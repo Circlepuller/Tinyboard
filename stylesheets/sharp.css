@@ -95,9 +95,10 @@ form table tr th {
 	padding: 4px;
 }
 form table tr th {
-	background: #AF0A0F;
-	color: #FFF;
-	border: 1px solid #800000; 
+	background: #DDD;
+	color: #36362E;
+	border: 1px solid #CCC;
+	text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7);
 }
 form table tr td div {
 	text-align: center;
@@ -221,7 +222,7 @@ span.trip {
 	color: #228854;
 }
 span.quote {
-	color: #3C6D8A;
+	color: #789922;
 }
 span.omitted {
 	display: block;
@@ -249,17 +250,19 @@ div#wrap {
 }
 div.ban {
 	background-color: white;
-	border: 1px solid #AF0A0F;
+	border: 1px solid #CCC;
 	max-width: 700px;
 	margin: 30px auto;
+	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 div.ban p, div.ban h2 {
 	padding: 3px 7px;
 }
 div.ban h2 {
-	background: #AF0A0F;
-	color: #FFF;
+	background: #DDD;
+	color: #36362E;
 	font-size: 12pt;
+	text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7);
 }
 div.ban p {
 	font-size: 12px;
@@ -369,7 +372,10 @@ table.modlog tr th {
 	white-space: nowrap;
 }
 table.modlog tr th {
-	background: #AF0A0F;
+	background: #DDD;
+	color: #36362E;
+	border: 1px solid #CCC;
+	text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7);
 }
 td.minimal, th.minimal {
 	width: 1%;
