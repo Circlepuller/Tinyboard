@@ -11,6 +11,7 @@
   width: 330px;
   margin: 8px 0;
   padding: 0;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 .box ul {
   padding: 2px 15px;
@@ -77,6 +78,17 @@ div.ban.boards {
 
 div.category {
   flex: 1;
+  margin-bottom: 20px;
+  margin-top: 15px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+div.category h3 {
+  margin: 5px;
+  font-size: 16px;
+  color: #36362E;
+  text-shadow: 1px 1px 0 #FFF;
 }
 
 div.category ul {
