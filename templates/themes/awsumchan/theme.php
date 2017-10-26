@@ -170,7 +170,7 @@
         'config' => $config,
         'boardlist' => createBoardlist(),
         'news' => $news,
-        'categories' = > $categories,
+        'categories' => $categories,
         'recent_images' => $recent_images,
         'recent_posts' => $recent_posts,
         'stats' => $stats
