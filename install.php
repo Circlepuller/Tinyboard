@@ -593,7 +593,7 @@ if (file_exists($config['has_installed'])) {
 			  	`extra` varchar(200),
 			  	`text` varchar(255),
 			  	`created_at` int(11),
-			  	PRIMARY KEY (`cookie`,`extra`),
+			  	PRIMARY KEY (`cookie`,`extra`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;') or error(db_error());
 		case false:
 			// TODO: enhance Tinyboard -> vichan upgrade path.
@@ -900,6 +900,10 @@ if ($step == 0) {
 	$instance_config .= "\n";
 	
 	if (@file_put_contents('inc/instance-config.php', $instance_config)) {
+		// flushes opcache if php >= 5.5.0 or opcache is installed via PECL
+		if (function_exists('opcache_invalidate')) {
+			opcache_invalidate('inc/instance-config.php');
+		}
 		header('Location: ?step=4', true, $config['redirect_http']);
 	} else {
 		$page['title'] = 'Manual installation required';
