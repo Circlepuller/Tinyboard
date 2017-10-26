@@ -37,7 +37,7 @@
     
     // Build news page
     public function homepage($settings) {
-      global $config, $board;
+      global $config, $board, $__board;
       
       $settings['no_recent'] = (int)$settings['no_recent'];
       
@@ -47,11 +47,11 @@
       $categories = $config['categories'];
  
       foreach ($categories as &$boards) {
-        foreach ($boards as &$board) {
-          $title = boardTitle($board);
+        foreach ($boards as &$__board) {
+          $title = boardTitle($__board);
           if (!$title)
-            $title = $board; // board doesn't exist, but for some reason you want to display it anyway
-          $board = ['title' => $title, 'uri' => sprintf($config['board_path'], $board)];
+            $title = $__board; // board doesn't exist, but for some reason you want to display it anyway
+          $__board = ['title' => $title, 'uri' => sprintf($config['board_path'], $__board)];
         }
       }
       
