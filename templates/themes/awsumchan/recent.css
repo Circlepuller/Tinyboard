@@ -75,8 +75,21 @@ div.ban.boards {
   display: flex;
 }
 
-div.categories ul {
+div.category {
+  flex: 1;
+}
+
+div.category ul {
   padding: 0;
   margin: 0;
   list-style-type: none;
+}
+
+div.category a:link, div.category a:visited {
+  color: #28759C;
+  text-decoration: none;
+}
+
+div.category a:hover, div.category a:active {
+  font-weight: bold;
 }
