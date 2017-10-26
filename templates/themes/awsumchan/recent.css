@@ -57,7 +57,7 @@ header h1 {
   margin-right: auto;
   padding-bottom: 18px;
   padding-left: 16px;
-  padding-top: 34px;
+  padding-top: 50px;
   text-align: text-bottom;
   width: 478px;
 }
@@ -65,4 +65,18 @@ header h1 {
 img.banner.logo {
   border-width: 0;
   max-width: 100%;
+}
+
+header div.subtitle {
+  margin-top: -50px;
+}
+
+div.ban.boards {
+  display: flex;
+}
+
+div.categories ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
 }
