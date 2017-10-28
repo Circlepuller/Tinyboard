@@ -1,0 +1,103 @@
+{% filter remove_whitespace %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>{{ settings.title }}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+		{% if config.meta_keywords %}<meta name="keywords" content="{{ config.meta_keywords }}">{% endif %}
+		{% if config.url_favicon %}<link rel="shortcut icon" href="{{ config.url_favicon }}">{% endif %}
+		<link rel="stylesheet" media="screen" href="{{ config.url_stylesheet }}" />
+		<link rel="stylesheet" media="screen" href="{{ config.root }}{{ settings.css }}" />
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript">
+			var onready_callbacks = [];
+			
+			function onready(fnc) {
+				onready_callbacks.push(fnc);
+			}
+
+			function ready() {
+				for (var i = 0; i < onready_callbacks.length; i++) {
+					onready_callbacks[i]();
+				}
+			}
+		</script>
+		<script type="text/javascript" src="/js/post-hover.js"></script>
+		<script type="text/javascript" src="/js/sidebar.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1><img class="banner logo" src="/static/logo.png" alt="{{ settings.title }}" /></h1>
+			<div class="subtitle">{% if settings.subtitle %}{{ settings.subtitle }}{% endif %}</div>
+		</header>
+		
+		<div class="ban boards">
+			<h2>Boards</h2>
+			<p>
+				{% for category, boards in categories %}
+					<div class="category">
+						<h3>{{ category }}{% if loop.last %} <span class="unimportant" style="color:red;">(+18)</span>{% endif %}</h3>
+						{% for board in boards %}
+							<a href="{{ board.uri }}">{{ board.title|e }}</a>
+						{% endfor %}
+					</div>
+				{% endfor %}
+			</p>
+			<br class="clear" />
+		</div>
+		
+		<div class="box-wrap">
+			<div class="box left">
+				<h2>Recent Images</h2>
+				<ul>
+					{% for post in recent_images %}
+						<li>
+							<a class="preview" href="{{ post.link }}">
+								<img src="{{ post.src }}" style="width:{{ post.thumbwidth }}px;height:{{ post.thumbheight }}px" alt="">
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="box right">
+				<h2>Latest Posts</h2>
+				<ul>
+					{% for post in recent_posts %}
+						<li>
+							<strong>{{ post.board_name }}</strong>: 
+							<a class="preview" href="{{ post.link }}">
+								{{ post.snippet }}
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="box right">
+				<h2>Stats</h2>
+				<ul>
+					<li>Total posts: {{ stats.total_posts }}</li>
+					<li>Unique posters: {{ stats.unique_posters }}</li>
+					<li>Active content: {{ stats.active_content|filesize }}</li>
+				</ul>
+			</div>
+		</div>
+		
+		<nav>
+			<div class="navigation">
+				<a href="{{ config.root }}{{ settings.file_main }}" class="selected">Home</a>
+				<a href="{{ config.root }}{{ settings.file_news }}">News</a>
+				<a href="http://qchat.rizon.net?channels=awsumchan">IRC</a>
+			</div>
+		</nav>
+		
+		<footer>
+			<p class="unimportant" style="margin-top:20px;text-align:center;">Powered by <a href="http://tinyboard.org/">Tinyboard</a> {{ config.version }} | <a href="http://tinyboard.org/">Tinyboard</a> Copyright &copy; 2010-2012 Tinyboard Development Group</p>
+			{% for footer in config.footer %}<p class="unimportant" style="text-align:center;">{{ footer }}</p>{% endfor %}
+		</footer>
+		<script type="text/javascript">{% raw %}
+			ready();
+		{% endraw %}</script>
+	</body>
+</html>
+{% endfilter %}
