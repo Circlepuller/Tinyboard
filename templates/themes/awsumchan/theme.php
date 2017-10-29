@@ -46,8 +46,8 @@
 
       $categories = $config['categories'];
  
-      foreach ($categories as &$boards) {
-        foreach ($boards as &$_board) {
+      foreach ($categories as &$_boards) {
+        foreach ($_boards as &$_board) {
           $title = boardTitle($_board);
           if (!$title)
             $title = $_board; // board doesn't exist, but for some reason you want to display it anyway
