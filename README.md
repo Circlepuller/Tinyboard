@@ -38,7 +38,7 @@ it need one.
 2.	ImageMagick (command-line ImageMagick or GraphicsMagick preferred).
 3.	[APC (Alternative PHP Cache)](http://php.net/manual/en/book.apc.php),
 	[XCache](http://xcache.lighttpd.net/) or
-	[Memcached](http://www.php.net/manual/en/intro.memcached.php)
+	[Redis](http://pecl.php.net/package/redis)
 
 Contributing
 ------------

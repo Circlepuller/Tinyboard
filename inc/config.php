@@ -118,7 +118,6 @@
 	$config['cache']['enabled'] = 'php';
 	// $config['cache']['enabled'] = 'xcache';
 	// $config['cache']['enabled'] = 'apc';
-	// $config['cache']['enabled'] = 'memcached';
 	// $config['cache']['enabled'] = 'redis';
 	// $config['cache']['enabled'] = 'fs';
 
@@ -127,11 +126,6 @@
 
 	// Optional prefix if you're running multiple Tinyboard instances on the same machine.
 	$config['cache']['prefix'] = '';
-
-	// Memcached servers to use. Read more: http://www.php.net/manual/en/memcached.addservers.php
-	$config['cache']['memcached'] = array(
-		array('localhost', 11211)
-	);
 
 	// Redis server to use. Location, port, password, database id.
 	// Note that Tinyboard may clear the database at times, so you may want to pick a database id just for

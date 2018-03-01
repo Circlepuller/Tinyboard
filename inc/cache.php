@@ -12,10 +12,6 @@ class Cache {
 		global $config;
 		
 		switch ($config['cache']['enabled']) {
-			case 'memcached':
-				self::$cache = new Memcached();
-				self::$cache->addServers($config['cache']['memcached']);
-				break;
 			case 'redis':
 				self::$cache = new Redis();
 				self::$cache->connect($config['cache']['redis'][0], $config['cache']['redis'][1]);
@@ -36,11 +32,6 @@ class Cache {
 		
 		$data = false;
 		switch ($config['cache']['enabled']) {
-			case 'memcached':
-				if (!self::$cache)
-					self::init();
-				$data = self::$cache->get($key);
-				break;
 			case 'apc':
 				$data = apc_fetch($key);
 				break;
@@ -82,11 +73,6 @@ class Cache {
 			$expires = $config['cache']['timeout'];
 		
 		switch ($config['cache']['enabled']) {
-			case 'memcached':
-				if (!self::$cache)
-					self::init();
-				self::$cache->set($key, $value, $expires);
-				break;
 			case 'redis':
 				if (!self::$cache)
 					self::init();
@@ -117,7 +103,6 @@ class Cache {
 		$key = $config['cache']['prefix'] . $key;
 		
 		switch ($config['cache']['enabled']) {
-			case 'memcached':
 			case 'redis':
 				if (!self::$cache)
 					self::init();
@@ -146,10 +131,6 @@ class Cache {
 		global $config;
 		
 		switch ($config['cache']['enabled']) {
-			case 'memcached':
-				if (!self::$cache)
-					self::init();
-				return self::$cache->flush();
 			case 'apc':
 				return apc_clear_cache('user');
 			case 'php':
