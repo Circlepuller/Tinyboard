@@ -378,6 +378,10 @@ if (isset($_POST['delete'])) {
 
 
 	if (!$dropped_post) {
+
+		// Check if banned
+		checkBan($board['uri']);
+
 		// Check for CAPTCHA right after opening the board so the "return" link is in there
 		if ($config['recaptcha']) {
 			if (!isset($_POST['g-recaptcha-response']))
@@ -418,8 +422,6 @@ if (isset($_POST['delete'])) {
 	
 		checkDNSBL();
 		
-		// Check if banned
-		checkBan($board['uri']);
 
 		if ($post['mod'] = isset($_POST['mod']) && $_POST['mod']) {
 			check_login(false);
@@ -655,6 +657,13 @@ if (isset($_POST['delete'])) {
 	if ($post['has_file']) {
 		$i = 0;
 		foreach ($_FILES as $key => $file) {
+			if (!in_array($file['error'], array(UPLOAD_ERR_NO_FILE, UPLOAD_ERR_OK))) {
+				error(sprintf3($config['error']['phpfileserror'], array(
+					'index' => $i+1,
+					'code' => $file['error']
+				)));
+			}
+
 			if ($file['size'] && $file['tmp_name']) {
 				$file['filename'] = urldecode($file['name']);
 				$file['extension'] = strtolower(mb_substr($file['filename'], mb_strrpos($file['filename'], '.') + 1));

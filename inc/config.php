@@ -17,9 +17,9 @@
  *  Some directives are commented out. This is either because they are optional and examples, or because
  *  they are "optionally configurable", and given their default values by Tinyboard's code later if unset.
  *
- *  More information: http://tinyboard.org/docs/?p=Config
+ *  More information: https://web.archive.org/web/20121003095922/http://tinyboard.org/docs/?p=Config
  *
- *  Tinyboard documentation: http://tinyboard.org/docs/
+ *  Tinyboard documentation: https://web.archive.org/web/20121003095807/http://tinyboard.org/docs/?p=Main_Page
  *
  */
 
@@ -112,7 +112,7 @@
 	 * designed to minimize SQL queries and can significantly increase speed when posting or using the 
 	 * moderator interface. APC is the recommended method of caching.
 	 *
-	 * http://tinyboard.org/docs/index.php?p=Config/Cache
+	 * https://web.archive.org/web/20121003095626/http://tinyboard.org/docs/?p=Config/Cache
 	 */
 
 	$config['cache']['enabled'] = 'php';
@@ -191,7 +191,7 @@
 	 * addresses published through the Internet Domain Name Service (DNS) either as a zone file that can be
 	 * used by DNS server software, or as a live DNS zone that can be queried in real-time.
 	 *
-	 * Read more: http://tinyboard.org/docs/?p=Config/DNSBL
+	 * Read more: https://web.archive.org/web/20121003095945/http://tinyboard.org/docs/?p=Config/DNSBL
 	 */
 
 	// Prevents most Tor exit nodes from making posts. Recommended, as a lot of abuse comes from Tor because
@@ -239,7 +239,7 @@
 	 * $config['spam']['hidden_inputs_max_pass'] and $config['spam']['hidden_inputs_expire'] to
 	 * something higher to avoid false positives.
 	 *
-	 * See also: http://tinyboard.org/docs/?p=Your_request_looks_automated
+	 * See also: https://web.archive.org/web/20121003095610/http://tinyboard.org/docs/?p=Your_request_looks_automated
 	 *
 	 */
 
@@ -347,7 +347,7 @@
 	 * it still is, as long as you leave the relevant $config['filters'] intact. These old config variables
 	 * still exist for backwards-compatability and general convenience.
 	 *
-	 * Read more: http://tinyboard.org/docs/index.php?p=Config/Filters
+	 * Read more: https://web.archive.org/web/20121003095807/http://tinyboard.org/docs/?p=Config/Flood_filters
 	 */
 
 	// Minimum time between between each post by the same IP address.
@@ -992,7 +992,7 @@
 	// with non-board links.
 	// $config['custom_categories'] = array(
 	// 	'Links' => array(
-	// 		'Tinyboard' => 'http://tinyboard.org',
+	// 		'Github' => 'https://github.com/my/project',
 	// 		'Donate' => 'donate.html'
 	// 	)
 	// );
@@ -1075,7 +1075,7 @@
 		),
 		array(
 			'/^https?:\/\/(\w+\.)?vimeo\.com\/(\d{2,10})(\?.+)?$/i',
-			'<object style="float: left;margin: 10px 20px;" width="%%tb_width%%" height="%%tb_height%%"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=$2&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=$2&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="%%tb_width%%" height="%%tb_height%%"></object>'
+			'<iframe style="float: left;margin: 10px 20px;" width="%%tb_width%%" height="%%tb_height%%" src="https://player.vimeo.com/video/$2" frameborder="0"></iframe>'
 		),
 		array(
 			'/^https?:\/\/(\w+\.)?dailymotion\.com\/video\/([a-zA-Z0-9]{2,10})(_.+)?$/i',
@@ -1136,6 +1136,7 @@
 	$config['error']['toomanyreports']	= _('You can\'t report that many posts at once.');
 	$config['error']['invalidpassword']	= _('Wrong password…');
 	$config['error']['invalidimg']		= _('Invalid image.');
+	$config['error']['phpfileserror']	= _('Upload failure (file #%index%): Error code %code%. Refer to <a href="http://php.net/manual/en/features.file-upload.errors.php">http://php.net/manual/en/features.file-upload.errors.php</a>; post discarded.');
 	$config['error']['unknownext']		= _('Unknown file extension.');
 	$config['error']['filesize']		= _('Maximum file size: %maxsz% bytes<br>Your file\'s size: %filesz% bytes');
 	$config['error']['maxsize']		= _('The file was too big.');
@@ -1694,7 +1695,7 @@
  * ====================
  */
 
-	// http://tinyboard.org/docs/?p=Events
+	// https://web.archive.org/web/20121003095551/http://tinyboard.org/docs/?p=Events
 
 	// event_handler('post', function($post) {
 	// 	// do something
