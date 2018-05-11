@@ -2,13 +2,19 @@
     "name": "circlepuller/tinyboard",
     "description": "Tinyboard is a light-weight, fast, highly configurable and user-friendly imageboard software package released under a non-restrictive open-source license. It is written in PHP and has few dependencies.",
     "type": "project",
+    "config": {
+        "platform": {
+            "php": "7.0.27"
+        }
+    },
     "require": {
         "gettext/gettext": "^4.4",
         "twig/twig": "^2.4",
         "twig/extensions": "^1.5",
         "maxmind/geoip": "^1.1",
         "mrclay/minify": "^3.0",
-        "lifo/ip": "^1.0"
+        "lifo/ip": "^1.0",
+        "erusev/parsedown": "^1.7"
     },
     "license": "MIT",
     "authors": [
