@@ -35,7 +35,7 @@
 	<legend>{% trans 'Messages' %}</legend>
 	<ul>
 		{% if mod|hasPermission(config.mod.noticeboard) %}
-			{% if noticeboard|count > 0 %}
+			{% if noticeboard|length > 0 %}
 				<li>
 					{% trans 'Noticeboard' %}:
 					<ul>
@@ -131,7 +131,7 @@
 	</fieldset>
 {%  endif %}
 
-{% if config.mod.dashboard_links|count %}
+{% if config.mod.dashboard_links|length %}
 	<fieldset>
 		<legend>{% trans 'Other' %}</legend>
 	
