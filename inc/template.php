@@ -123,7 +123,6 @@ class Twig_Extensions_Extension_Tinyboard extends Twig_Extension
 			new Twig_SimpleFilter('date', 'twig_date_filter'),
 			new Twig_SimpleFilter('poster_id', 'poster_id'),
 			new Twig_SimpleFilter('remove_whitespace', 'twig_remove_whitespace_filter'),
-			new Twig_SimpleFilter('count', 'count'),
 			new Twig_SimpleFilter('ago', 'ago'),
 			new Twig_SimpleFilter('until', 'until'),
 			new Twig_SimpleFilter('push', 'twig_push_filter'),

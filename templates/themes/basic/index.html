@@ -19,7 +19,7 @@
 	</header>
 	
 	<div class="ban">
-		{% if news|count == 0 %}
+		{% if news|length == 0 %}
 			<p style="text-align:center" class="unimportant">(No news to show.)</p>
 		{% else %}
 			{% for entry in news %}
