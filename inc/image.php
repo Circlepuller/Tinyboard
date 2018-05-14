@@ -496,7 +496,7 @@ class ImageBMP extends ImageBase {
 	}
 }
 
-
+if (!function_exists('imagecreatefrombmp')) {
 /*********************************************/
 /* Fonction: imagecreatefrombmp              */
 /* Author:   DHKold                          */
@@ -582,7 +582,9 @@ function imagecreatefrombmp($filename) {
 
  return $res;
 }
+}
 
+if (!function_exists('imagebmp')) {
 function imagebmp(&$img, $filename='') {
 	$widthOrig = imagesx($img);
 	$widthFloor = ((floor($widthOrig/16))*16);
@@ -654,6 +656,7 @@ function imagebmp(&$img, $filename='') {
 		fwrite($file, $result);
 		fclose($file);
 	}
+}
 }
 // imagebmp helpers
 function int_to_dword($n) {
