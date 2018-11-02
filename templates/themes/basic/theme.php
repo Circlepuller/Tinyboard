@@ -31,6 +31,7 @@
 			return Element('themes/basic/index.html', Array(
 				'settings' => $settings,
 				'config' => $config,
+				'mod' => false,
 				'menu' => createMenu(),
 				'news' => $news
 			));

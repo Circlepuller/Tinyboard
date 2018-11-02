@@ -19,10 +19,10 @@ function format_bytes($size) {
 	return round($size, 2).$units[$i];
 }
 
-function createMenu($mod=false) {
+function createMenu() {
 	global $config;
 
-	if (!array_key_exists('menu', $config)) return [];
+	if (!isset($config['menu'])) return [];
 
 	$xboards = listBoards();
 	$boards = [];
@@ -39,7 +39,7 @@ function createMenu($mod=false) {
 			if (gettype($title) != 'string' && array_key_exists($uri, $boards)) {
 				$menu[$category][] = [
 					'title' => $boards[$uri],
-					'uri' => ($mod ? '?/' : $config['root']) . $uri . '/' . $config['file_index'],
+					'uri' => $uri,
 					'is_board' => true
 				];
 			} else {

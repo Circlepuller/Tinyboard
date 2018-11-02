@@ -886,7 +886,8 @@ function displayBan($ban) {
 		Element('page.html', array(
 			'title' => _('Banned!'),
 			'config' => $config,
-			'menu' => createMenu(isset($mod) ? $mod : false),
+			'mod' => false,
+			'menu' => createMenu(),
 			'body' => Element('banned.html', array(
 				'config' => $config,
 				'ban' => $ban,
@@ -1428,7 +1429,8 @@ function index($page, $mod=false, $brief = false) {
 		'body' => $body,
 		'post_url' => $config['post_url'],
 		'config' => $config,
-		'menu' => createMenu($mod),
+		'mod' => $mod,
+		'menu' => createMenu(),
 		'threads' => $threads,
 	);
 }
@@ -2270,7 +2272,7 @@ function buildThread($id, $return = false, $mod = false) {
 			'hasnoko50' => $hasnoko50,
 			'isnoko50' => false,
 			'antibot' => $antibot,
-			'menu' => createMenu($mod),
+			'menu' => createMenu(),
 			'return' => ($mod ? '?' . $board['url'] . $config['file_index'] : $config['root'] . $board['dir'] . $config['file_index'])
 		));
 
@@ -2373,7 +2375,7 @@ function buildThread50($id, $return = false, $mod = false, $thread = null, $anti
 		'hasnoko50' => $hasnoko50,
 		'isnoko50' => true,
 		'antibot' => $mod ? false : ($antibot ? $antibot : create_antibot($board['uri'], $id)),
-		'menu' => createMenu($mod),
+		'menu' => createMenu(),
 		'return' => ($mod ? '?' . $board['url'] . $config['file_index'] : $config['root'] . $board['dir'] . $config['file_index'])
 	));	
 

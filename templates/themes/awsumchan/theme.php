@@ -157,6 +157,7 @@
       return Element('themes/awsumchan/index.html', [
         'settings' => $settings,
         'config' => $config,
+        'mod' => false,
         'menu' => createMenu(),
         'news' => $news,
         'recent_images' => $recent_images,

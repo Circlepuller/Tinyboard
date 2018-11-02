@@ -113,6 +113,7 @@
 			return Element('themes/rss/rss.xml', Array(
 				'settings' => $settings,
 				'config' => $config,
+				//'mod' => false,
 				//'menu' => createMenu(),
 				//'recent_images' => $recent_images,
 				'recent_posts' => $recent_posts,

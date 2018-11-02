@@ -42,6 +42,7 @@
 			return Element('themes/categories/news.html', Array(
 				'settings' => $settings,
 				'config' => $config,
+				'mod' => false,
 				'news' => $news,
 		        'menu' => createMenu(false)
 			));

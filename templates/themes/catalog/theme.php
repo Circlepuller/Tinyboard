@@ -112,6 +112,7 @@
 			file_write($config['dir']['home'] . $board_name . '/catalog.html', Element('themes/catalog/catalog.html', Array(
 				'settings' => $settings,
 				'config' => $config,
+				'mod' => false,
 				'menu' => createMenu(),
 				'recent_images' => $recent_images,
 				'recent_posts' => $recent_posts,
