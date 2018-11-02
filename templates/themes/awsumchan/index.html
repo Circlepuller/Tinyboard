@@ -44,9 +44,9 @@
       <div class="category">
         <h2>{{ category }}</h2>
         <ul>
-          {% for board in boards %}
+          {% for item in items %}
             <li>
-              <a href="{{ board.uri }}">{{ board.title|e }}</a>
+              <a href="{{ item.uri }}">{{ item.title|e|title }}</a>
             </li>
           {% endfor %}
         </ul>
