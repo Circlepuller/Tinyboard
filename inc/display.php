@@ -19,56 +19,38 @@ function format_bytes($size) {
 	return round($size, 2).$units[$i];
 }
 
-function doBoardListPart($list, $root, &$boards) {
+function createMenu($mod=false) {
 	global $config;
-	
-	$body = '';
-	foreach ($list as $key => $board) {
-		if (is_array($board))
-			$body .= ' <span class="sub" data-description="' . $key . '">[' . doBoardListPart($board, $root, $boards) . ']</span> ';
-		else {
-			if (gettype($key) == 'string') {
-				$body .= ' <a href="' . $board . '">' . $key . '</a> /';
-			} else {
-				$title = '';
-				if (isset ($boards[$board])) {
-					$title = ' title="'.$boards[$board].'"';
-				}
-				
-				$body .= ' <a href="' . $root . $board . '/' . $config['file_index'] . '"'.$title.'>' . $board . '</a> /';
-			}
-		}
-	}
-	$body = preg_replace('/\/$/', '', $body);
-	
-	return $body;
-}
 
-function createBoardlist($mod=false) {
-	global $config;
-	
-	if (!isset($config['boards'])) return array('top'=>'','bottom'=>'');
-	
 	$xboards = listBoards();
-	$boards = array();
+	$boards = [];
+	$menu = [];
+
 	foreach ($xboards as $val) {
 		$boards[$val['uri']] = $val['title'];
 	}
 
-	$body = doBoardListPart($config['boards'], $mod?'?/':$config['root'], $boards);
+	foreach ($config['menu'] as $category => $items) {
+		$menu[$category] = [];
 
-	if ($config['boardlist_wrap_bracket'] && !preg_match('/\] $/', $body))
-		$body = '[' . $body . ']';
-	
-	$body = trim($body);
+		foreach ($items as $title => $uri) {
+			if (gettype($title) != 'string' && array_key_exists($uri, $boards)) {
+				$menu[$category][] = [
+					'title' => $boards[$uri],
+					'uri' => ($mod ? '?/' : $config['root']) . $uri . '/' . $config['file_index'],
+					'is_board' => true
+				];
+			} else {
+				$menu[$category][] = [
+					'title' => $title,
+					'uri' => $uri,
+					'is_board' => false
+				];
+			}
+		}
+	}
 
-	// Message compact-boardlist.js faster, so that page looks less ugly during loading
-	$top = "<script type='text/javascript'>if (typeof do_boardlist != 'undefined') do_boardlist();</script>";
-	
-	return array(
-		'top' => '<div class="boardlist">' . $body . '</div>' . $top,
-		'bottom' => '<div class="boardlist bottom">' . $body . '</div>'
-	);
+	return $menu;
 }
 
 function error($message, $priority = true, $debug_stuff = false) {

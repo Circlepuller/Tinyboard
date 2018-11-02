@@ -152,7 +152,7 @@
 			return Element('themes/recent/recent.html', Array(
 				'settings' => $settings,
 				'config' => $config,
-				'boardlist' => createBoardlist(),
+				'menu' => createMenu(),
 				'recent_images' => $recent_images,
 				'recent_posts' => $recent_posts,
 				'stats' => $stats

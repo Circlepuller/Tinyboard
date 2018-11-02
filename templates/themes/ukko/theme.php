@@ -107,7 +107,7 @@
 				'no_post_form' => true,
 				'body' => $body,
 				'mod' => $mod,
-				'boardlist' => createBoardlist($mod),
+				'menu' => createMenu($mod),
 			));
 		}
 		

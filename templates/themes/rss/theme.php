@@ -113,7 +113,7 @@
 			return Element('themes/rss/rss.xml', Array(
 				'settings' => $settings,
 				'config' => $config,
-				//'boardlist' => createBoardlist(),
+				//'menu' => createMenu(),
 				//'recent_images' => $recent_images,
 				'recent_posts' => $recent_posts,
 				//'stats' => $stats

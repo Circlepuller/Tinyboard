@@ -31,7 +31,7 @@
 			return Element('themes/basic/index.html', Array(
 				'settings' => $settings,
 				'config' => $config,
-				'boardlist' => createBoardlist(),
+				'menu' => createMenu(),
 				'news' => $news
 			));
 		}

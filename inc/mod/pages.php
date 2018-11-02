@@ -15,7 +15,7 @@ function mod_page($title, $template, $args, $subtitle = false) {
 		'hide_dashboard_link' => $template == 'mod/dashboard.html',
 		'title' => $title,
 		'subtitle' => $subtitle,
-		'boardlist' => createBoardlist($mod),
+		'menu' => createMenu($mod),
 		'body' => Element($template,
 				array_merge(
 					array('config' => $config, 'mod' => $mod), 

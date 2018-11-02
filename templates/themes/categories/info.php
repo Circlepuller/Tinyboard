@@ -58,9 +58,9 @@ Requires $config[\'categories\'].';
 		function categories_install($settings) {
 			global $config;
 			
-			if (!isset($config['categories'])) {
+			if (!isset($config['menu'])) {
 				return Array(false, '<h2>Prerequisites not met!</h2>' . 
-					'This theme requires $config[\'boards\'] and $config[\'categories\'] to be set.');
+					'This theme requires $config[\'menu\'] to be set.');
 			}
 		}
 	}

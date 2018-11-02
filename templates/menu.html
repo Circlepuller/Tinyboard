@@ -1,0 +1,11 @@
+<div class="boardlist{% if bottom %} bottom{% endif %}">
+    {% for category, items in menu %}
+        <span class="sub" data-description="{{ category }}">[
+            {% for item in items %}
+                <a href="{{ item.uri }}"{% if item.is_board %} title="{{ item.title }}"{% endif %}>{% if item.is_board %}{{ item.uri }}{% else %}{{ item.title }}{% endif %}</a>
+                {% if not loop.last %}/{% endif %}
+            {% endfor %}
+        ]</span>
+    {% endfor %}
+</div>
+{% if not bottom %}<script type='text/javascript'>if (typeof do_boardlist != 'undefined') do_boardlist();</script>{% endif %}

@@ -11,7 +11,7 @@
 	<title>{{ board }} - Catalog</title>
 </head>
 <body class="8chan vichan {% if mod %}is-moderator{% else %}is-not-moderator{% endif %} theme-catalog active-catalog" data-stylesheet="{% if config.default_stylesheet.1 != '' %}{{ config.default_stylesheet.1 }}{% else %}default{% endif %}">
-	{{ boardlist.top }}
+	{% include "menu.html" %}
 	<header>
 		<h1>{{ settings.title }} (<a href="{{link}}">/{{ board }}/</a>)</h1>
 		<div class="subtitle">{{ settings.subtitle }}</div>
@@ -78,17 +78,17 @@
 		<br>Tinyboard Copyright &copy; 2010-2014 Tinyboard Development Group    
 		<br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2016 vichan-devel</p>
 	</footer>
-	<script type="text/javascript">{% verbatim %}
+	{% verbatim %}<script type="text/javascript">
 		var styles = {
 			{% endverbatim %}
 			{% for name, uri in config.stylesheets %}{% verbatim %}'{% endverbatim %}{{ name|addslashes }}{% verbatim %}' : '{% endverbatim %}/stylesheets/{{ uri|addslashes }}{% verbatim %}',
 			{% endverbatim %}{% endfor %}{% verbatim %}
 		}; onready(init);
-	{% endverbatim %}</script>
+	</script>{% endverbatim %}
 
-	<script type="text/javascript">{% verbatim %}
+	{% verbatim %}<script type="text/javascript">
 		ready();
-	{% endverbatim %}</script>
+	</script>{% endverbatim %}
 </body>
 </html>
 {% endfilter %}

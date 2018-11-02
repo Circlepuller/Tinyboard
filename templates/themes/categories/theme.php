@@ -43,29 +43,18 @@
 				'settings' => $settings,
 				'config' => $config,
 				'news' => $news,
-		                'boardlist' => createBoardlist(false)
+		        'menu' => createMenu(false)
 			));
 		}
 		
 		// Build sidebar
 		public static function sidebar($settings) {
-			global $config, $board;
-			
-			$categories = $config['categories'];
-			
-			foreach ($categories as &$boards) {
-				foreach ($boards as &$board) {
-					$title = boardTitle($board);
-					if (!$title)
-						$title = $board; // board doesn't exist, but for some reason you want to display it anyway
-					$board = Array('title' => $title, 'uri' => sprintf($config['board_path'], $board));
-				}
-			}
+			global $config;
 			
 			return Element('themes/categories/sidebar.html', Array(
 				'settings' => $settings,
 				'config' => $config,
-				'categories' => $categories
+				'menu' => $menu
 			));
 		}
 	};
