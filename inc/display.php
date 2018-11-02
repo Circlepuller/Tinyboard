@@ -22,6 +22,8 @@ function format_bytes($size) {
 function createMenu($mod=false) {
 	global $config;
 
+	if (!array_key_exists('menu', $config)) return [];
+
 	$xboards = listBoards();
 	$boards = [];
 	$menu = [];
