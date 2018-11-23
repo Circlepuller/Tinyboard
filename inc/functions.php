@@ -1628,7 +1628,7 @@ function buildIndex($global_api = "yes") {
 	global $board, $config, $build_pages;
 
 	$pages = getPages();
-	if ($config['try_smarter'])
+	if (!$config['try_smarter'])
 		$antibot = create_antibot($board['uri']);
 
 	if ($config['api']['enabled']) {
