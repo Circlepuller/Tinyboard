@@ -99,7 +99,7 @@
 				'settings' => $settings,
 				'config' => $config,
 				'mod' => false,
-				'menu' => createMenu(),
+				'boardlist' => createBoardlist(),
 				'recent_images' => $recent_images,
 				'recent_posts' => $recent_posts,
 				'stats' => $stats,

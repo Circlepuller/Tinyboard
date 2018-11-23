@@ -1,1 +1,13 @@
-I'm your overboard boardlist. You can put here anything and I reside in templates/boardlist.html
+<div class="boardlist{% if bottom %} bottom{% endif %}">
+    {% if config.boardlist_wrap_bracket %}[{% endif %}
+    {% for group in boardlist %}
+        <span class="sub">[
+            {% for board in group %}
+                <a href="{% if board.uri == board.text %}{{ mod ? "?/" : config.root }}{{ board.uri }}/{{ config.file_index }}{% else %}{{ board.uri }}{% endif %}"{% if board.uri == board.text %} title="{{ board.title }}"{% endif %}>{{ board.text }}</a>
+                {% if not loop.last %}/{% endif %}
+            {% endfor %}
+        ]</span>
+    {% endfor %}
+    {% if config.boardlist_wrap_bracket %}]{% endif %}
+</div>
+{% if not bottom %}<script type='text/javascript'>if (typeof do_boardlist != 'undefined') do_boardlist();</script>{% endif %}

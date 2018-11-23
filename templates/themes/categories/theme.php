@@ -44,18 +44,31 @@
 				'config' => $config,
 				'mod' => false,
 				'news' => $news,
-		        'menu' => createMenu(false)
+		        'boardlist' => createBoardlist()
 			));
 		}
 		
 		// Build sidebar
 		public static function sidebar($settings) {
 			global $config;
+
+			$categories = $config['categories'];
+
+			foreach ($categories as &$_boards) {
+			  foreach ($_boards as &$board) {
+				$title = boardTitle($_board);
+	  
+				if (!$title)
+				  $title = $_board;
+				
+				$_board = ['title' => $title, 'uri' => sprintf($config['board_path'], $_board)];
+			  }
+			}
 			
 			return Element('themes/categories/sidebar.html', Array(
 				'settings' => $settings,
 				'config' => $config,
-				'menu' => $menu
+				'categories' => $categories
 			));
 		}
 	};

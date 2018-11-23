@@ -19,40 +19,40 @@ function format_bytes($size) {
 	return round($size, 2).$units[$i];
 }
 
-function createMenu() {
+function createBoardlist() {
 	global $config;
 
-	if (!isset($config['menu'])) return [];
+	if (!isset($config['boards']))
+		return [];
 
 	$xboards = listBoards();
 	$boards = [];
-	$menu = [];
+	$boardlist = [];
 
 	foreach ($xboards as $val) {
 		$boards[$val['uri']] = $val['title'];
 	}
 
-	foreach ($config['menu'] as $category => $items) {
-		$menu[$category] = [];
+	foreach ($config['boards'] as $idx => $group) {
+		$boardlist[] = [];
 
-		foreach ($items as $title => $uri) {
-			if (gettype($title) != 'string' && array_key_exists($uri, $boards)) {
-				$menu[$category][] = [
-					'title' => $boards[$uri],
-					'uri' => $uri,
-					'is_board' => true
-				];
-			} else {
-				$menu[$category][] = [
-					'title' => $title,
-					'uri' => $uri,
-					'is_board' => false
-				];
-			}
+		// Someone configured the variable wrong
+		if (!is_int($idx) || !is_array($group))
+			error('Please change \$config[\'boards\'] to a valid format.');
+
+		foreach ($group as $title => $uri) {
+			if (!is_string($uri))
+				error('Please change \$config[\'boards\'] to a valid format.');
+
+			$boardlist[$idx][] = [
+				'title' => is_string($title) ? $title : $boards[$uri],
+				'text' => is_string($title) ? $title : $uri, // Simple way to do this.
+				'uri' => $uri
+			];
 		}
 	}
 
-	return $menu;
+	return $boardlist;
 }
 
 function error($message, $priority = true, $debug_stuff = false) {

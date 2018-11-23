@@ -9,7 +9,7 @@
 	<title>{{ title }}</title>
 </head>
 <body class="8chan vichan {% if mod %}is-moderator{% else %}is-not-moderator{% endif %} active-page" data-stylesheet="{% if config.default_stylesheet.1 != '' %}{{ config.default_stylesheet.1 }}{% else %}default{% endif %}">
-        {% include "menu.html" %}
+        {% include "boardlist.html" %}
 
 	{% if pm %}<div class="top_notice">You have <a href="?/PM/{{ pm.id }}">an unread PM</a>{% if pm.waiting > 0 %}, plus {{ pm.waiting }} more waiting{% endif %}.</div><hr>{% endif %}
 	<header>
@@ -26,7 +26,7 @@
 	<footer>
 		<p class="unimportant" style="margin-top:20px;text-align:center;">- Tinyboard + 
 			<a href="https://engine.vichan.net/">vichan</a> {{ config.version }} -
-		<br>Tinyboard Copyright &copy; 2010-2014 Tinyboard Development Group    
+		<br>Tinyboard Copyright &copy; 2010-2018 Tinyboard Development Group    
 		<br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2016 vichan-devel</p>
 	</footer>
 </body>

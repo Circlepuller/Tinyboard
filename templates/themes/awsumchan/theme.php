@@ -35,6 +35,19 @@
       
       $query = query("SELECT * FROM ``news`` ORDER BY `time` DESC" . ($settings['no_recent'] ? ' LIMIT ' . $settings['no_recent'] : '')) or error(db_error());
       $news = $query->fetchAll(PDO::FETCH_ASSOC);
+
+      $categories = $config['categories'];
+
+      foreach ($categories as &$_boards) {
+        foreach ($_boards as &$board) {
+          $title = boardTitle($_board);
+
+          if (!$title)
+            $title = $_board;
+          
+          $_board = ['title' => $title, 'uri' => sprintf($config['board_path'], $_board)];
+        }
+      }
       
       $recent_images = [];
       $recent_posts = [];
@@ -150,8 +163,9 @@
         'settings' => $settings,
         'config' => $config,
         'mod' => false,
-        'menu' => createMenu(),
+        'boardlist' => createBoardlist(),
         'news' => $news,
+        'categories' => $categories,
         'recent_images' => $recent_images,
         'recent_posts' => $recent_posts,
         'stats' => $stats

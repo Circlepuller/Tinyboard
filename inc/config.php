@@ -924,18 +924,24 @@
 	$config['font_awesome_css'] = 'stylesheets/font-awesome/css/font-awesome.min.css';
 
 	/*
-	 * Tinyboard allows the creation of a menu for boards and other links you may want on your site.
-	 * Categories are used for organizing your menu items into sections.
+	 * For lack of a better name, “boardlinks” are those sets of navigational links that appear at the top
+	 * and bottom of board pages. They can be a list of links to boards and/or other pages such as status
+	 * blogs and social network profiles/pages.
+	 *
+	 * "Groups" in the boardlinks are marked with square brackets. Each array() in $config['boards']
+	 * represents a new square bracket group.
 	 */
 
-	// $config['menu'] = [
-	// 	'Japan' => ['a', 'd', 'h', 'm'],
-	//  'General' => ['b', 'f', 'k'],
-	//  'Site' => [
-	//	  'news' => 'https://example.org/news',
-	//	  'status' => 'https://status.example.org'
-	//   ]
-	// ];
+	// $config['boards'] = array(
+	// 	array('a', 'b'),
+	// 	array('c', 'd', 'e', 'f', 'g'),
+	// 	array('h', 'i', 'j'),
+	// 	array('k', array('l', 'm')),
+	// 	array('status' => 'http://status.example.org/')
+	// );
+
+	// Whether or not to put brackets around the whole board list
+	$config['boardlist_wrap_bracket'] = false;
 
 	// Show page navigation links at the top as well.
 	$config['page_nav_top'] = false;
@@ -943,6 +949,11 @@
 	// Show "Catalog" link in page navigation. Use with the Catalog theme. Set to false to disable.
 	$config['catalog_link'] = 'catalog.html';
 
+	// Board categories. Only used in the "Categories" theme.
+	// $config['categories'] = array(
+	// 	'Group Name' => array('a', 'b', 'c'),
+	// 	'Another Group' => array('d')
+	// );
 	// Optional for the Categories theme. This is an array of name => (title, url) groups for categories
 	// with non-board links.
 	// $config['custom_categories'] = array(

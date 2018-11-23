@@ -17,7 +17,7 @@
 	<title>{{ board.url }} - {{ board.title|e }}</title>
 </head>
 <body class="8chan vichan {% if mod %}is-moderator{% else %}is-not-moderator{% endif %} active-{% if not no_post_form %}index{% else %}ukko{% endif %}" data-stylesheet="{% if config.default_stylesheet.1 != '' %}{{ config.default_stylesheet.1 }}{% else %}default{% endif %}">
-	{% include "menu.html" %}
+	{% include "boardlist.html" %}
 	
 	{% if pm %}<div class="top_notice">You have <a href="?/PM/{{ pm.id }}">an unread PM</a>{% if pm.waiting > 0 %}, plus {{ pm.waiting }} more waiting{% endif %}.</div><hr />{% endif %}
 	{% if config.url_banner %}<img class="board_image" src="{{ config.url_banner }}" {% if config.banner_width or config.banner_height %}style="{% if config.banner_width %}width:{{ config.banner_width }}px{% endif %};{% if config.banner_width %}height:{{ config.banner_height }}px{% endif %}" {% endif %}alt="" />{% endif %}
@@ -42,8 +42,6 @@
 
 	{% if not no_post_form %}
 		{% include 'post_form.html' %}
-	{% else %}
-		{% include 'boardlist.html' %}
 	{% endif %}
 
 	{% if config.page_nav_top %}
@@ -84,14 +82,14 @@
 		{% endif %}
 	</div>
 	
-	{% include "menu.html" with {"bottom": true} %}
+	{% include "boardlist.html" with {"bottom": true} %}
 
 	{{ config.ad.bottom }}
 
 	<footer>
 		<p class="unimportant" style="margin-top:20px;text-align:center;">- Tinyboard + 
 			<a href="https://engine.vichan.net/">vichan</a> {{ config.version }} -
-		<br>Tinyboard Copyright &copy; 2010-2014 Tinyboard Development Group
+		<br>Tinyboard Copyright &copy; 2010-2018 Tinyboard Development Group
 		<br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2016 vichan-devel</p>
 
 		{% for footer in config.footer %}<p class="unimportant" style="text-align:center;">{{ footer }}</p>{% endfor %}

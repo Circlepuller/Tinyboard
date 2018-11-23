@@ -40,13 +40,13 @@
   </div>
 
   <div class="ban boards">
-    {% for category, items in menu %}
+    {% for category, boards in categories %}
       <div class="category">
         <h2>{{ category }}</h2>
         <ul>
-          {% for item in items %}
+          {% for board in boards %}
             <li>
-              <a href="{{ item.uri }}">{{ item.title|e|title }}</a>
+              <a href="{{ board.uri }}">{{ board.title|e }}</a>
             </li>
           {% endfor %}
         </ul>
@@ -98,7 +98,7 @@
   <footer>
     <p class="unimportant" style="margin-top:20px;text-align:center;">- Tinyboard + 
       <a href="https://engine.vichan.net/">vichan</a> {{ config.version }} -
-    <br>Tinyboard Copyright &copy; 2010-2014 Tinyboard Development Group    
+    <br>Tinyboard Copyright &copy; 2010-2018 Tinyboard Development Group    
     <br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2016 vichan-devel</p>
   </footer>
 </body>

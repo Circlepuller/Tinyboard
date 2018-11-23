@@ -12,7 +12,7 @@
 	{% if config.font_awesome %}<link rel="stylesheet" href="{{ config.root }}{{ config.font_awesome_css }}">{% endif %}
 </head>
 <body class="8chan vichan {% if mod %}is-moderator{% else %}is-not-moderator{% endif %}" data-stylesheet="{% if config.default_stylesheet.1 != '' %}{{ config.default_stylesheet.1 }}{% else %}default{% endif %}">
-	{% include "menu.html" %}
+	{% include "boardlist.html" %}
 	<header>
 		<h1>{{ settings.title }}</h1>
 		<div class="subtitle">{{ settings.subtitle }}</div>
@@ -40,7 +40,7 @@
         <footer>
                 <p class="unimportant" style="margin-top:20px;text-align:center;">- Tinyboard + 
                         <a href="https://engine.vichan.net/">vichan</a> {{ config.version }} -
-                <br>Tinyboard Copyright &copy; 2010-2014 Tinyboard Development Group    
+                <br>Tinyboard Copyright &copy; 2010-2018 Tinyboard Development Group    
                 <br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2016 vichan-devel</p>
         </footer>
 </body>

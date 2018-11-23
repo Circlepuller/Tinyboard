@@ -878,7 +878,7 @@ function displayBan($ban) {
 			'title' => _('Banned!'),
 			'config' => $config,
 			'mod' => false,
-			'menu' => createMenu(),
+			'boardlist' => createBoardlist(),
 			'body' => Element('banned.html', array(
 				'config' => $config,
 				'ban' => $ban,
@@ -1418,7 +1418,7 @@ function index($page, $mod=false) {
 		'post_url' => $config['post_url'],
 		'config' => $config,
 		'mod' => $mod,
-		'menu' => createMenu(),
+		'boardlist' => createBoardlist(),
 		'threads' => $threads,
 	);
 }
@@ -2233,7 +2233,7 @@ function buildThread($id, $return = false, $mod = false) {
 		'hasnoko50' => $hasnoko50,
 		'isnoko50' => false,
 		'antibot' => $antibot,
-		'menu' => createMenu(),
+		'boardlist' => createBoardlist(),
 		'return' => ($mod ? '?' . $board['url'] . $config['file_index'] : $config['root'] . $board['dir'] . $config['file_index'])
 	));
 
@@ -2329,7 +2329,7 @@ function buildThread50($id, $return = false, $mod = false, $thread = null, $anti
 		'hasnoko50' => $hasnoko50,
 		'isnoko50' => true,
 		'antibot' => $mod ? false : ($antibot ? $antibot : create_antibot($board['uri'], $id)),
-		'menu' => createMenu(),
+		'boardlist' => createBoardlist(),
 		'return' => ($mod ? '?' . $board['url'] . $config['file_index'] : $config['root'] . $board['dir'] . $config['file_index'])
 	));	
 

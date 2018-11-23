@@ -24,17 +24,15 @@
 		</ul>
 	</fieldset>
 	
-	{% for category, items in menu %}
+	{% for category, board in categories %}
 		<fieldset>
 			<legend>
 				{{ category }}
 			</legend>
-			{% for item in items %}
-				{% if item.is_board %}
-					<li>
-						<a href="{{ item.uri }}">{{ item.title|e }}</a>
-					</li>
-				{% endif %}
+			{% for board in boards %}
+				<li>
+					<a href="{{ board.uri }}">{{ board.title|e }}</a>
+				</li>
 			{% endfor %}
 		</fieldset>
 	{% endfor %}
