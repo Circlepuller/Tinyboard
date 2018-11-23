@@ -39,7 +39,7 @@
       $categories = $config['categories'];
 
       foreach ($categories as &$_boards) {
-        foreach ($_boards as &$board) {
+        foreach ($_boards as &$_board) {
           $title = boardTitle($_board);
 
           if (!$title)
