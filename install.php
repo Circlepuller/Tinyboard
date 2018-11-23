@@ -598,7 +598,7 @@ if (file_exists($config['has_installed'])) {
                 query(sprintf("ALTER TABLE ``posts_%s`` ADD `cycle` int(1) NOT NULL AFTER `locked`", $board['uri'])) or error(db_error());
 		case '5.1.2':
 		case '5.1.3':
-		case '5.2.0-dev-1':
+		case '5.1.4':
 			query('DROP TABLE IF EXISTS ``nntp_references``;') or error(db_error());
 			query('DROP TABLE IF EXISTS ``captchas``;') or error(db_error());
 		case false:
