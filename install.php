@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', '5.2.0');
+define('VERSION', '5.2.0-dev-1');
 require 'inc/functions.php';
 loadConfig();
 
