@@ -21,9 +21,6 @@ require_once 'inc/database.php';
 require_once 'inc/events.php';
 require_once 'inc/api.php';
 require_once 'inc/mod/auth.php';
-require_once 'inc/lock.php';
-require_once 'inc/queue.php';
-require_once 'inc/polyfill.php';
 
 // the user is not currently logged in as a moderator
 $mod = false;
@@ -92,8 +89,6 @@ function loadConfig() {
 			'db',
 			'api',
 			'cache',
-			'lock',
-			'queue',
 			'cookies',
 			'error',
 			'dir',
@@ -563,10 +558,6 @@ function openBoard($uri) {
 	$b = getBoardInfo($uri);
 	if ($b) {
 		setupBoard($b);
-
-		if (function_exists('after_open_board')) {
-			after_open_board();
-		}
 
 		return true;
 	}
@@ -1343,7 +1334,7 @@ function thread_find_page($thread) {
 }
 
 // $brief means that we won't need to generate anything yet
-function index($page, $mod=false, $brief = false) {
+function index($page, $mod=false) {
 	global $board, $config, $debug;
 
 	$body = '';
@@ -1414,10 +1405,7 @@ function index($page, $mod=false, $brief = false) {
 		}
 		
 		$threads[] = $thread;
-
-		if (!$brief) {
-			$body .= $thread->build(true);
-		}
+		$body .= $thread->build(true);
 	}
 
 	if ($config['file_board']) {
@@ -1639,10 +1627,9 @@ function checkMute() {
 function buildIndex($global_api = "yes") {
 	global $board, $config, $build_pages;
 
-	$catalog_api_action = generation_strategy('sb_api', array($board['uri']));
-
-	$pages = null;
-	$antibot = null;
+	$pages = getPages();
+	if ($config['try_smarter'])
+		$antibot = create_antibot($board['uri']);
 
 	if ($config['api']['enabled']) {
 		$api = new Api();
@@ -1653,54 +1640,43 @@ function buildIndex($global_api = "yes") {
 		$filename = $board['dir'] . ($page == 1 ? $config['file_index'] : sprintf($config['file_page'], $page));
 		$jsonFilename = $board['dir'] . ($page - 1) . '.json'; // pages should start from 0
 
-		$wont_build_this_page = $config['try_smarter'] && isset($build_pages) && !empty($build_pages) && !in_array($page, $build_pages);
-
-		if ((!$config['api']['enabled'] || $global_api == "skip") && $wont_build_this_page)
+		if ((!$config['api']['enabled'] || $global_api == "skip") && $config['try_smarter'] && isset($build_pages)
+			&& !empty($build_pages) && !in_array($page, $build_pages))
 			continue;
 
-		$action = generation_strategy('sb_board', array($board['uri'], $page));
-		if ($action == 'rebuild' || $catalog_api_action == 'rebuild') {
-			$content = index($page, false, $wont_build_this_page);
-			if (!$content)
-				break;
+		$content = index($page);
+		if (!$content)
+			break;
 
-			// json api
-			if ($config['api']['enabled']) {
-				$threads = $content['threads'];
-				$json = json_encode($api->translatePage($threads));
-				file_write($jsonFilename, $json);
+		// json api
+		if ($config['api']['enabled']) {
+			$threads = $content['threads'];
+			$json = json_encode($api->translatePage($threads));
+			file_write($jsonFilename, $json);
 
-				$catalog[$page-1] = $threads;
-
-				if ($wont_build_this_page) continue;
-			}
-
-			if ($config['try_smarter']) {
-				$antibot = create_antibot($board['uri'], 0 - $page);
-				$content['current_page'] = $page;
-			}
-			elseif (!$antibot) {
-				$antibot = create_antibot($board['uri']);
-			}
-			$antibot->reset();
-			if (!$pages) {
-				$pages = getPages();
-			}
-			$content['pages'] = $pages;
-			$content['pages'][$page-1]['selected'] = true;
-			$content['btn'] = getPageButtons($content['pages']);
-			$content['antibot'] = $antibot;
-
-			file_write($filename, Element('index.html', $content));
+			$catalog[$page-1] = $threads;
 		}
-		elseif ($action == 'delete' || $catalog_api_action == 'delete') {
-			file_unlink($filename);
-			file_unlink($jsonFilename);
+
+		if ((!$config['api']['enabled'] || $global_api == "skip") && $config['try_smarter'] && isset($build_pages)
+			&& !empty($build_pages) && !in_array($page, $build_pages))
+			continue;
+
+		if ($config['try_smarter']) {
+			$antibot = create_antibot($board['uri'], 0 - $page);
+			$content['current_page'] = $page;
 		}
+
+		$antibot->reset();
+		$content['pages'] = $pages;
+		$content['pages'][$page-1]['selected'] = true;
+		$content['btn'] = getPageButtons($content['pages']);
+		$content['antibot'] = $antibot;
+
+		file_write($filename, Element('index.html', $content));
 	}
 
 	// $action is an action for our last page
-	if (($catalog_api_action == 'rebuild' || $action == 'rebuild' || $action == 'delete') && $page < $config['max_pages']) {
+	if ($page < $config['max_pages']) {
 		for (;$page<=$config['max_pages'];$page++) {
 			$filename = $board['dir'] . ($page==1 ? $config['file_index'] : sprintf($config['file_page'], $page));
 			file_unlink($filename);
@@ -1714,21 +1690,13 @@ function buildIndex($global_api = "yes") {
 
 	// json api catalog
 	if ($config['api']['enabled'] && $global_api != "skip") {
-		if ($catalog_api_action == 'delete') {
-			$jsonFilename = $board['dir'] . 'catalog.json';
-			file_unlink($jsonFilename);
-			$jsonFilename = $board['dir'] . 'threads.json';
-			file_unlink($jsonFilename);
-		}
-		elseif ($catalog_api_action == 'rebuild') {
-			$json = json_encode($api->translateCatalog($catalog));
-			$jsonFilename = $board['dir'] . 'catalog.json';
-			file_write($jsonFilename, $json);
+		$json = json_encode($api->translateCatalog($catalog));
+		$jsonFilename = $board['dir'] . 'catalog.json';
+		file_write($jsonFilename, $json);
 
-			$json = json_encode($api->translateCatalog($catalog, true));
-			$jsonFilename = $board['dir'] . 'threads.json';
-			file_write($jsonFilename, $json);
-		}
+		$json = json_encode($api->translateCatalog($catalog, true));
+		$jsonFilename = $board['dir'] . 'threads.json';
+		file_write($jsonFilename, $json);
 	}
 
 	if ($config['try_smarter'])
@@ -2237,71 +2205,57 @@ function buildThread($id, $return = false, $mod = false) {
 		cache::delete("thread_{$board['uri']}_{$id}");
 	}
 
+	$query = prepare(sprintf("SELECT * FROM ``posts_%s`` WHERE (`thread` IS NULL AND `id` = :id) OR `thread` = :id ORDER BY `thread`,`id`", $board['uri']));
+	$query->bindValue(':id', $id, PDO::PARAM_INT);
+	$query->execute() or error(db_error($query));
+
+	while ($post = $query->fetch(PDO::FETCH_ASSOC)) {
+		if (!isset($thread))
+			$thread = new Thread($post, $mod ? '?/' : $config['root'], $mod);
+		else
+			$thread->add(new Post($post, $mod ? '?/' : $config['root'], $mod));
+	}
+
+	// Check if any posts were found
+	if (!isset($thread))
+		error($config['error']['nonexistant']);
+
+	$hasnoko50 = $thread->postCount() >= $config['noko50_min'];
+	$antibot = $mod || $return ? false : create_antibot($board['uri'], $id);
+
+	$body = Element('thread.html', array(
+		'board' => $board,
+		'thread' => $thread,
+		'body' => $thread->build(),
+		'config' => $config,
+		'id' => $id,
+		'mod' => $mod,
+		'hasnoko50' => $hasnoko50,
+		'isnoko50' => false,
+		'antibot' => $antibot,
+		'menu' => createMenu(),
+		'return' => ($mod ? '?' . $board['url'] . $config['file_index'] : $config['root'] . $board['dir'] . $config['file_index'])
+	));
+
+
 	if ($config['try_smarter'] && !$mod)
 		$build_pages[] = thread_find_page($id);
 
-	$action = generation_strategy('sb_thread', array($board['uri'], $id));
-
-	if ($action == 'rebuild' || $return || $mod) {
-		$query = prepare(sprintf("SELECT * FROM ``posts_%s`` WHERE (`thread` IS NULL AND `id` = :id) OR `thread` = :id ORDER BY `thread`,`id`", $board['uri']));
-		$query->bindValue(':id', $id, PDO::PARAM_INT);
-		$query->execute() or error(db_error($query));
-
-		while ($post = $query->fetch(PDO::FETCH_ASSOC)) {
-			if (!isset($thread)) {
-				$thread = new Thread($post, $mod ? '?/' : $config['root'], $mod);
-			} else {
-				$thread->add(new Post($post, $mod ? '?/' : $config['root'], $mod));
-			}
-		}
-
-		// Check if any posts were found
-		if (!isset($thread))
-			error($config['error']['nonexistant']);
-	
-		$hasnoko50 = $thread->postCount() >= $config['noko50_min'];
-		$antibot = $mod || $return ? false : create_antibot($board['uri'], $id);
-
-		$body = Element('thread.html', array(
-			'board' => $board,
-			'thread' => $thread,
-			'body' => $thread->build(),
-			'config' => $config,
-			'id' => $id,
-			'mod' => $mod,
-			'hasnoko50' => $hasnoko50,
-			'isnoko50' => false,
-			'antibot' => $antibot,
-			'menu' => createMenu(),
-			'return' => ($mod ? '?' . $board['url'] . $config['file_index'] : $config['root'] . $board['dir'] . $config['file_index'])
-		));
-
-		// json api
-		if ($config['api']['enabled'] && !$mod) {
-			$api = new Api();
-			$json = json_encode($api->translateThread($thread));
-			$jsonFilename = $board['dir'] . $config['dir']['res'] . $id . '.json';
-			file_write($jsonFilename, $json);
-		}
-	}
-	elseif($action == 'delete') {
+	// json api
+	if ($config['api']['enabled'] && !$mod) {
+		$api = new Api();
+		$json = json_encode($api->translateThread($thread));
 		$jsonFilename = $board['dir'] . $config['dir']['res'] . $id . '.json';
-		file_unlink($jsonFilename);
+		file_write($jsonFilename, $json);
 	}
 
-	if ($action == 'delete' && !$return && !$mod) {
-		$noko50fn = $board['dir'] . $config['dir']['res'] . link_for(array('id' => $id), true);
-		file_unlink($noko50fn);
-
-		file_unlink($board['dir'] . $config['dir']['res'] . link_for(array('id' => $id)));
-	} elseif ($return) {
+	if ($return) {
 		return $body;
-	} elseif ($action == 'rebuild') {
+	} else {
 		$noko50fn = $board['dir'] . $config['dir']['res'] . link_for($thread, true);
-		if ($hasnoko50 || file_exists($noko50fn)) {
+		if ($hasnoko50 || file_exists($noko50fn))
 			buildThread50($id, $return, $mod, $thread, $antibot);
-		}
-
+		
 		file_write($board['dir'] . $config['dir']['res'] . link_for($thread), $body);
 	}
 }
@@ -2778,62 +2732,4 @@ function markdown($s) {
 	$pd->setimagesEnabled(false);
 
 	return $pd->text($s);
-}
-
-function generation_strategy($fun, $array=array()) { global $config;
-	$action = false;
-
-	foreach ($config['generation_strategies'] as $s) {
-		if ($action = $s($fun, $array)) {
-			break;
-		}
-	}
-
-	switch ($action[0]) {
-		case 'immediate':
-			return 'rebuild';
-		case 'defer':
-			// Ok, it gets interesting here :)
-			get_queue('generate')->push(serialize(array('build', $fun, $array, $action)));
-			return 'ignore';
-		case 'build_on_load':
-			return 'delete';
-	}
-}
-
-function strategy_immediate($fun, $array) {
-	return array('immediate');
-}
-
-function strategy_smart_build($fun, $array) {
-	return array('build_on_load');
-}
-
-function strategy_sane($fun, $array) { global $config;
-	if (php_sapi_name() == 'cli') return false;
-	else if (isset($_POST['mod'])) return false;
-	// Thread needs to be done instantly. Same with a board page, but only if posting a new thread.
-	else if ($fun == 'sb_thread' || ($fun == 'sb_board' && $array[1] == 1 && isset ($_POST['page']))) return array('immediate');
-	else return false;
-}
-
-// My first, test strategy.
-function strategy_first($fun, $array) {
-	switch ($fun) {
-	case 'sb_thread':
-		return array('defer');
-	case 'sb_board':
-		if ($array[1] > 8) return array('build_on_load');
-		else return array('defer');
-	case 'sb_api':
-		return array('defer');
-	case 'sb_catalog':
-		return array('defer');
-	case 'sb_recent':
-		return array('build_on_load');
-	case 'sb_sitemap':
-		return array('build_on_load');
-	case 'sb_ukko':
-		return array('defer');
-	}
 }

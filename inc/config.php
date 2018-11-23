@@ -103,7 +103,7 @@
 
 /*
  * ====================
- *  Cache, lock and queue settings
+ *  Cache settings
  * ====================
  */
 
@@ -136,12 +136,6 @@
 	// If you have any lambdas/includes present in your config, you should move them to instance-functions.php
 	// (this file will be explicitly loaded during cache hit, but not during cache miss).
 	$config['cache_config'] = false;
-
-	// Define a lock driver.
-	$config['lock']['enabled'] = 'fs';
-
-	// Define a queue driver.
-	$config['queue']['enabled'] = 'fs'; // xD
 
 /*
  * ====================
@@ -281,8 +275,6 @@
 		'raw',
 		'embed',
 		'g-recaptcha-response',
-		'captcha_cookie',
-		'captcha_text',
 		'spoiler',
 		'page',
 		'file_url',
@@ -298,26 +290,6 @@
 	// Public and private key pair from https://www.google.com/recaptcha/admin/create
 	$config['recaptcha_public'] = '6LcXTcUSAAAAAKBxyFWIt2SO8jwx4W7wcSMRoN3f';
 	$config['recaptcha_private'] = '6LcXTcUSAAAAAOGVbVdhmEM1_SyRF4xTKe8jbzf_';
-
-	// Enable Custom Captcha you need to change a couple of settings 
-	//Read more at: /captcha/instructions.md
-	 $config['captcha'] = array();
-
-	// Enable custom captcha provider
-	$config['captcha']['enabled'] = false;
-
-	//New thread captcha
- 	//Require solving a captcha to post a thread. 
- 	//Default off.
- 	 $config['new_thread_capt'] = false;
-
-	// Custom captcha get provider path (if not working get the absolute path aka your url.)
-	$config['captcha']['provider_get'] = '../inc/captcha/entrypoint.php';
-	// Custom captcha check provider path
-	$config['captcha']['provider_check'] = '../inc/captcha/entrypoint.php';
-
-	// Custom captcha extra field (eg. charset)
-	 $config['captcha']['extra'] = 'abcdefghijklmnopqrstuvwxyz';
 	
 	// Ability to lock a board for normal users and still allow mods to post.  Could also be useful for making an archive board
 	$config['board_locked'] = false;
@@ -1025,7 +997,6 @@
 	// $config['additional_javascript'][] = 'js/auto-reload.js';
 	// $config['additional_javascript'][] = 'js/post-hover.js';
 	// $config['additional_javascript'][] = 'js/style-select.js';
-	// $config['additional_javascript'][] = 'js/captcha.js';
 
 	// Where these script files are located on the web. Defaults to $config['root'].
 	// $config['additional_javascript_url'] = 'http://static.example.org/tinyboard-javascript-stuff/';
@@ -1133,7 +1104,7 @@
 	$config['error']['delete_too_soon']	= _('You\'ll have to wait another %s before deleting that.');
 	$config['error']['mime_exploit']	= _('MIME type detection XSS exploit (IE) detected; post discarded.');
 	$config['error']['invalid_embed']	= _('Couldn\'t make sense of the URL of the video you tried to embed.');
-	$config['error']['captcha']		= _('You seem to have mistyped the verification.');
+	$config['error']['captcha']		= _('You seem to have failed the verification.');
 
 
 	// Moderator errors
@@ -1236,76 +1207,7 @@
 	
 	// Try not to build pages when we shouldn't have to.
 	$config['try_smarter'] = true;
-
-/*
- * ====================
- *  Advanced build
- * ====================
- */
-
-	// Strategies for file generation. Also known as an "advanced build". If you don't have performance
-	// issues, you can safely ignore that part, because it's hard to configure and won't even work on
-	// your free webhosting.
-	//
-	// A strategy is a function, that given the PHP environment and ($fun, $array) variable pair, returns
-	// an $action array or false.
-	//
-	// $fun - a controller function name, see inc/controller.php. This is named after functions, so that
-	//        we can generate the files in daemon.
-	//
-	// $array - arguments to be passed
-	//
-	// $action - action to be taken. It's an array, and the first element of it is one of the following:
-	//   * "immediate" - generate the page immediately
-	//   * "defer" - defer page generation to a moment a worker daemon gets to build it (serving a stale
-	//               page in the meantime). The remaining arguments are daemon-specific. Daemon isn't
-	//               implemented yet :DDDD inb4 while(true) { generate(Queue::Get()) }; (which is probably it).
-	//   * "build_on_load" - defer page generation to a moment, when the user actually accesses the page.
-	//                       This is a smart_build behaviour. You shouldn't use this one too much, if you
-	//                       use it for active boards, the server may choke due to a possible race condition.
-	//                       See my blog post: https://engine.vichan.net/blog/res/2.html
-	//
-	// So, let's assume we want to build a thread 1324 on board /b/, because a new post appeared there.
-	// We try the first strategy, giving it arguments: 'sb_thread', array('b', 1324). The strategy will
-	// now return a value $action, denoting an action to do. If $action is false, we try another strategy.
-	//
-	// As I said, configuration isn't easy.
-	//
-	// 1. chmod 0777 directories: tmp/locks/ and tmp/queue/.
-	// 2. serve 403 and 404 requests to go thru smart_build.php
-	//    for nginx, this blog post contains config snippets: https://engine.vichan.net/blog/res/2.html
-	// 3. disable indexes in your webserver
-	// 4. launch any number of daemons (eg. twice your number of threads?) using the command:
-	//    $ tools/worker.php
-	//    You don't need to do that step if you are not going to use the "defer" option.
-	// 5. enable smart_build_helper (see below)
-	// 6. edit the strategies (see inc/functions.php for the builtin ones). You can use lambdas. I will test
-	//    various ones and include one that works best for me.
-	$config['generation_strategies'] = array();
-	// Add a sane strategy. It forces to immediately generate a page user is about to land on. Otherwise,
-	// it has no opinion, so it needs a fallback strategy.
-	$config['generation_strategies'][] = 'strategy_sane';
-	// Add an immediate catch-all strategy. This is the default function of imageboards: generate all pages
-	// on post time.
-	$config['generation_strategies'][] = 'strategy_immediate';
-	// NOT RECOMMENDED: Instead of an all-"immediate" strategy, you can use an all-"build_on_load" one (used
-	// to be initialized using $config['smart_build']; ) for all pages instead of those to be build
-	// immediately. A rebuild done in this mode should remove all your static files
-	// $config['generation_strategies'][1] = 'strategy_smart_build';
-
-	// Deprecated. Leave it false. See above.
-	$config['smart_build'] = false;
-
-	// Use smart_build.php for dispatching missing requests. It may be useful without smart_build or advanced
-	// build, for example it will regenerate the missing files.
-	$config['smart_build_helper'] = true;
-
-	// smart_build.php: when a file doesn't exist, where should we redirect?
-	$config['page_404'] = '/404.html';
-
-	// Extra controller entrypoints. Controller is used only by smart_build and advanced build.
-	$config['controller_entrypoints'] = array();
-
+	
 /*
  * ====================
  *  Mod settings
@@ -1707,45 +1609,6 @@
 	// $config['api']['extra_fields'] = array('body_nomarkup' => 'com_nomarkup');
 
 /*
- * ==================
- *  NNTPChan settings
- * ==================
- */
-
-/*
- * Please keep in mind that NNTPChan support in vichan isn't finished yet / is in an experimental
- * state. Please join #nntpchan on Rizon in order to peer with someone.
- */
-
-	$config['nntpchan'] = array();
-
-	// Enable NNTPChan integration
-	$config['nntpchan']['enabled'] = false;
-
-	// NNTP server
-	$config['nntpchan']['server'] = "localhost:1119";
-
-	// Global dispatch array. Add your boards to it to enable them. Please make
-	// sure that this setting is set in a global context.
-	$config['nntpchan']['dispatch'] = array(); // 'overchan.test' => 'test'
-
-	// Trusted peer - an IP address of your NNTPChan instance. This peer will have
-	// increased capabilities, eg.: will evade spamfilter.
-	$config['nntpchan']['trusted_peer'] = '127.0.0.1';
-
-	// Salt for message ID generation. Keep it long and secure.
-	$config['nntpchan']['salt'] = 'change_me+please';
-
-	// A local message ID domain. Make sure to change it.
-	$config['nntpchan']['domain'] = 'example.vichan.net';
-
-	// An NNTPChan group name.
-	// Please set this setting in your board/config.php, not globally.
-	$config['nntpchan']['group'] = false; // eg. 'overchan.test'
-
-
-
-/*
  * ====================
  *  Other/uncategorized
  * ====================
@@ -1841,9 +1704,6 @@
 	// If set to 0, it won't upgrade hashes using old password encryption schema, only create new.
 	// You can set it to a higher value, to further migrate to other password hashing function.
 	$config['password_crypt_version'] = 1;
-
-	// Use CAPTCHA for reports?
-	$config['report_captcha'] = false;
 
 	// Allowed HTML tags in ?/edit_pages.
 	$config['allowed_html'] = 'a[href|title],p,br,li,ol,ul,strong,em,u,h2,b,i,tt,div,img[src|alt|title],hr';

@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', '5.1.4');
+define('VERSION', '5.2.0');
 require 'inc/functions.php';
 loadConfig();
 
@@ -9,25 +9,11 @@ loadConfig();
 class SaltGen {
 	public $salt_length = 128;
 
-	// Best function I could think of for non-SSL PHP 5
-	private function generate_install_salt() {
-		$ret = "";
-
-		// This is bad! But what else can we do sans OpenSSL?
-		for ($i = 0; $i < $this->salt_length; ++$i) {
-			$s = pack("c", mt_rand(0,255));
-			$ret = $ret . $s;
-		}
-
-		return base64_encode($ret);
-	}
-
 	// Best function of the lot. Works with any PHP version as long as OpenSSL extension is on
 	private function generate_install_salt_openssl() {
 		$ret = openssl_random_pseudo_bytes($this->salt_length, $strong);
-		if (!$strong) {
+		if (!$strong)
 			error(_("Misconfigured system: OpenSSL returning weak salts. Cannot continue."));
-		}
 		return base64_encode($ret);
 	}
 
@@ -37,13 +23,10 @@ class SaltGen {
 
 	// TODO: Perhaps add mcrypt as an option? Maybe overkill.
 	public function generate() {
-		if (extension_loaded('openssl')) {
+		if (extension_loaded('openssl'))
 			return "OSSL." . $this->generate_install_salt_openssl();
-		} else if (defined('PHP_MAJOR_VERSION') && PHP_MAJOR_VERSION >= 7) {
+		else
 			return "PHP7." . $this->generate_install_salt_php7();
-		} else {
-			return "INSECURE." . $this->generate_install_salt();
-		}
 	}
 }
 
@@ -561,7 +544,8 @@ if (file_exists($config['has_installed'])) {
 				break;
 			}
 		case '4.4.98-pre':
-			if (!$twig) load_twig();
+			if (!$twig)
+				load_twig();
 			$twig->clearCacheFiles();
 		case '4.4.98':
 		case '4.5.0':
@@ -590,12 +574,11 @@ if (file_exists($config['has_installed'])) {
 		case '4.9.90':
 		case '4.9.91':
 		case '4.9.92':
-                        foreach ($boards as &$board) {
-                                query(sprintf('ALTER TABLE ``posts_%s`` ADD `slug` VARCHAR(255) DEFAULT NULL AFTER `embed`;', $board['uri'])) or error(db_error());
-			}
-                case '4.9.93':
-                        query('ALTER TABLE ``mods`` CHANGE `password` `password` VARCHAR(255) NOT NULL;') or error(db_error());
-                        query('ALTER TABLE ``mods`` CHANGE `salt` `salt` VARCHAR(64) NOT NULL;') or error(db_error());
+            foreach ($boards as &$board)
+                query(sprintf('ALTER TABLE ``posts_%s`` ADD `slug` VARCHAR(255) DEFAULT NULL AFTER `embed`;', $board['uri'])) or error(db_error());
+        case '4.9.93':
+            query('ALTER TABLE ``mods`` CHANGE `password` `password` VARCHAR(255) NOT NULL;') or error(db_error());
+            query('ALTER TABLE ``mods`` CHANGE `salt` `salt` VARCHAR(64) NOT NULL;') or error(db_error());
 		case '5.0.0':
 			query('ALTER TABLE ``mods`` CHANGE `salt` `version` VARCHAR(64) NOT NULL;') or error(db_error());
 		case '5.0.1':
@@ -611,9 +594,8 @@ if (file_exists($config['has_installed'])) {
 			  UNIQUE KEY `u_pages` (`name`,`board`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;') or error(db_error());
 		case '5.1.1':
-                        foreach ($boards as &$board) {
-                                query(sprintf("ALTER TABLE ``posts_%s`` ADD `cycle` int(1) NOT NULL AFTER `locked`", $board['uri'])) or error(db_error());
-                        }
+            foreach ($boards as &$board)
+                query(sprintf("ALTER TABLE ``posts_%s`` ADD `cycle` int(1) NOT NULL AFTER `locked`", $board['uri'])) or error(db_error());
 		case '5.1.2':
 			query('CREATE TABLE IF NOT EXISTS ``nntp_references`` (
 				  `board` varchar(60) NOT NULL,
@@ -635,6 +617,9 @@ if (file_exists($config['has_installed'])) {
 			  	`created_at` int(11),
 			  	PRIMARY KEY (`cookie`,`extra`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;') or error(db_error());
+		case '5.2.0-dev-1':
+			query('DROP TABLE IF EXISTS ``nntp_references``;
+				   DROP TABLE IF EXISTS ``captchas``;') or error(db_error());
 		case false:
 			// TODO: enhance Tinyboard -> vichan upgrade path.
 			query("CREATE TABLE IF NOT EXISTS ``search_queries`` (  `ip` varchar(39) NOT NULL,  `time` int(11) NOT NULL,  `query` text NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8;") or error(db_error());
@@ -647,11 +632,11 @@ if (file_exists($config['has_installed'])) {
 			break;
 		default:
 			$page['title'] = 'Unknown version';
-			$page['body'] = '<p style="text-align:center">vichan was unable to determine what version is currently installed.</p>';
+			$page['body'] = '<p style="text-align:center">Tinyboard was unable to determine what version is currently installed.</p>';
 			break;
 		case VERSION:
 			$page['title'] = 'Already installed';
-			$page['body'] = '<p style="text-align:center">It appears that vichan is already installed (' . $version . ') and there is nothing to upgrade! Delete <strong>' . $config['has_installed'] . '</strong> to reinstall.</p>';
+			$page['body'] = '<p style="text-align:center">It appears that Tinyboard is already installed (' . $version . ') and there is nothing to upgrade! Delete <strong>' . $config['has_installed'] . '</strong> to reinstall.</p>';
 			break;
 	}			
 	
@@ -729,17 +714,17 @@ if ($step == 0) {
 	$tests = array(
 		array(
 			'category' => 'PHP',
-			'name' => 'PHP &ge; 5.4',
-			'result' => PHP_VERSION_ID >= 50400,
+			'name' => 'PHP &ge; 7.0',
+			'result' => PHP_VERSION_ID >= 70000,
 			'required' => true,
-			'message' => 'vichan requires PHP 5.4 or better.',
+			'message' => 'Tinyboard requires PHP 7.0 or better.',
 		),
 		array(
 			'category' => 'PHP',
-			'name' => 'PHP &ge; 5.6',
-			'result' => PHP_VERSION_ID >= 50600,
+			'name' => 'PHP &ge; 7.2',
+			'result' => PHP_VERSION_ID >= 70200,
 			'required' => false,
-			'message' => 'vichan works best on PHP 5.6 or better.',
+			'message' => 'Tinyboard works best on PHP 7.2 or better.',
 		),
 		array(
 			'category' => 'PHP',
@@ -750,10 +735,10 @@ if ($step == 0) {
 		),
 		array(
 			'category' => 'PHP',
-			'name' => 'OpenSSL extension installed or PHP &ge; 7.0',
-			'result' => (extension_loaded('openssl') || (defined('PHP_MAJOR_VERSION') && PHP_MAJOR_VERSION >= 7)),
+			'name' => 'OpenSSL extension installed',
+			'result' => extension_loaded('openssl'),
 			'required' => false,
-			'message' => 'It is highly recommended that you install the PHP <a href="http://www.php.net/manual/en/openssl.installation.php">OpenSSL</a> extension and/or use PHP version 7 or above. <strong>If you do not, it is possible that the IP addresses of users of your site could be compromised &mdash; see <a href="https://github.com/vichan-devel/vichan/issues/284">vichan issue #284.</a></strong> Installing the OpenSSL extension allows vichan to generate a secure salt automatically for you.',
+			'message' => 'It is highly recommended that you install the PHP <a href="http://www.php.net/manual/en/openssl.installation.php">OpenSSL</a> extension. Installing the OpenSSL extension allows Tinyboard to generate a secure salt automatically for you.',
 		),
 		array(
 			'category' => 'Database',
@@ -851,28 +836,28 @@ if ($step == 0) {
 			'name' => getcwd(),
 			'result' => is_writable('.'),
 			'required' => true,
-			'message' => 'vichan does not have permission to create directories (boards) here. You will need to <code>chmod</code> (or operating system equivalent) appropriately.'
+			'message' => 'Tinyboard does not have permission to create directories (boards) here. You will need to <code>chmod</code> (or operating system equivalent) appropriately.'
 		),
 		array(
 			'category' => 'File permissions',
 			'name' => getcwd() . '/templates/cache',
 			'result' => is_writable('templates') || (is_dir('templates/cache') && is_writable('templates/cache')),
 			'required' => true,
-			'message' => 'You must give vichan permission to create (and write to) the <code>templates/cache</code> directory or performance will be drastically reduced.'
+			'message' => 'You must give Tinyboard permission to create (and write to) the <code>templates/cache</code> directory or performance will be drastically reduced.'
 		),
 		array(
 			'category' => 'File permissions',
 			'name' => getcwd() . '/tmp/cache',
 			'result' => is_dir('tmp/cache') && is_writable('tmp/cache'),
 			'required' => true,
-			'message' => 'You must give vichan permission to write to the <code>tmp/cache</code> directory.'
+			'message' => 'You must give Tinyboard permission to write to the <code>tmp/cache</code> directory.'
 		),
 		array(
 			'category' => 'File permissions',
 			'name' => getcwd() . '/inc/instance-config.php',
 			'result' => is_writable('inc/instance-config.php'),
 			'required' => false,
-			'message' => 'vichan does not have permission to make changes to <code>inc/instance-config.php</code>. To complete the installation, you will be asked to manually copy and paste code into the file instead.'
+			'message' => 'Tinyboard does not have permission to make changes to <code>inc/instance-config.php</code>. To complete the installation, you will be asked to manually copy and paste code into the file instead.'
 		),
 		array(
 			'category' => 'Misc',
@@ -884,10 +869,10 @@ if ($step == 0) {
 		),
 		array(
 			'category' => 'Misc',
-			'name' => 'vichan installed using git',
+			'name' => 'Tinyboard installed using git',
 			'result' => is_dir('.git'),
 			'required' => false,
-			'message' => 'vichan is still beta software and it\'s not going to come out of beta any time soon. As there are often many months between releases yet changes and bug fixes are very frequent, it\'s recommended to use the git repository to maintain your vichan installation. Using git makes upgrading much easier.'
+			'message' => 'Tinyboard is still beta software and it\'s not going to come out of beta any time soon. As there are often many months between releases yet changes and bug fixes are very frequent, it\'s recommended to use the git repository to maintain your Tinyboard installation. Using git makes upgrading much easier.'
 		)
 	);
 
