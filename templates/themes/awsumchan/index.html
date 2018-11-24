@@ -61,7 +61,7 @@
         <ul>
           {% for post in recent_images %}
             <li>
-              <a href="{{ post.link }}">
+              <a href="{{ post.link }}" data-thread="{{ post.thread }}">
                 <img src="{{ post.src }}" style="width:{{ post.thumbwidth }}px;height:{{ post.thumbheight }}px" alt="">
               </a>
             </li>
@@ -76,7 +76,7 @@
           {% for post in recent_posts %}
             <li>
               <strong>{{ post.board_name }}</strong>: 
-              <a href="{{ post.link }}">
+              <a href="{{ post.link }}" data-thread="{{ post.thread }}">
                 {{ post.snippet }}
               </a>
             </li>

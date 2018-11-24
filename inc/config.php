@@ -936,7 +936,7 @@
 	// 	array('a', 'b'),
 	// 	array('c', 'd', 'e', 'f', 'g'),
 	// 	array('h', 'i', 'j'),
-	// 	array('k', array('l', 'm')),
+	// 	array('k', 'l', 'm'),
 	// 	array('status' => 'http://status.example.org/')
 	// );
 
