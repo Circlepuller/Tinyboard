@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2014 Tinyboard Development Group
+ *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
 require_once 'inc/functions.php';

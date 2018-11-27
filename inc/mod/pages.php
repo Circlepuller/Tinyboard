@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2013 Tinyboard Development Group
+ *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
 defined('TINYBOARD') or exit;
@@ -492,9 +492,6 @@ function mod_new_board() {
 		
 		$query = Element('posts.sql', array('board' => $board['uri']));
 		
-		if (mysql_version() < 50503)
-			$query = preg_replace('/(CHARSET=|CHARACTER SET )utf8mb4/', '$1utf8', $query);
-		
 		query($query) or error(db_error());
 		
 		if ($config['cache']['enabled'])
@@ -895,8 +892,6 @@ function mod_ban() {
 		mod_page(_('New ban'), 'mod/ban_form.html', array('token' => make_secure_link_token('ban')));
 		return;
 	}
-	
-	require_once 'inc/mod/ban.php';
 	
 	Bans::new_ban($_POST['ip'], $_POST['reason'], $_POST['length'], $_POST['board'] == '*' ? false : $_POST['board']);
 
@@ -1467,8 +1462,6 @@ function mod_ban_post($board, $delete, $post, $token = false) {
 	$ip = $_post['ip'];
 
 	if (isset($_POST['new_ban'], $_POST['reason'], $_POST['length'], $_POST['board'])) {
-		require_once 'inc/mod/ban.php';
-		
 		if (isset($_POST['ip']))
 			$ip = $_POST['ip'];
 		
