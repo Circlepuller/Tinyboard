@@ -91,7 +91,7 @@ You actually don't need these tools for your imageboard functioning, they are ai
 at the power users. You won't be able to run these from shared hosting accounts
 (i.e. all free web servers).
 
-Localisation
+Localization
 ------------
 Wanting to have Tinyboard in your language? You can contribute your translations at this URL:
 

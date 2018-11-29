@@ -2726,7 +2726,6 @@ function purify_html($s) {
 function markdown($s) {
 	$pd = new Parsedown();
 	$pd->setMarkupEscaped(true);
-	$pd->setimagesEnabled(false);
 
 	return $pd->text($s);
 }

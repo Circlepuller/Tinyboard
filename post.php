@@ -810,7 +810,7 @@ if (isset($_POST['delete'])) {
 				));
 			}
 		}
-		}
+	}
 	
 	// Do filters again if OCRing
 	if ($config['tesseract_ocr'] && !hasPermission($config['mod']['bypass_filters'], $board['uri']))
