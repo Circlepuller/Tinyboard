@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright (c) 2010-2014 Tinyboard Development Group
+ *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
 require_once 'inc/functions.php';
@@ -561,26 +561,8 @@ if (isset($_POST['delete'])) {
 		$post['body'] .= "\n<tinyboard proxy>".$proxy."</tinyboard>";
 	}
 	
-	if (mysql_version() >= 50503) {
-		$post['body_nomarkup'] = $post['body']; // Assume we're using the utf8mb4 charset
-	} else {
-		// MySQL's `utf8` charset only supports up to 3-byte symbols
-		// Remove anything >= 0x010000
-		
-		$chars = preg_split('//u', $post['body'], -1, PREG_SPLIT_NO_EMPTY);
-		$post['body_nomarkup'] = '';
-		foreach ($chars as $char) {
-			$o = 0;
-			$ord = ordutf8($char, $o);
-			if ($ord >= 0x010000)
-				continue;
-			$post['body_nomarkup'] .= $char;
-		}
-	}
-	
+	$post['body_nomarkup'] = $post['body']; // Assume we're using the utf8mb4 charset	
 	$post['tracked_cites'] = markup($post['body'], true);
-
-	
 	
 	if ($post['has_file']) {
 		$md5cmd = false;
@@ -828,7 +810,7 @@ if (isset($_POST['delete'])) {
 				));
 			}
 		}
-		}
+	}
 	
 	// Do filters again if OCRing
 	if ($config['tesseract_ocr'] && !hasPermission($config['mod']['bypass_filters'], $board['uri']))

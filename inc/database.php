@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2013 Tinyboard Development Group
+ *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
 defined('TINYBOARD') or exit;
@@ -78,10 +78,8 @@ function sql_open() {
 		if ($config['debug'])
 			$debug['time']['db_connect'] = '~' . round((microtime(true) - $start) * 1000, 2) . 'ms';
 		
-		if (mysql_version() >= 50503)
-			query('SET NAMES utf8mb4') or error(db_error());
-		else
-			query('SET NAMES utf8') or error(db_error());
+		query('SET NAMES utf8mb4') or error(db_error());
+		
 		return $pdo;
 	} catch(PDOException $e) {
 		$message = $e->getMessage();

@@ -27,7 +27,7 @@ You must agree to both (not either) licensing terms in order to use this
 software. The original Tinyboard license can be found in a LICENSE.Tinyboard.md
 file, it is included below for your convenience:
 
-Copyright (c) 2010-2014 Tinyboard Development Group (tinyboard.org)
+Copyright (c) 2010-2018 Tinyboard Development Group (tinyboard.org)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

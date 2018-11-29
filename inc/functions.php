@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2014 Tinyboard Development Group
+ *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
 if (realpath($_SERVER['SCRIPT_FILENAME']) == str_replace('\\', '/', __FILE__)) {
@@ -1900,9 +1900,6 @@ function markup(&$body, $track_cites = false, $op = false) {
 	$body = str_replace("\r", '', $body);
 	$body = utf8tohtml($body);
 
-	if (mysql_version() < 50503)
-		$body = mb_encode_numericentity($body, array(0x010000, 0xffffff, 0, 0xffffff), 'UTF-8');
-
 	if ($config['markup_code']) {
 		$code_markup = array();
 		$body = preg_replace_callback($config['markup_code'], function($matches) use (&$code_markup) {
@@ -2729,7 +2726,6 @@ function purify_html($s) {
 function markdown($s) {
 	$pd = new Parsedown();
 	$pd->setMarkupEscaped(true);
-	$pd->setimagesEnabled(false);
 
 	return $pd->text($s);
 }
