@@ -7,9 +7,7 @@ require_once 'inc/functions.php';
 require_once 'inc/anti-bot.php';
 require_once 'inc/bans.php';
 
-if ((!isset($_POST['mod']) || !$_POST['mod']) && $config['board_locked']) {
-    error("Board is locked");
-}
+$is_mod = isset($_POST['mod']) && $_POST['mod'];
 
 if (isset($_POST['delete'])) {
 	// Delete
@@ -34,6 +32,10 @@ if (isset($_POST['delete'])) {
 	// Check if board exists
 	if (!openBoard($_POST['board']))
 		error($config['error']['noboard']);
+
+	// Check if board locked
+	if (!$is_mod && $config['board_locked'])
+	    error("Board is locked");
 	
 	// Check if banned
 	checkBan($board['uri']);
@@ -85,7 +87,6 @@ if (isset($_POST['delete'])) {
 	
 	buildIndex();
 
-	$is_mod = isset($_POST['mod']) && $_POST['mod'];
 	$root = $is_mod ? $config['root'] . $config['file_mod'] . '?/' : $config['root'];
 
 	if (!isset($_POST['json_response'])) {
@@ -117,6 +118,10 @@ if (isset($_POST['delete'])) {
 	// Check if board exists
 	if (!openBoard($_POST['board']))
 		error($config['error']['noboard']);
+
+	// Check if board locked
+	if (!$is_mod && $config['board_locked'])
+    	error("Board is locked");
 	
 	// Check if banned
 	checkBan($board['uri']);
@@ -164,13 +169,12 @@ if (isset($_POST['delete'])) {
 		$query = prepare("INSERT INTO ``reports`` VALUES (NULL, :time, :ip, :board, :post, :reason)");
 		$query->bindValue(':time', time(), PDO::PARAM_INT);
 		$query->bindValue(':ip', $_SERVER['REMOTE_ADDR'], PDO::PARAM_STR);
-		$query->bindValue(':board', $board['uri'], PDO::PARAM_INT);
+		$query->bindValue(':board', $board['uri'], PDO::PARAM_STR);
 		$query->bindValue(':post', $id, PDO::PARAM_INT);
 		$query->bindValue(':reason', $reason, PDO::PARAM_STR);
 		$query->execute() or error(db_error($query));
 	}
 	
-	$is_mod = isset($_POST['mod']) && $_POST['mod'];
 	$root = $is_mod ? $config['root'] . $config['file_mod'] . '?/' : $config['root'];
 	
 	if (!isset($_POST['json_response'])) {
@@ -189,6 +193,9 @@ if (isset($_POST['delete'])) {
 	// Check if board exists
 	if (!openBoard($post['board']))
 		error($config['error']['noboard']);
+
+	if (!$is_mod && $config['board_locked'])
+		error("Board is locked");
 	
 	if (!isset($_POST['name']))
 		$_POST['name'] = $config['anonymous'];

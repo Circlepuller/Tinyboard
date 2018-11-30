@@ -101,8 +101,8 @@ function login($username, $password) {
 			}
 
 			return $mod = array(
-				'id' => $user['id'],
-				'type' => $user['type'],
+				'id' => (int)$user['id'],
+				'type' => (int)$user['type'],
 				'username' => $username,
 				'hash' => mkhash($username, $user['password']),
 				'boards' => explode(',', $user['boards'])
