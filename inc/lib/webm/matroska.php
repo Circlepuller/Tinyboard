@@ -72,7 +72,7 @@ function ebmlDecodeInt($data, $signed=FALSE, $carryIn=0) {
     if (strlen($data) > 8) throw new Exception('not supported: integer too long');
     for ($i = 0; $i < strlen($data); $i++) {
         if ($n > (PHP_INT_MAX >> 8) || $n < ((-PHP_INT_MAX-1) >> 8)) {
-            $n = floatval($n);
+            $n = (float)$n;
         }
         $n = $n * 0x100 + ord($data[$i]);
         if ($i == 0 && $signed && ($n & 0x80) != 0) {
@@ -258,7 +258,7 @@ class EBMLReader {
         // Range shift for signed integers
         if ($signed) {
             if ($n == PHP_INT_MAX) {
-                $n = floatval($n);
+                $n = (float)$n;
             }
             $n++;
         }

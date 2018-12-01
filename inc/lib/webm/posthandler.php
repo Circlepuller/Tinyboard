@@ -3,7 +3,7 @@
 // Portions of this file are derived from Tinyboard code.
 function postHandler($post) {
     global $board, $config;
-    if ($post->has_file) foreach ($post->files as &$file) if ($file->extension == 'webm' || $file->extension == 'mp4') {
+    if ($post->has_file) foreach ($post->files as &$file) if ($file->extension === 'webm' || $file->extension === 'mp4') {
       if ($config['webm']['use_ffmpeg']) {
         require_once dirname(__FILE__) . '/ffmpeg.php';
         $webminfo = get_webm_info($file->file_path);
@@ -51,7 +51,7 @@ function postHandler($post) {
         if (isset($videoDetails['width']) && isset($videoDetails['height'])) {
             $file->width = $videoDetails['width'];
             $file->height = $videoDetails['height'];
-            if ($file->thumb != 'file' && $file->thumb != 'spoiler') {
+            if ($file->thumb !== 'file' && $file->thumb !== 'spoiler') {
                   $file = set_thumbnail_dimensions($post, $file);
                 }
             }
@@ -64,8 +64,8 @@ function set_thumbnail_dimensions($post,$file) {
   $tn_maxw = $post->op ? $config['thumb_op_width'] : $config['thumb_width'];
   $tn_maxh = $post->op ? $config['thumb_op_height'] : $config['thumb_height'];
   if ($file->width > $tn_maxw || $file->height > $tn_maxh) {
-      $file->thumbwidth = min($tn_maxw, intval(round($file->width * $tn_maxh / $file->height)));
-      $file->thumbheight = min($tn_maxh, intval(round($file->height * $tn_maxw / $file->width)));
+      $file->thumbwidth = min($tn_maxw, (int)round($file->width * $tn_maxh / $file->height));
+      $file->thumbheight = min($tn_maxh, (int)round($file->height * $tn_maxw / $file->width));
   } else {
       $file->thumbwidth = $file->width;
       $file->thumbheight = $file->height;

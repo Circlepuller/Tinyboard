@@ -3,7 +3,7 @@
  *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
-require_once 'inc/functions.php';
+require 'inc/functions.php';
 require_once 'inc/anti-bot.php';
 require_once 'inc/bans.php';
 
@@ -17,7 +17,7 @@ if (isset($_POST['delete'])) {
 	
 	$password = &$_POST['password'];
 	
-	if ($password == '')
+	if ($password === '')
 		error($config['error']['invalidpassword']);
 	
 	$delete = array();
@@ -35,7 +35,7 @@ if (isset($_POST['delete'])) {
 
 	// Check if board locked
 	if (!$is_mod && $config['board_locked'])
-	    error("Board is locked");
+	    error('Board is locked');
 	
 	// Check if banned
 	checkBan($board['uri']);
@@ -48,24 +48,24 @@ if (isset($_POST['delete'])) {
 		error($config['error']['nodelete']);
 		
 	foreach ($delete as &$id) {
-		$query = prepare(sprintf("SELECT `id`,`thread`,`time`,`password` FROM ``posts_%s`` WHERE `id` = :id", $board['uri']));
+		$query = prepare(sprintf('SELECT `id`,`thread`,`time`,`password` FROM ``posts_%s`` WHERE `id` = :id', $board['uri']));
 		$query->bindValue(':id', $id, PDO::PARAM_INT);
 		$query->execute() or error(db_error($query));
 		
 		if ($post = $query->fetch(PDO::FETCH_ASSOC)) {
 			$thread = false;
 			if ($config['user_moderation'] && $post['thread']) {
-				$thread_query = prepare(sprintf("SELECT `time`,`password` FROM ``posts_%s`` WHERE `id` = :id", $board['uri']));
+				$thread_query = prepare(sprintf('SELECT `time`,`password` FROM ``posts_%s`` WHERE `id` = :id', $board['uri']));
 				$thread_query->bindValue(':id', $post['thread'], PDO::PARAM_INT);
 				$thread_query->execute() or error(db_error($query));
 
 				$thread = $thread_query->fetch(PDO::FETCH_ASSOC);	
 			}
 
-			if ($password != '' && $post['password'] != $password && (!$thread || $thread['password'] != $password))
+			if ($password !== '' && $post['password'] !== $password && (!$thread || $thread['password'] !== $password))
 				error($config['error']['invalidpassword']);
 			
-			if ($post['time'] > time() - $config['delete_time'] && (!$thread || $thread['password'] != $password)) {
+			if ($post['time'] > time() - $config['delete_time'] && (!$thread || $thread['password'] !== $password)) {
 				error(sprintf($config['error']['delete_too_soon'], until($post['time'] + $config['delete_time'])));
 			}
 			
@@ -121,7 +121,7 @@ if (isset($_POST['delete'])) {
 
 	// Check if board locked
 	if (!$is_mod && $config['board_locked'])
-    	error("Board is locked");
+    	error('Board is locked');
 	
 	// Check if banned
 	checkBan($board['uri']);
@@ -150,7 +150,7 @@ if (isset($_POST['delete'])) {
 	markup($reason);
 
 	foreach ($report as &$id) {
-		$query = prepare(sprintf("SELECT `id`, `thread` FROM ``posts_%s`` WHERE `id` = :id", $board['uri']));
+		$query = prepare(sprintf('SELECT `id`, `thread` FROM ``posts_%s`` WHERE `id` = :id', $board['uri']));
 		$query->bindValue(':id', $id, PDO::PARAM_INT);
 		$query->execute() or error(db_error($query));
 		
@@ -166,7 +166,7 @@ if (isset($_POST['delete'])) {
 				'/' . $board['dir'] . $config['dir']['res'] . link_for($post) . ($post['thread'] ? '#' . $id : '') .
 				' for "' . $reason . '"'
 			);
-		$query = prepare("INSERT INTO ``reports`` VALUES (NULL, :time, :ip, :board, :post, :reason)");
+		$query = prepare('INSERT INTO ``reports`` VALUES (NULL, :time, :ip, :board, :post, :reason)');
 		$query->bindValue(':time', time(), PDO::PARAM_INT);
 		$query->bindValue(':ip', $_SERVER['REMOTE_ADDR'], PDO::PARAM_STR);
 		$query->bindValue(':board', $board['uri'], PDO::PARAM_STR);
@@ -195,7 +195,7 @@ if (isset($_POST['delete'])) {
 		error($config['error']['noboard']);
 
 	if (!$is_mod && $config['board_locked'])
-		error("Board is locked");
+		error('Board is locked');
 	
 	if (!isset($_POST['name']))
 		$_POST['name'] = $config['anonymous'];
@@ -233,8 +233,8 @@ if (isset($_POST['delete'])) {
 			error($config['error']['captcha']);
 	}
 
-	if (!(($post['op'] && $_POST['post'] == $config['button_newtopic']) ||
-		(!$post['op'] && $_POST['post'] == $config['button_reply'])))
+	if (!(($post['op'] && $_POST['post'] === $config['button_newtopic']) ||
+		(!$post['op'] && $_POST['post'] === $config['button_reply'])))
 		error($config['error']['bot']);
 
 	// Check the referrer
@@ -275,7 +275,7 @@ if (isset($_POST['delete'])) {
 	
 	//Check if thread exists
 	if (!$post['op']) {
-		$query = prepare(sprintf("SELECT `sticky`,`locked`,`cycle`,`sage`,`slug` FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL LIMIT 1", $board['uri']));
+		$query = prepare(sprintf('SELECT `sticky`,`locked`,`cycle`,`sage`,`slug` FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL LIMIT 1', $board['uri']));
 		$query->bindValue(':id', $post['thread'], PDO::PARAM_INT);
 		$query->execute() or error(db_error());
 		
@@ -372,7 +372,7 @@ if (isset($_POST['delete'])) {
 		);
 	}
 	
-	$post['name'] = $_POST['name'] != '' ? $_POST['name'] : $config['anonymous'];
+	$post['name'] = $_POST['name'] !== '' ? $_POST['name'] : $config['anonymous'];
 	$post['subject'] = $_POST['subject'];
 	$post['email'] = str_replace(' ', '%20', htmlspecialchars($_POST['email']));
 	$post['body'] = $_POST['body'];
@@ -381,7 +381,7 @@ if (isset($_POST['delete'])) {
 
 	if (!($post['has_file'] || isset($post['embed'])) || (($post['op'] && $config['force_body_op']) || (!$post['op'] && $config['force_body']))) {
 		$stripped_whitespace = preg_replace('/[\s]/u', '', $post['body']);
-		if ($stripped_whitespace == '')
+		if ($stripped_whitespace === '')
 			error($config['error']['tooshort_body']);
 	}
 
@@ -393,20 +393,20 @@ if (isset($_POST['delete'])) {
 	
 		$numposts = numPosts($post['thread']);
 	
-		if ($config['reply_hard_limit'] != 0 && $config['reply_hard_limit'] <= $numposts['replies'])
+		if ($config['reply_hard_limit'] !== 0 && $config['reply_hard_limit'] <= $numposts['replies'])
 			error($config['error']['reply_hard_limit']);
 	
-		if ($post['has_file'] && $config['image_hard_limit'] != 0 && $config['image_hard_limit'] <= $numposts['images'])
+		if ($post['has_file'] && $config['image_hard_limit'] !== 0 && $config['image_hard_limit'] <= $numposts['images'])
 			error($config['error']['image_hard_limit']);
 	}
 		
 	if ($post['has_file']) {
 		// Determine size sanity
 		$size = 0;
-		if ($config['multiimage_method'] == 'split') {
+		if ($config['multiimage_method'] === 'split') {
 			foreach ($_FILES as $key => $file)
 				$size += $file['size'];
-		} elseif ($config['multiimage_method'] == 'each') {
+		} elseif ($config['multiimage_method'] === 'each') {
 			foreach ($_FILES as $key => $file) {
 				if ($file['size'] > $size)
 					$size = $file['size'];
@@ -427,7 +427,7 @@ if (isset($_POST['delete'])) {
 	$post['capcode'] = false;
 	
 	if ($mod && preg_match('/^((.+) )?## (.+)$/', $post['name'], $matches)) {
-		$name = $matches[2] != '' ? $matches[2] : $config['anonymous'];
+		$name = $matches[2] !== '' ? $matches[2] : $config['anonymous'];
 		$cap = $matches[3];
 		
 		if (isset($config['mod']['capcode'][$mod['type']])) {
@@ -447,10 +447,10 @@ if (isset($_POST['delete'])) {
 	$post['trip'] = isset($trip[1]) ? $trip[1] : ''; // XX: Tripcodes
 	
 	$noko = false;
-	if (strtolower($post['email']) == 'noko') {
+	if (strtolower($post['email']) === 'noko') {
 		$noko = true;
 		$post['email'] = '';
-	} elseif (strtolower($post['email']) == 'nonoko'){
+	} elseif (strtolower($post['email']) === 'nonoko'){
 		$noko = false;
 		$post['email'] = '';
 	} else
@@ -531,7 +531,8 @@ if (isset($_POST['delete'])) {
 			if (strpos($ip, ':') !== false) {
 				if (strpos($ip, '.') > 0)
 					$ip = substr($ip, strrpos($ip, ':')+1);
-				else return $ip;  //native ipv6
+				else
+					return $ip;  //native ipv6
 			}
 			$iparr = array_pad(explode('.', $ip), 4, 0);
 			$part7 = base_convert(($iparr[0] * 256) + $iparr[1], 10, 16);
@@ -541,8 +542,8 @@ if (isset($_POST['delete'])) {
 	
 		if ($country_code = geoip\geoip_country_code_by_addr_v6($gi, ipv4to6($_SERVER['REMOTE_ADDR']))) {
 			if (!in_array(strtolower($country_code), array('eu', 'ap', 'o1', 'a1', 'a2')))
-				$post['body'] .= "\n<tinyboard flag>".strtolower($country_code)."</tinyboard>".
-				"\n<tinyboard flag alt>".geoip\geoip_country_name_by_addr_v6($gi, ipv4to6($_SERVER['REMOTE_ADDR']))."</tinyboard>";
+				$post['body'] .= "\n<tinyboard flag>" . strtolower($country_code) . '</tinyboard>'.
+				"\n<tinyboard flag alt>" . geoip\geoip_country_name_by_addr_v6($gi, ipv4to6($_SERVER['REMOTE_ADDR'])) . '</tinyboard>';
 		}
 	}
 
@@ -555,17 +556,16 @@ if (isset($_POST['delete'])) {
 
 		$flag_alt = isset($user_flag_alt) ? $user_flag_alt : $config['user_flags'][$user_flag];
 
-		$post['body'] .= "\n<tinyboard flag>" . strtolower($user_flag) . "</tinyboard>" .
-		"\n<tinyboard flag alt>" . $flag_alt . "</tinyboard>";
+		$post['body'] .= "\n<tinyboard flag>" . strtolower($user_flag) . '</tinyboard>' .
+		"\n<tinyboard flag alt>" . $flag_alt . '</tinyboard>';
 	}
 
-	if ($config['allowed_tags'] && $post['op'] && isset($_POST['tag']) && isset($config['allowed_tags'][$_POST['tag']])) {
-		$post['body'] .= "\n<tinyboard tag>" . $_POST['tag'] . "</tinyboard>";
-	}
+	if ($config['allowed_tags'] && $post['op'] && isset($_POST['tag']) && isset($config['allowed_tags'][$_POST['tag']]))
+		$post['body'] .= "\n<tinyboard tag>" . $_POST['tag'] . '</tinyboard>';
 
 	if ($config['proxy_save'] && isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 		$proxy = preg_replace("/[^0-9a-fA-F.,: ]/", '', $_SERVER['HTTP_X_FORWARDED_FOR']);
-		$post['body'] .= "\n<tinyboard proxy>".$proxy."</tinyboard>";
+		$post['body'] .= "\n<tinyboard proxy>" . $proxy . '</tinyboard>';
 	}
 	
 	$post['body_nomarkup'] = $post['body']; // Assume we're using the utf8mb4 charset	
@@ -582,8 +582,7 @@ if (isset($_POST['delete'])) {
 			if ($post['op'] && $config['allowed_ext_op']) {
 				if (!in_array($file['extension'], $config['allowed_ext_op']))
 					error($config['error']['unknownext']);
-			}
-			elseif (!in_array($file['extension'], $config['allowed_ext']) && !in_array($file['extension'], $config['allowed_ext_files']))
+			} elseif (!in_array($file['extension'], $config['allowed_ext']) && !in_array($file['extension'], $config['allowed_ext_files']))
 				error($config['error']['unknownext']);
 			
 			$file['is_an_image'] = !in_array($file['extension'], $config['allowed_ext_files']);
@@ -597,7 +596,7 @@ if (isset($_POST['delete'])) {
 				error($config['error']['nomove']);
 
 			if ($md5cmd) {
-				$output = shell_exec_error($md5cmd . " " . escapeshellarg($upload));
+				$output = shell_exec_error($md5cmd . ' ' . escapeshellarg($upload));
 				$output = explode(' ', $output);
 				$hash = $output[0];
 			}
@@ -609,10 +608,9 @@ if (isset($_POST['delete'])) {
 			$allhashes .= $hash;
 		}
 
-		if (count ($post['files']) == 1) {
+		if (count($post['files']) === 1) {
 			$post['filehash'] = $hash;
-		}
-		else {
+		} else {
 			$post['filehash'] = md5($allhashes);
 		}
 	}
@@ -649,10 +647,10 @@ if (isset($_POST['delete'])) {
 			}
 			
 			
-			if ($config['convert_auto_orient'] && ($file['extension'] == 'jpg' || $file['extension'] == 'jpeg')) {
+			if ($config['convert_auto_orient'] && ($file['extension'] === 'jpg' || $file['extension'] === 'jpeg')) {
 				// The following code corrects the image orientation.
 				// Currently only works with the 'convert' option selected but it could easily be expanded to work with the rest if you can be bothered.
-				if (!($config['redraw_image'] || (($config['strip_exif'] && !$config['use_exiftool']) && ($file['extension'] == 'jpg' || $file['extension'] == 'jpeg')))) {
+				if (!($config['redraw_image'] || (($config['strip_exif'] && !$config['use_exiftool']) && ($file['extension'] === 'jpg' || $file['extension'] === 'jpeg')))) {
 					if (in_array($config['thumb_method'], array('convert', 'convert+gifsicle', 'gm', 'gm+gifsicle'))) {
 						$exif = @exif_read_data($file['tmp_name']);
 						$gm = in_array($config['thumb_method'], array('gm', 'gm+gifsicle'));
@@ -707,7 +705,7 @@ if (isset($_POST['delete'])) {
 			} elseif ($config['minimum_copy_resize'] &&
 				$image->size->width <= $config['thumb_width'] &&
 				$image->size->height <= $config['thumb_height'] &&
-				$file['extension'] == ($config['thumb_ext'] ? $config['thumb_ext'] : $file['extension'])) {
+				$file['extension'] === ($config['thumb_ext'] ? $config['thumb_ext'] : $file['extension'])) {
 			
 				// Copy, because there's nothing to resize
 				copy($file['tmp_name'], $file['thumb']);
@@ -729,7 +727,7 @@ if (isset($_POST['delete'])) {
 				$thumb->_destroy();
 			}
 			
-			if ($config['redraw_image'] || (!@$file['exif_stripped'] && $config['strip_exif'] && ($file['extension'] == 'jpg' || $file['extension'] == 'jpeg'))) {
+			if ($config['redraw_image'] || (!@$file['exif_stripped'] && $config['strip_exif'] && ($file['extension'] === 'jpg' || $file['extension'] === 'jpeg'))) {
 				if (!$config['redraw_image'] && $config['use_exiftool']) {
 					if($error = shell_exec_error('exiftool -overwrite_original -ignoreMinorErrors -q -q -all= ' .
 						escapeshellarg($file['tmp_name'])))
@@ -752,22 +750,21 @@ if (isset($_POST['delete'])) {
 			$file['thumbheight'] = $size[1];
 		}
 
-		if ($config['tesseract_ocr'] && $file['thumb'] != 'file') { // Let's OCR it!
+		if ($config['tesseract_ocr'] && $file['thumb'] !== 'file') { // Let's OCR it!
 			$fname = $file['tmp_name'];
 
 			if ($file['height'] > 500 || $file['width'] > 500) {
 				$fname = $file['thumb'];
 			}
 
-			if ($fname == 'spoiler') { // We don't have that much CPU time, do we?
-			}
-			else {
-				$tmpname = "tmp/tesseract/".rand(0,10000000);
+			if ($fname === 'spoiler') { // We don't have that much CPU time, do we?
+			} else {
+				$tmpname = 'tmp/tesseract/' . rand(0,10000000);
 
 				// Preprocess command is an ImageMagick b/w quantization
-				$error = shell_exec_error(sprintf($config['tesseract_preprocess_command'], escapeshellarg($fname)) . " | " .
+				$error = shell_exec_error(sprintf($config['tesseract_preprocess_command'], escapeshellarg($fname)) . ' | ' .
                                                           'tesseract stdin '.escapeshellarg($tmpname).' '.$config['tesseract_params']);
-				$tmpname .= ".txt";
+				$tmpname .= '.txt';
 
 				$value = @file_get_contents($tmpname);
 				@unlink($tmpname);
@@ -775,7 +772,7 @@ if (isset($_POST['delete'])) {
 				if ($value && trim($value)) {
 					// This one has an effect, that the body is appended to a post body. So you can write a correct
 					// spamfilter.
-					$post['body_nomarkup'] .= "<tinyboard ocr image $key>".htmlspecialchars($value)."</tinyboard>";
+					$post['body_nomarkup'] .= "<tinyboard ocr image $key>" . htmlspecialchars($value) . '</tinyboard>';
 				}
 			}
 		}
@@ -838,7 +835,7 @@ if (isset($_POST['delete'])) {
 			$file['file_path'] = $file['file'];
 			$file['thumb_path'] = $file['thumb'];
 			$file['file'] = mb_substr($file['file'], mb_strlen($board['dir'] . $config['dir']['img']));
-			if ($file['is_an_image'] && $file['thumb'] != 'spoiler')
+			if ($file['is_an_image'] && $file['thumb'] !== 'spoiler')
 				$file['thumb'] = mb_substr($file['thumb'], mb_strlen($board['dir'] . $config['dir']['thumb']));
 		}
 	}
@@ -887,7 +884,7 @@ if (isset($_POST['delete'])) {
 		query('INSERT INTO ``cites`` VALUES ' . implode(', ', $insert_rows)) or error(db_error());
 	}
 	
-	if (!$post['op'] && strtolower($post['email']) != 'sage' && !$thread['sage'] && ($config['reply_limit'] == 0 || $numposts['replies']+1 < $config['reply_limit'])) {
+	if (!$post['op'] && strtolower($post['email']) !== 'sage' && !$thread['sage'] && ($config['reply_limit'] === 0 || $numposts['replies']+1 < $config['reply_limit'])) {
 		bumpThread($post['thread']);
 	}
 	
@@ -981,26 +978,26 @@ if (isset($_POST['delete'])) {
 	}
 	
 	if (!isset($ban)) {
-		error(_("That ban doesn't exist or is not for you."));
+		error(_('That ban doesn\'t exist or is not for you.'));
 	}
 	
 	if ($ban['expires'] && $ban['expires'] - $ban['created'] <= $config['ban_appeals_min_length']) {
-		error(_("You cannot appeal a ban of this length."));
+		error(_('You cannot appeal a ban of this length.'));
 	}
 	
 	$query = query("SELECT `denied` FROM ``ban_appeals`` WHERE `ban_id` = $ban_id") or error(db_error());
 	$ban_appeals = $query->fetchAll(PDO::FETCH_COLUMN);
 	
 	if (count($ban_appeals) >= $config['ban_appeals_max']) {
-		error(_("You cannot appeal this ban again."));
+		error(_('You cannot appeal this ban again.'));
 	}
 	
 	foreach ($ban_appeals as $is_denied) {
 		if (!$is_denied)
-			error(_("There is already a pending appeal for this ban."));
+			error(_('There is already a pending appeal for this ban.'));
 	}
 	
-	$query = prepare("INSERT INTO ``ban_appeals`` VALUES (NULL, :ban_id, :time, :message, 0)");
+	$query = prepare('INSERT INTO ``ban_appeals`` VALUES (NULL, :ban_id, :time, :message, 0)');
 	$query->bindValue(':ban_id', $ban_id, PDO::PARAM_INT);
 	$query->bindValue(':time', time(), PDO::PARAM_INT);
 	$query->bindValue(':message', $_POST['appeal']);

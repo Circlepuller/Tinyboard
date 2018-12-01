@@ -4,7 +4,7 @@
  *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
-require_once 'inc/functions.php';
+require 'inc/functions.php';
 
 if ($config['debug'])
 	$parse_start_time = microtime(true);

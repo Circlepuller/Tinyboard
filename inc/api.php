@@ -50,7 +50,7 @@ class Api {
 			'size' => 'fsize',
 		);
 
-		if (isset($config['api']['extra_fields']) && gettype($config['api']['extra_fields']) == 'array'){
+		if (isset($config['api']['extra_fields']) && gettype($config['api']['extra_fields']) === 'array'){
 			$this->postFields = array_merge($this->postFields, $config['api']['extra_fields']);
 		}
 	}
@@ -134,7 +134,7 @@ class Api {
 			if (sizeof($post->files) > 1) {
 				$extra_files = array();
 				foreach ($post->files as $i => $f) {
-					if ($i == 0) continue;
+					if ($i === 0) continue;
 				
 					$extra_file = array();
 					$this->translateFile($f, $post, $extra_file);
