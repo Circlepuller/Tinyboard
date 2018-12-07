@@ -1,6 +1,7 @@
 <?php
 // Glue code for handling a Tinyboard post.
 // Portions of this file are derived from Tinyboard code.
+// TODO: Export thumbnail as WebP
 function postHandler($post) {
     global $board, $config;
     if ($post->has_file) foreach ($post->files as &$file) if ($file->extension === 'webm' || $file->extension === 'mp4') {
@@ -59,7 +60,7 @@ function postHandler($post) {
     }
 }
 function set_thumbnail_dimensions($post,$file) {
-  global $board, $config;
+  global $config;
   $tn_dimensions = array();
   $tn_maxw = $post->op ? $config['thumb_op_width'] : $config['thumb_width'];
   $tn_maxh = $post->op ? $config['thumb_op_height'] : $config['thumb_height'];
@@ -73,7 +74,7 @@ function set_thumbnail_dimensions($post,$file) {
   return $file;
 }
 function webm_set_spoiler($file) {
-  global $board, $config;
+  global $config;
   $file->thumb = 'spoiler';
   $size = @getimagesize($config['spoiler_image']);
   $file->thumbwidth = $size[0];
