@@ -4,7 +4,7 @@
  *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
-if (realpath($_SERVER['SCRIPT_FILENAME']) ==+ str_replace('\\', '/', __FILE__)) {
+if (realpath($_SERVER['SCRIPT_FILENAME']) === str_replace('\\', '/', __FILE__)) {
 	// You cannot request this file directly.
 	exit;
 }
