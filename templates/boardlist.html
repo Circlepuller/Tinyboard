@@ -4,10 +4,10 @@
         {% if board is iterable %}
             <span class="sub" data-description="{{ key }}">[{{ macros.boardlist(board, root, boards) }}]</span>
         {% else %}
-            {% if loop.index0 != key %}
-                <a href="{{ board }}">{{ key }}</a>
-            {% else %}
+            {% if key matches '/^\\d+$/' and loop.index0 == key %}
                 <a href="{{ root }}{{ board }}/{{ config.file_index }}"{% if boards[board] %} title="{{ boards[board] }}"{% endif %}>{{ board }}</a>
+            {% else %}
+                <a href="{{ board }}">{{ key }}</a>
             {% endif %}
             {% if not loop.last %}/{% endif %}
         {% endif %}
