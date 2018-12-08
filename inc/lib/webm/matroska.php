@@ -23,7 +23,7 @@ class EBMLElementTypeList {
             $t->name = $fields[2];
             $t->validParents = array();
             for ($i = 0; $i + 3 < count($fields); $i++) {
-                if ($fields[$i+3] == '*' || $fields[$i+3] == 'root') {
+                if ($fields[$i+3] === '*' || $fields[$i+3] === 'root') {
                     $t->validParents[$i] = $fields[$i+3];
                 } else {
                     $t->validParents[$i] = hexdec($fields[$i+3]);
@@ -75,7 +75,7 @@ function ebmlDecodeInt($data, $signed=FALSE, $carryIn=0) {
             $n = (float)$n;
         }
         $n = $n * 0x100 + ord($data[$i]);
-        if ($i == 0 && $signed && ($n & 0x80) != 0) {
+        if ($i === 0 && $signed && ($n & 0x80) !== 0) {
             $n -= 0x100;
         }
     }
@@ -208,7 +208,7 @@ class EBMLReader {
         if ($this->_size === NULL) throw new Exception('unknown length');
         fseek($this->_fileHandle, $this->_offset);
         $data = fread($this->_fileHandle, $this->_size);
-        if ($data === FALSE || strlen($data) != $this->_size) {
+        if ($data === FALSE || strlen($data) !== $this->_size) {
             throw new Exception('error reading from file');
         }
         return $data;
@@ -228,7 +228,7 @@ class EBMLReader {
             throw new Exception('not supported: variable-length integer too long');
         }
         $flag = 0x80;
-        while (($n & $flag) == 0) {
+        while (($n & $flag) === 0) {
             $flag = $flag >> 1;
             $size++;
         }
@@ -238,13 +238,13 @@ class EBMLReader {
         $rawInt = $this->read($size);
 
         // Check for all ones
-        if ($n == $flag - 1 && $rawInt == str_repeat("\xFF", $size)) {
+        if ($n == $flag - 1 && $rawInt === str_repeat("\xFF", $size)) {
             return NULL;
         }
 
         // Range shift for signed integers
         if ($signed) {
-            if ($flag == 0x01) {
+            if ($flag === 0x01) {
                 $n = ord($rawInt[0]) - 0x80;
                 $rawInt = $rawInt.substr(1);
             } else {
@@ -257,7 +257,7 @@ class EBMLReader {
 
         // Range shift for signed integers
         if ($signed) {
-            if ($n == PHP_INT_MAX) {
+            if ($n === PHP_INT_MAX) {
                 $n = (float)$n;
             }
             $n++;
@@ -297,7 +297,7 @@ class EBMLElement {
 
     // Read and interpret content
     public function value() {
-        if ($this->_datatype == 'binary') {
+        if ($this->_datatype === 'binary') {
             return $this->_content;
         } else {
             return ebmlDecode($this->_content->readAll(), $this->_datatype);

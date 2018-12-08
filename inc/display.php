@@ -4,7 +4,7 @@
  *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
-if (realpath($_SERVER['SCRIPT_FILENAME']) == str_replace('\\', '/', __FILE__)) {
+if (realpath($_SERVER['SCRIPT_FILENAME']) ==+ str_replace('\\', '/', __FILE__)) {
 	// You cannot request this file directly.
 	exit;
 }
@@ -16,7 +16,7 @@ if (realpath($_SERVER['SCRIPT_FILENAME']) == str_replace('\\', '/', __FILE__)) {
 function format_bytes($size) {
 	$units = array(' B', ' KB', ' MB', ' GB', ' TB');
 	for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024;
-	return round($size, 2).$units[$i];
+	return round($size, 2) . $units[$i];
 }
 
 function createBoardlist() {
@@ -27,32 +27,11 @@ function createBoardlist() {
 
 	$xboards = listBoards();
 	$boards = [];
-	$boardlist = [];
 
-	foreach ($xboards as $val) {
+	foreach ($xboards as $val) 
 		$boards[$val['uri']] = $val['title'];
-	}
 
-	foreach ($config['boards'] as $idx => $group) {
-		$boardlist[] = [];
-
-		// Someone configured the variable wrong
-		if (!is_int($idx) || !is_array($group))
-			error('Please change \$config[\'boards\'] to a valid format.');
-
-		foreach ($group as $title => $uri) {
-			if (!is_string($uri))
-				error('Please change \$config[\'boards\'] to a valid format.');
-
-			$boardlist[$idx][] = [
-				'title' => is_string($title) ? $title : $boards[$uri],
-				'text' => is_string($title) ? $title : $uri, // Simple way to do this.
-				'uri' => $uri
-			];
-		}
-	}
-
-	return $boardlist;
+	return $boards;
 }
 
 function error($message, $priority = true, $debug_stuff = false) {
@@ -65,7 +44,7 @@ function error($message, $priority = true, $debug_stuff = false) {
 	
 	if (defined('STDIN')) {
 		// Running from CLI
-		echo('Error: ' . $message . "\n");
+		echo 'Error: ', $message, "\n";
 		debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		die();
 	}

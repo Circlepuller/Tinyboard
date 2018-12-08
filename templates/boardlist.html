@@ -1,13 +1,24 @@
+{% macro boardlist(list, root, boards) %}
+    {% import _self as macros %}
+    {% for key, board in list %}
+        {% if board is iterable %}
+            <span class="sub" data-description="{{ key }}">[{{ macros.boardlist(board, root, boards) }}]</span>
+        {% else %}
+            {% if loop.index0 != key %}
+                <a href="{{ board }}">{{ key }}</a>
+            {% else %}
+                <a href="{{ root }}{{ board }}/{{ config.file_index }}"{% if boards[board] %} title="{{ boards[board] }}"{% endif %}>{{ board }}</a>
+            {% endif %}
+            {% if not loop.last %}/{% endif %}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% import _self as macros %}
+
 <div class="boardlist{% if bottom %} bottom{% endif %}">
     {% if config.boardlist_wrap_bracket %}[{% endif %}
-    {% for group in boardlist %}
-        <span class="sub">[
-            {% for board in group %}
-                <a href="{% if board.uri == board.text %}{{ mod ? "?/" : config.root }}{{ board.uri }}/{{ config.file_index }}{% else %}{{ board.uri }}{% endif %}"{% if board.uri == board.text %} title="{{ board.title }}"{% endif %}>{{ board.text }}</a>
-                {% if not loop.last %}/{% endif %}
-            {% endfor %}
-        ]</span>
-    {% endfor %}
+    {{ macros.boardlist(config.boards, mod ? '?/' : config.root, boardlist) }}
     {% if config.boardlist_wrap_bracket %}]{% endif %}
 </div>
 {% if not bottom %}<script type='text/javascript'>if (typeof do_boardlist != 'undefined') do_boardlist();</script>{% endif %}

@@ -929,15 +929,15 @@
 	 * and bottom of board pages. They can be a list of links to boards and/or other pages such as status
 	 * blogs and social network profiles/pages.
 	 *
-	 * "Groups" in the boardlinks are marked with square brackets. Each array() in $config['boards']
-	 * represents a new square bracket group.
+	 * "Groups" in the boardlinks are marked with square brackets. Tinyboard allows for infinite recursion
+	 * with groups. Each array() in $config['boards'] represents a new square bracket group.
 	 */
 
 	// $config['boards'] = array(
 	// 	array('a', 'b'),
 	// 	array('c', 'd', 'e', 'f', 'g'),
 	// 	array('h', 'i', 'j'),
-	// 	array('k', 'l', 'm'),
+	// 	array('k', array('l', 'm')),
 	// 	array('status' => 'http://status.example.org/')
 	// );
 
