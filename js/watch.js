@@ -17,21 +17,19 @@
  *              
  */
 
-$(function(){
+onready(() => {
   // migrate from old name
-  if (typeof localStorage.watch == "string") {
+  if (typeof localStorage.watch == 'string') {
     localStorage.watch_js = localStorage.watch;
     delete localStorage.watch;
   }
 
-  var window_active = true;
-  $(window).focus(function() {
+  let window_active = true;
+  $(window).focus(() => {
     window_active = true;
     $(window).trigger('scroll');
   });
-  $(window).blur(function() {
-    window_active = false;
-  });
+  $(window).blur(() => window_active = false);
 
   var status = {};
 
@@ -67,14 +65,13 @@ $(function(){
     return boardconfig && boardconfig.threads && boardconfig.threads[thread];
   };
   var toggle_pinned = function(board) {
-    var st = storage();
-    var bc = st[board] || {};
+    let st = storage();
+    let bc = st[board] || {};
     if (is_pinned(bc)) {
       bc.pinned = false;
       bc.watched = false;
       bc.threads = {};
-    }
-    else {
+    } else {
       bc.pinned = true;
     }
     st[board] = bc;
@@ -82,20 +79,19 @@ $(function(){
     return bc.pinned;
   };
   var toggle_boardwatched = function(board) {
-    var st = storage();
-    var bc = st[board] || {};
+    let st = storage();
+    let bc = st[board] || {};
     bc.watched = !is_boardwatched(bc) && Date.now();
     st[board] = bc;
     storage_save(st);
     return bc.watched;
   };
   var toggle_threadwatched = function(board, thread) {
-    var st = storage();
-    var bc = st[board] || {};
+    let st = storage();
+    let bc = st[board] || {};
     if (is_threadwatched(bc, thread)) {
       delete bc.threads[thread];
-    }
-    else {
+    } else {
       bc.threads = bc.threads || {};
       bc.threads[thread] = Date.now();
 
@@ -106,52 +102,53 @@ $(function(){
     storage_save(st);
     return is_threadwatched(bc, thread);
   };
-  var construct_watchlist_for = function(board, variant) {
-    var list = $("<div class='boardlist top cb-menu watch-menu'></div>");
+  var construct_watchlist_for = (board, variant) => {
+    let list = $("<div class='boardlist top cb-menu watch-menu'></div>");
     list.attr("data-board", board);
 
-    if (storage()[board] && storage()[board].threads)
-    for (var tid in storage()[board].threads) {
-      var newposts = "(0)";
-      if (status && status[board] && status[board].threads && status[board].threads[tid]) {
-        if (status[board].threads[tid] == -404) {
-          newposts = "<i class='fa fa-ban-circle'></i>";
-        }
-        else {
-          newposts = "("+status[board].threads[tid]+")";
-        }
-      }
+    if (storage()[board] && storage()[board].threads) {
+      for (let tid in storage()[board].threads) {
+        let newposts = "(0)";
 
-      var tag;
-      if (variant == 'desktop') {
-        tag = $("<a href='"+((storage()[board].slugs && storage()[board].slugs[tid]) || (modRoot+board+"/res/"+tid+".html"))+"'><span>#"+tid+"</span><span class='cb-uri watch-remove'>"+newposts+"</span>");
-	tag.find(".watch-remove").mouseenter(function() {
-          this.oldval = $(this).html();
-          $(this).css("min-width", $(this).width());
-          $(this).html("<i class='fa fa-minus'></i>");
-        })
-        .mouseleave(function() {
-          $(this).html(this.oldval);
-        })
-      }
-      else if (variant == 'mobile') {
-        tag = $("<a href='"+((storage()[board].slugs && storage()[board].slugs[tid]) || (modRoot+board+"/res/"+tid+".html"))+"'><span>#"+tid+"</span><span class='cb-uri'>"+newposts+"</span>"
-               +"<span class='cb-uri watch-remove'><i class='fa fa-minus'></i></span>");	
-      }
+        if (status && status[board] && status[board].threads && status[board].threads[tid]) {
+          if (status[board].threads[tid] == -404) {
+            newposts = "<i class='fa fa-ban-circle'></i>";
+          } else {
+            newposts = "("+status[board].threads[tid]+")";
+          }
+        }
 
-      tag.attr('data-thread', tid)
-        .addClass("cb-menuitem")
-        .appendTo(list)
-        .find(".watch-remove")
-        .click(function() {
-          var b = $(this).parent().parent().attr("data-board");
-          var t = $(this).parent().attr("data-thread");
-          toggle_threadwatched(b, t);
-          $(this).parent().parent().parent().mouseleave();
-	  $(this).parent().remove();
-          return false;
-        });
+        let tag;
+        if (variant == 'desktop') {
+          tag = $("<a href='"+((storage()[board].slugs && storage()[board].slugs[tid]) || (modRoot+board+"/res/"+tid+".html"))+"'><span>#"+tid+"</span><span class='cb-uri watch-remove'>"+newposts+"</span>");
+          tag.find(".watch-remove").mouseenter(() => {
+            this.oldval = $(this).html();
+            $(this).css("min-width", $(this).width());
+            $(this).html("<i class='fa fa-minus'></i>");
+          })
+          .mouseleave(() => {
+            $(this).html(this.oldval);
+          })
+        } else if (variant == 'mobile') {
+          tag = $("<a href='"+((storage()[board].slugs && storage()[board].slugs[tid]) || (modRoot+board+"/res/"+tid+".html"))+"'><span>#"+tid+"</span><span class='cb-uri'>"+newposts+"</span>"
+                +"<span class='cb-uri watch-remove'><i class='fa fa-minus'></i></span>");	
+        }
+
+        tag.attr('data-thread', tid)
+          .addClass("cb-menuitem")
+          .appendTo(list)
+          .find(".watch-remove")
+          .click(() => {
+            let b = $(this).parent().parent().attr("data-board");
+            let t = $(this).parent().attr("data-thread");
+            toggle_threadwatched(b, t);
+            $(this).parent().parent().parent().mouseleave();
+            $(this).parent().remove();
+            return false;
+          });
+      }
     }
+
     return list;
   };
 
@@ -165,26 +162,26 @@ $(function(){
     var pinned = $('<div id="watch-pinned"></div>').appendTo(bl);
 
     if (device_type == "desktop")
-    bl.off().on("mouseenter", function() {
-      updating_suspended = true;
-    }).on("mouseleave", function() {
-      updating_suspended = false;
-    });
+      bl.off().on("mouseenter", function() {
+        updating_suspended = true;
+      }).on("mouseleave", function() {
+        updating_suspended = false;
+      });
 
     var st = storage();
     for (var i in st) {
       if (is_pinned(st[i])) {
-	var link;
-        if (bl.find('[href*="'+modRoot+i+'/index.html"]:not(.cb-menuitem)').length) link = bl.find('[href*="'+modRoot+i+'/"]').first();
+        let link;
+        
+        if (bl.find('[href*="'+modRoot+i+'/index.html"]:not(.cb-menuitem)').length)
+          link = bl.find('[href*="'+modRoot+i+'/"]').first();
+        else
+          link = $('<a href="'+modRoot+i+'/" class="cb-item cb-cat">/'+i+'/</a>').appendTo(pinned);
 
-        else link = $('<a href="'+modRoot+i+'/" class="cb-item cb-cat">/'+i+'/</a>').appendTo(pinned);
-
-	if (link[0].origtitle === undefined) {
-	  link[0].origtitle = link.html();
-	}
-	else {
-	  link.html(link[0].origtitle);
-	}
+	      if (link[0].origtitle === undefined)
+	        link[0].origtitle = link.html();
+	      else
+	        link.html(link[0].origtitle);
 
 	if (st[i].watched) {
 	  link.css("font-weight", "bold");

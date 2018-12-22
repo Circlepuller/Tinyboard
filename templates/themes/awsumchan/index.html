@@ -13,7 +13,7 @@
   {% if config.font_awesome %}<link rel="stylesheet" href="{{ config.root }}{{ config.font_awesome_css }}">{% endif %}
   {% include 'header.html' %}
 </head>
-<body class="8chan vichan {% if mod %}is-moderator{% else %}is-not-moderator{% endif %}" data-stylesheet="{% if config.default_stylesheet.1 != '' %}{{ config.default_stylesheet.1 }}{% else %}default{% endif %}">
+<body class="{% if mod %}is-moderator{% else %}is-not-moderator{% endif %}" data-stylesheet="{% if config.default_stylesheet.1 != '' %}{{ config.default_stylesheet.1 }}{% else %}default{% endif %}">
   <header>
     <h1>
       <img class="banner logo" src="/static/logo/logo.png" alt="{{ settings.title }}">
