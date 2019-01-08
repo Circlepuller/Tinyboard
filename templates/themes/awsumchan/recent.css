@@ -59,26 +59,9 @@
   margin: 10px auto;
 }
 
-header h1 {
-  background: url('/static/logo/bg.gif') left center no-repeat;
-  height: 125px;
-  margin-bottom: -40px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 18px;
-  padding-left: 16px;
-  padding-top: 50px;
-  text-align: text-bottom;
-  width: 478px;
-}
-
 img.banner.logo {
   border-width: 0;
   max-width: 100%;
-}
-
-header div.subtitle {
-  margin-top: -50px;
 }
 
 div.ban.boards {

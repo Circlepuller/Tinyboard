@@ -1,9 +1,9 @@
 {% filter remove_whitespace %}
 <!doctype html>
-<html>
+<html lang="{{ config.locale }}">
 <head>
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-	<script type='text/javascript'>
+	<meta charset="utf-8">
+	<script>
 		var active_page = "catalog"
 		  , board_name = "{{ board }}";
 	</script>
@@ -74,10 +74,10 @@
 	<hr/>
 	<footer>
 		<p class="unimportant" style="margin-top:20px;text-align:center;">Powered by Tinyboard {{ config.version }}
-		<br>Tinyboard Copyright &copy; 2010-2018 Tinyboard Development Group    
+		<br>Tinyboard Copyright &copy; 2010-2019 Tinyboard Development Group    
 		<br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2016 vichan-devel</p>
 	</footer>
-	{% verbatim %}<script type="text/javascript">
+	{% verbatim %}<script>
 		var styles = {
 			{% endverbatim %}
 			{% for name, uri in config.stylesheets %}{% verbatim %}'{% endverbatim %}{{ name|addslashes }}{% verbatim %}' : '{% endverbatim %}/stylesheets/{{ uri|addslashes }}{% verbatim %}',
@@ -85,7 +85,7 @@
 		}; onready(init);
 	</script>{% endverbatim %}
 
-	{% verbatim %}<script type="text/javascript">
+	{% verbatim %}<script>
 		ready();
 	</script>{% endverbatim %}
 </body>

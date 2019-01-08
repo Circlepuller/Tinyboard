@@ -8,6 +8,7 @@
     //  - boards (board list changed)
     //  - post (a post has been made)
     //  - post-thread (a thread has been made)
+    //  - post-delete (a post has been deleted)
     
     $b = new AwsumChan();
     $b->build($action, $settings);
@@ -18,12 +19,18 @@
     public function build($action, $settings) {
       global $config, $_theme;
       
-      if ($action == 'all')
+      if ($action == 'all') {
         copy('templates/themes/awsumchan/' . $settings['basecss'], $config['dir']['home'] . $settings['css']);
-      
+        
+        if ($settings['logo'] !== '')
+          copy('templates/themes/awsumchan/logo.png', $config['dir']['home'] . $settings['logo']);
+
+        copy('templates/themes/awsumchan/favicon.ico', $config['dir']['home'] . 'favicon.ico');
+      }
+
       $this->excluded = explode(' ', $settings['exclude']);
       
-      if ($action == 'all' || $action == 'news' || $action == 'post' || $action == 'post-thread' || $action == 'post-delete')
+      if ($action === 'all' || $action === 'news' || $action === 'boards' || $action === 'post' || $action === 'post-thread' || $action === 'post-delete')
         file_write($config['dir']['home'] . $settings['html'], $this->homepage($settings));
     }
     

@@ -44,7 +44,7 @@
 					<input type="checkbox" id="public_message" name="public_message"{% if config.mod.check_ban_message %} checked{% endif %}> 
 					<input type="text" name="message" id="message" size="35" maxlength="200" value="{{ config.mod.default_ban_message|e }}"> 
 					<span class="unimportant">({% trans 'public; attached to post' %})</span>
-					<script type="text/javascript">
+					<script>
 						document.getElementById('message').disabled = !document.getElementById('public_message').checked;
 						document.getElementById('public_message').onchange = function() {
 							document.getElementById('message').disabled = !this.checked;

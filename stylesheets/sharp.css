@@ -6,7 +6,7 @@
 @import url('//fonts.googleapis.com/css?family=Arimo|Signika');
 
 body {
-	background: #FFF url('img/fade-gray.png') repeat-x 50% 0%;
+	background: #FFF url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADICAIAAACmkByiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAD5JREFUeNpiuHPnDhMDAwNezMjISFANIbXYxElRS6556GKE+LQwE58dlJpFqX/INY8UP1EqRg37yQwfgAADABZtBIk9PYvfAAAAAElFTkSuQmCC) repeat-x 50% 0%;
 	color: black;
 	font-family: 'Arimo', sans-serif;
 	font-size: 10pt;
@@ -53,13 +53,6 @@ h1 {
 	letter-spacing: -2px;
 	font-size: 20pt;
 	margin: 0;
-}
-h1.logo img {
-	display: inline;
-	float: none;
-	background-image: url('/static/logo_bg.gif');
-	background-repeat: no-repeat;
-	background-position: center;
 }
 header div.subtitle, h1 {
 	color: #000;
@@ -400,8 +393,6 @@ div.blotter {
 	font-weight: bold;
 	text-align: center;
 }
-
-.desktop-style div.boardlist:nth-child(1) {}
 
 .desktop-style div.boardlist:nth-child(1):hover, .desktop-style div.boardlist:nth-child(1).cb-menu {
 	background-color: rgba(80%, 80%, 80%, 0.35);

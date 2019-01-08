@@ -1,9 +1,9 @@
 <!doctype html>
-<html>
+<html lang="{{ config.locale }}">
 <head>
 	<meta charset="utf-8">
 
-        <script type="text/javascript">
+        <script>
 	  var
           {% if not no_post_form %}
               active_page = "index"
@@ -88,14 +88,14 @@
 
 	<footer>
 		<p class="unimportant" style="margin-top:20px;text-align:center;">Powered by Tinyboard {{ config.version }}
-		<br>Tinyboard Copyright &copy; 2010-2018 Tinyboard Development Group
+		<br>Tinyboard Copyright &copy; 2010-2019 Tinyboard Development Group
 		<br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2016 vichan-devel</p>
 
 		{% for footer in config.footer %}<p class="unimportant" style="text-align:center;">{{ footer }}</p>{% endfor %}
 	</footer>
-	<script type="text/javascript">{% verbatim %}
+	{% verbatim %}<script>
 		ready();
-	{% endverbatim %}</script>
+	</script>{% endverbatim %}
 	
 </body>
 </html>

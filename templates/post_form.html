@@ -111,7 +111,7 @@
 			<td>
 				<input type="file" name="file" id="upload_file">
 
-				<script type="text/javascript">if (typeof init_file_selector !== 'undefined') init_file_selector({{ config.max_images }});</script>
+				<script>if (typeof init_file_selector !== 'undefined') init_file_selector({{ config.max_images }});</script>
 
 				{% if config.allow_upload_by_url %}
 					<div style="float:none;text-align:left" id="upload_url">
@@ -170,6 +170,6 @@
 <input type="hidden" name="hash" value="{{ antibot.hash() }}">
 </form>
 
-<script type="text/javascript">{% verbatim %}
+{% verbatim %}<script>
 	rememberStuff();
-{% endverbatim %}</script>
+</script>{% endverbatim %}

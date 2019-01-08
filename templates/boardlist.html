@@ -21,4 +21,4 @@
     {{ macros.boardlist(config.boards, mod ? '?/' : config.root, boardlist) }}
     {% if config.boardlist_wrap_bracket %}]{% endif %}
 </div>
-{% if not bottom %}<script type='text/javascript'>if (typeof do_boardlist != 'undefined') do_boardlist();</script>{% endif %}
+{% if not bottom %}<script>if (typeof do_boardlist != 'undefined') do_boardlist();</script>{% endif %}

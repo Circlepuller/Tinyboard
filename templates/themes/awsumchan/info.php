@@ -22,6 +22,14 @@
 		'type' => 'text',
 		'comment' => '(optional)'
 	];
+
+	$theme['config'][] = [
+		'title' => 'Logo Destination',
+		'name' => 'logo',
+		'type' => 'text',
+		'default' => 'logo.png',
+		'comment' => '(optional, leave blank to disable)'
+	];
 	
 	$theme['config'][] = [
 		'title' => '# of recent entries',
