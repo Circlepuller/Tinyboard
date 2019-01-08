@@ -5,7 +5,7 @@
 	$theme['name'] = 'AwsumChan';
 	// Description (you can use Tinyboard markup here)
 	$theme['description'] = 'A combination of the RecentPosts and Basic themes, made specially for AwsumChan.';
-	$theme['version'] = 'v1.0';
+	$theme['version'] = 'v1.1';
 	
 	// Theme configuration	
 	$theme['config'] = [];
@@ -24,10 +24,18 @@
 	];
 
 	$theme['config'][] = [
-		'title' => 'Logo Destination',
+		'title' => 'Logo file',
 		'name' => 'logo',
 		'type' => 'text',
 		'default' => 'logo.png',
+		'comment' => '(optional, leave blank to disable)'
+	];
+
+	$theme['config'][] = [
+		'title' => 'Favicon file',
+		'name' => 'favicon',
+		'type' => 'text',
+		'default' => 'favicon.ico',
 		'comment' => '(optional, leave blank to disable)'
 	];
 	

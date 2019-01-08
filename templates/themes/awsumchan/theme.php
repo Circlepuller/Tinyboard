@@ -19,13 +19,14 @@
     public function build($action, $settings) {
       global $config, $_theme;
       
-      if ($action == 'all') {
+      if ($action === 'all') {
         copy('templates/themes/awsumchan/' . $settings['basecss'], $config['dir']['home'] . $settings['css']);
         
         if ($settings['logo'] !== '')
           copy('templates/themes/awsumchan/logo.png', $config['dir']['home'] . $settings['logo']);
 
-        copy('templates/themes/awsumchan/favicon.ico', $config['dir']['home'] . 'favicon.ico');
+        if ($settings['favicon'] !== '')
+          copy('templates/themes/awsumchan/icon.ico', $config['dir']['home'] . $settings['favicon']);
       }
 
       $this->excluded = explode(' ', $settings['exclude']);
