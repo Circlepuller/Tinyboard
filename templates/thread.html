@@ -14,7 +14,7 @@
 	{% set meta_subject %}{% if config.thread_subject_in_title and thread.subject %}{{ thread.subject|e }}{% else %}{{ thread.body_nomarkup[:256]|remove_modifiers|e }}{% endif %}{% endset %}
 
 	<meta name="description" content="{{ board.url }} - {{ board.title|e }} - {{ meta_subject }}" />
-	<meta name="twitter:card" value="summary">
+	<meta name="twitter:card" content="summary">
 	<meta property="og:title" content="{{ meta_subject }}" />
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content="{{ config.domain }}/{{ board.uri }}/{{ config.dir.res }}{{ thread.id }}.html" />
@@ -25,7 +25,7 @@
 </head>
 <body class="{% if mod %}is-moderator{% else %}is-not-moderator{% endif %} active-thread" data-stylesheet="{% if config.default_stylesheet.1 != '' %}{{ config.default_stylesheet.1 }}{% else %}default{% endif %}">
 	{% include "boardlist.html" %}
-	<a name="top"></a>
+	<a id="top"></a>
 	{% if pm %}<div class="top_notice">You have <a href="?/PM/{{ pm.id }}">an unread PM</a>{% if pm.waiting > 0 %}, plus {{ pm.waiting }} more waiting{% endif %}.</div><hr />{% endif %}
 	{% if config.url_banner %}<img class="board_image" src="{{ config.url_banner }}" {% if config.banner_width or config.banner_height %}style="{% if config.banner_width %}width:{{ config.banner_width }}px{% endif %};{% if config.banner_width %}height:{{ config.banner_height }}px{% endif %}" {% endif %}alt="" />{% endif %}
 	<header>
@@ -77,7 +77,7 @@
 		<div class="clearfix"></div>
 	</form>
 	
-	<a name="bottom"></a>
+	<a id="bottom"></a>
 	{% include "boardlist.html" with {"bottom": true} %}
 
 	{{ config.ad.bottom }}
