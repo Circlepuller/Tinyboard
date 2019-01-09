@@ -2,8 +2,8 @@
 <html lang="{{ config.locale }}">
 <head>
     <meta charset="utf-8">
-	<link rel="stylesheet" media="screen" href="{{ config.url_stylesheet }}">
-	<style>
+    {% include "header.html" with {"nojavascript": true} %}
+    <style>
 		iframe{border:none;margin:0;padding:0;height:99%;position:absolute}
 		iframe#sidebar{left:0;top:0;width:15%}
 		iframe#main{border-left:1px solid black;left:15%;top:0;width:85%}

@@ -10,6 +10,7 @@
 		ul{margin:0;padding:0}
 		li{list-style:none;padding:0 4px;margin: 0 4px}
 		li a.system{font-weight:bold}
+		#player{width:100%}
 	</style> 
 	{% if settings.playlist %}
 	{% verbatim %}
@@ -40,7 +41,7 @@
 				events: {
 					onReady: onPlayerReady,
 					onStateChange: (event) => {
-						if (event.data === YT.PlayerState.ENDED) // Ended
+						if (event.data === YT.PlayerState.ENDED) /* Ended */
 							player.stopVideo();
 					}
 				},
@@ -78,7 +79,7 @@
 		</ul>
 	</fieldset>
 	
-	{% for category, board in categories %}
+	{% for category, boards in categories %}
 		<fieldset>
 			<legend>
 				{{ category }}
