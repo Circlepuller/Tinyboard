@@ -4,13 +4,13 @@
 <head>
   <meta charset="utf-8">
   {% include 'header.html' %}
-  <link rel="stylesheet" media="screen" href="{{ config.root }}{{ settings.css }}"/>
+  <link rel="stylesheet" media="screen" href="{{ config.root }}{{ settings.file_css }}"/>
   <title>{{ settings.title }}</title>
 </head>
 <body class="{% if mod %}is-moderator{% else %}is-not-moderator{% endif %}" data-stylesheet="{% if config.default_stylesheet.1 != '' %}{{ config.default_stylesheet.1 }}{% else %}default{% endif %}">
   <header>
     <h1>
-      <img class="banner logo" src="{{ config.root }}{{ settings.logo }}" alt="{{ settings.title }}">
+      <img class="banner logo" src="{{ config.root }}{{ settings.file_logo }}" alt="{{ settings.title }}">
     </h1>
     <div class="subtitle">{{ settings.subtitle }}</div>
   </header>

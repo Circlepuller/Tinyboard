@@ -5,7 +5,7 @@
 	$theme['name'] = 'AwsumChan';
 	// Description (you can use Tinyboard markup here)
 	$theme['description'] = 'A combination of the RecentPosts and Basic themes, made specially for AwsumChan.';
-	$theme['version'] = 'v1.1';
+	$theme['version'] = 'v1.2';
 	
 	// Theme configuration	
 	$theme['config'] = [];
@@ -21,22 +21,6 @@
 		'name' => 'subtitle',
 		'type' => 'text',
 		'comment' => '(optional)'
-	];
-
-	$theme['config'][] = [
-		'title' => 'Logo file',
-		'name' => 'logo',
-		'type' => 'text',
-		'default' => 'logo.png',
-		'comment' => '(optional, leave blank to disable)'
-	];
-
-	$theme['config'][] = [
-		'title' => 'Favicon file',
-		'name' => 'favicon',
-		'type' => 'text',
-		'default' => 'favicon.ico',
-		'comment' => '(optional, leave blank to disable)'
 	];
 	
 	$theme['config'][] = [
@@ -72,8 +56,8 @@
 	];
 	
 	$theme['config'][] = [
-		'title' => 'HTML file',
-		'name' => 'html',
+		'title' => 'Index file',
+		'name' => 'file_index',
 		'type' => 'text',
 		'default' => 'index.html',
 		'comment' => '(eg. "index.html")'
@@ -81,10 +65,51 @@
 	
 	$theme['config'][] = [
 		'title' => 'CSS file',
-		'name' => 'css',
+		'name' => 'file_css',
 		'type' => 'text',
 		'default' => 'recent.css',
 		'comment' => '(eg. "recent.css")'
+	];
+
+	$theme['config'][] = [
+		'title' => 'Logo file',
+		'name' => 'file_logo',
+		'type' => 'text',
+		'default' => 'logo.png',
+		'comment' => '(optional, leave blank to disable)'
+	];
+
+	$theme['config'][] = [
+		'title' => 'Favicon file',
+		'name' => 'file_favicon',
+		'type' => 'text',
+		'default' => 'favicon.ico',
+		'comment' => '(optional, leave blank to disable)'
+	];
+
+	$theme['config'][] = [
+		'title' => 'Frames file',
+		'name' => 'file_frames',
+		'type' => 'text',
+		'default' => 'frames.html',
+		'comment' => '(optional, required if using frames - leave blank to disable)'
+	];
+	 
+	$theme['config'][] = [
+		'title' => 'Sidebar file',
+		'name' => 'file_sidebar',
+		'type' => 'text',
+		'default' => 'sidebar.html',
+		'comment' => '(optional, required if using frames - leave blank to disable)'
+	];
+
+	// This one's a bit of an odd one
+	$theme['config'][] = [
+		'title' => 'YouTube video playlist',
+		'name' => 'playlist',
+		'type' => 'text',
+		'default' => '',
+		'comment' => '(optional, play a YouTube playlist in the sidebar - leave blank to disable)'
 	];
 
 	$theme['config'][] = [

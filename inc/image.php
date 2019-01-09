@@ -1,10 +1,17 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2018 Tinyboard Development Group
+ *  Copyright (c) 2010-2019 Tinyboard Development Group
  */
 
 defined('TINYBOARD') or exit;
+
+/*
+ *  Note that WebP won't work in PHP prior to 7.1 as getimagesize()
+ *  doesn't support the format in earlier versions
+ */
+if (!defined('IMAGETYPE_WEBP'))
+	defined('IMAGETYPE_WEBP', 18);
 
 class Image {
 	public $src, $format, $image, $size;

@@ -18,21 +18,32 @@
   class AwsumChan {
     public function build($action, $settings) {
       global $config, $_theme;
+
+      $frames_enabled = ($settings['file_frames'] !== '' && $settings['file_sidebar'] !== '');
       
       if ($action === 'all') {
-        copy('templates/themes/awsumchan/' . $settings['basecss'], $config['dir']['home'] . $settings['css']);
+        copy('templates/themes/awsumchan/' . $settings['basecss'], $config['dir']['home'] . $settings['file_css']);
         
-        if ($settings['logo'] !== '')
-          copy('templates/themes/awsumchan/logo.png', $config['dir']['home'] . $settings['logo']);
+        if ($settings['file_logo'] !== '')
+          copy('templates/themes/awsumchan/logo.png', $config['dir']['home'] . $settings['file_logo']);
 
-        if ($settings['favicon'] !== '')
-          copy('templates/themes/awsumchan/icon.ico', $config['dir']['home'] . $settings['favicon']);
+        if ($settings['file_favicon'] !== '')
+          copy('templates/themes/awsumchan/icon.ico', $config['dir']['home'] . $settings['file_favicon']);
+      }
+
+      if ($frames_enabled) {
+        switch ($action) {
+          case 'all':
+            file_write($config['dir']['home'] . $settings['file_frames'], $this->frames($settings));
+          case 'boards':
+            file_write($config['dir']['home'] . $settings['file_sidebar'], $this->sidebar($settings));
+        }
       }
 
       $this->excluded = explode(' ', $settings['exclude']);
       
       if ($action === 'all' || $action === 'news' || $action === 'boards' || $action === 'post' || $action === 'post-thread' || $action === 'post-delete')
-        file_write($config['dir']['home'] . $settings['html'], $this->homepage($settings));
+        file_write($config['dir']['home'] . $settings['file_index'], $this->homepage($settings));
     }
     
     // Build news page
@@ -177,6 +188,43 @@
         'recent_images' => $recent_images,
         'recent_posts' => $recent_posts,
         'stats' => $stats
+      ]);
+    }
+
+    public function frames($settings)
+    {
+      global $config;
+
+      return Element('themes/awsumchan/frames.html', [
+        'config' => $config,
+        'settings' => $settings
+      ]);
+    }
+
+    public function sidebar($settings)
+    {
+      global $config;
+
+			$categories = $config['categories'];
+
+			foreach ($categories as &$_boards) {
+			  foreach ($_boards as &$_board) {
+				  $title = boardTitle($_board);
+	  
+				  if (!$title)
+				    $title = $_board;
+				
+				  $_board = [
+            'title' => $title,
+            'uri' => sprintf($config['board_path'], $_board)
+          ];
+			  }
+			}
+			
+			return Element('themes/awsumchan/sidebar.html', [
+				'settings' => $settings,
+				'config' => $config,
+				'categories' => $categories
       ]);
     }
   };
