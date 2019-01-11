@@ -11,7 +11,7 @@ defined('TINYBOARD') or exit;
  *  doesn't support the format in earlier versions
  */
 if (!defined('IMAGETYPE_WEBP'))
-	defined('IMAGETYPE_WEBP', 18);
+	define('IMAGETYPE_WEBP', 18);
 
 class Image {
 	public $src, $format, $image, $size;
