@@ -2,3 +2,6 @@
 	path = js/wPaint
 	url = https://github.com/vichan-devel/wPaint.git
 	branch = master
+[submodule "templates/themes/awsumchan"]
+	path = templates/themes/awsumchan
+	url = https://github.com/AwsumChan/AwsumChan-Theme.git
