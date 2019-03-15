@@ -497,6 +497,24 @@ table.modlog tr th {
   background: #98E;
 }
 
+table.tablesorter thead tr th.headerSortUp:after,
+table.tablesorter thead tr th.headerSortDown:after,
+table.tablesorter thead tr th.header:after {
+  font-family: FontAwesome;
+}
+
+table.tablesorter thead tr th.header:after {
+  content: "\f0dc";
+}
+
+table.tablesorter thead tr th.headerSortUp:after {
+  content: "\f0de";
+}
+
+table.tablesorter thead tr th.headerSortDown:after {
+  content: "\f0dd";
+}
+
 td.minimal,th.minimal {
   width: 1%;
   white-space: nowrap;
