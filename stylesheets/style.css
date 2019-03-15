@@ -497,22 +497,22 @@ table.modlog tr th {
   background: #98E;
 }
 
-table.tablesorter thead tr th.tablesorter-headerAsc:after,
-table.tablesorter thead tr th.tablesorter-headerDesc:after,
-table.tablesorter thead tr th.tablesorter-headerUnSorted:after {
+th.tablesorter-headerAsc .tablesorter-header-inner:after,
+th.tablesorter-headerDesc .tablesorter-header-inner:after,
+th.tablesorter-headerUnSorted .tablesorter-header-inner:after {
   font-family: FontAwesome;
 }
 
-table.tablesorter thead tr th.tablesorter-headerUnSorted:after {
-  content: "\f0dc";
+th.tablesorter-headerUnSorted .tablesorter-header-inner:after {
+  content: " \f0dc";
 }
 
-table.tablesorter thead tr th.tablesorter-headerAsc:after {
-  content: "\f0de";
+th.tablesorter-headerAsc .tablesorter-header-inner:after {
+  content: " \f0de";
 }
 
-table.tablesorter thead tr th.tablesorter-headerDesc:after {
-  content: "\f0dd";
+th.tablesorter-headerDesc .tablesorter-header-inner:after {
+  content: " \f0dd";
 }
 
 td.minimal,th.minimal {
