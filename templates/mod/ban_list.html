@@ -3,7 +3,7 @@
 {% else %}
 	<form action="?/bans" method="post">
 		<input type="hidden" name="token" value="{{ token }}">
-		<table class="modlog">
+		<table class="mod tablesorter" style="width: 100%">
 			<thead>
 				<tr>
 					<th>{% trans 'IP address/mask' %}</th>
@@ -92,7 +92,7 @@
 		</table>
 		<script>
 			if (typeof $ !== 'undefined' && $.tablesorter)
-				$('table.mod').tablesorter({
+				$('table.tablesorter').tablesorter({
 					textExtraction: (node) => {
 						let attr = $(node).data('sort-value');
 						

@@ -1,4 +1,4 @@
-<table class="modlog">
+<table class="modlog tablesorter">
 	<thead>
 		<tr>
 			<th>{% trans 'Staff' %}</th>
@@ -54,7 +54,7 @@
 </table>
 <script>
 	if (typeof $ !== 'undefined' && $.tablesorter)
-		$('table.modlog').tablesorter({
+		$('table.tablesorter').tablesorter({
 			textExtraction: (node) => {
 				let attr = $(node).data('sort-value');
 				
