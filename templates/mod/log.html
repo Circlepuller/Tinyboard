@@ -35,7 +35,7 @@
 						<em>hidden</em>
 					{% endif %}
 				</td>
-				<td class="minimal">
+				<td class="minimal" data-sort-value="{{ log.time }}">
 					<span title="{{ log.time|date(config.post_date) }}">{{ log.time|ago }}</span>
 				</td>
 				<td class="minimal">
@@ -52,6 +52,19 @@
 		{% endfor %}
 	</tbody>
 </table>
+<script>
+	if (typeof $ !== 'undefined' && $.tablesorter)
+		$('table.mod').tablesorter({
+			textExtraction: (node) => {
+				let attr = $(node).data('sort-value');
+				
+				if (typeof attr !== 'undefined' && attr !== false)
+					return attr;
+	
+				return $(node).text();
+			}
+		});
+</script>
 
 {% if count > logs|length %}
 	<p class="unimportant" style="text-align:center;word-wrap:break-word">

@@ -995,7 +995,8 @@
 
 	// Additional Javascript files to include on board index and thread pages. See js/ for available scripts.
 	$config['additional_javascript'][] = 'js/jquery.min.js';
-        $config['additional_javascript'][] = 'js/jquery-migrate-3.0.0.min.js';
+	$config['additional_javascript'][] = 'js/jquery-migrate-3.0.0.min.js';
+	$config['additional_javascript'][] = 'js/jquery.tablesorter.min.js';
 	$config['additional_javascript'][] = 'js/inline-expanding.js';
 	// $config['additional_javascript'][] = 'js/local-time.js';
 
@@ -1011,7 +1012,7 @@
 	// $config['additional_javascript'][] = 'js/style-select.js';
 
 	// Where these script files are located on the web. Defaults to $config['root'].
-	// $config['additional_javascript_url'] = 'http://static.example.org/tinyboard-javascript-stuff/';
+	// $config['url_additional_javascript'] = 'http://static.example.org/tinyboard-javascript-stuff/';
 
 	// Compile all additional scripts into one file ($config['file_script']) instead of including them seperately.
 	$config['additional_javascript_compile'] = false;

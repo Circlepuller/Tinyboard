@@ -233,8 +233,8 @@ function loadConfig() {
 			$config['url_stylesheet'] = $config['uri_stylesheets'] . 'style.css';
 		if (!isset($config['url_javascript']))
 			$config['url_javascript'] = $config['root'] . $config['file_script'];
-		if (!isset($config['additional_javascript_url']))
-			$config['additional_javascript_url'] = $config['root'];
+		if (!isset($config['url_additional_javascript']))
+			$config['url_additional_javascript'] = $config['root'];
 		if (!isset($config['uri_flags']))
 			$config['uri_flags'] = $config['root'] . 'static/flags/%s.png';
 		if (!isset($config['user_flag']))

@@ -13,7 +13,7 @@
 		{% if not nojavascript %}
 			<script src="{{ config.url_javascript }}"></script>
 			{% if not config.additional_javascript_compile %}
-			{% for javascript in config.additional_javascript %}<script src="{{ config.additional_javascript_url }}{{ javascript }}"></script>{% endfor %}
+			{% for javascript in config.additional_javascript %}<script src="{{ config.url_additional_javascript }}{{ javascript }}"></script>{% endfor %}
 			{% endif %}
 		{% endif %}
 		{% if config.recaptcha %}<script src="//www.google.com/recaptcha/api.js"></script>

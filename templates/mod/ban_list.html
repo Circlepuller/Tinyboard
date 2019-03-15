@@ -39,30 +39,29 @@
 								{{ config.board_abbreviation|sprintf(ban.board) }}
 							{% else %}
 								<em>{% trans 'all boards' %}</em>
-							{% endif %}					
+							{% endif %}
 						</td>
-						<td style="white-space: nowrap">
+						<td style="white-space: nowrap" data-sort-value="{{ ban.created }}">
 							<span title="{{ ban.created|date(config.post_date) }}">
 								{{ ban.created|ago }} ago
 							</span>
 						</td>
-						<td style="white-space: nowrap">
-							{% if ban.expires == 0 %}
-								-
-							{% else %}
-								{{ (ban.expires - ban.created + time()) | until }}
-							{% endif %}
-						</td>
-						<td style="white-space: nowrap">
-							{% if ban.expires == 0 %}
+						{% if ban.expires == 0 %}
+							<td style="white-space: nowrap">-</td>
+							<td style="white-space: nowrap">
 								<em>{% trans 'never' %}</em>
-							{% else %}
+							</td>
+						{% else %}
+							<td style="white-space: nowrap" data-sort-value="{{ ban.expires - ban.created + time() }}">
+								{{ (ban.expires - ban.created + time())|until }}
+							</td>
+							<td style="white-space: nowrap" data-sort-value="{{ ban.expires }}">
 								{{ ban.expires|date(config.post_date) }}
 								{% if ban.expires > time() %}
 									<small>(in {{ ban.expires|until }})</small>
 								{% endif %}
-							{% endif %}
-						</td>
+							</td>
+						{% endif %}
 						<td>
 							{%  if ban.seen %}
 								{% trans 'Yes' %}
@@ -91,13 +90,25 @@
 				{% endfor %}
 			</tbody>
 		</table>
-		
+		<script>
+			if (typeof $ !== 'undefined' && $.tablesorter)
+				$('table.mod').tablesorter({
+					textExtraction: (node) => {
+						let attr = $(node).data('sort-value');
+						
+						if (typeof attr !== 'undefined' && attr !== false)
+							return attr;
+			
+						return $(node).text();
+					}
+				});
+		</script>
+
 		<p style="text-align:center">
 			<input type="submit" name="unban" value="{% trans 'Unban selected' %}">
 		</p>
 	</form>
 {% endif %}
-
 {% if count > bans|length %}
 	<p class="unimportant" style="text-align:center;word-wrap:break-word">
 		{% for i in range(0, (count - 1) / config.mod.modlog_page) %}
