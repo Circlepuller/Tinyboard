@@ -1632,8 +1632,6 @@
 
 	// Link imageboard to your Google Analytics account to track users and provide traffic insights.
 	// $config['google_analytics'] = 'UA-xxxxxxx-yy';
-	// Keep the Google Analytics cookies to one domain -- ga._setDomainName()
-	// $config['google_analytics_domain'] = 'www.example.org';
 
 	// Link imageboard to your Statcounter.com account to track users and provide traffic insights without the Google botnet.
 	// Extract these values from Statcounter's JS tracking code:

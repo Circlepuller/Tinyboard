@@ -504,15 +504,15 @@ th.tablesorter-headerUnSorted .tablesorter-header-inner:after {
 }
 
 th.tablesorter-headerUnSorted .tablesorter-header-inner:after {
-  content: " \f0dc";
+  content: "\00a0\f0dc";
 }
 
 th.tablesorter-headerAsc .tablesorter-header-inner:after {
-  content: " \f0de";
+  content: "\00a0\f0de";
 }
 
 th.tablesorter-headerDesc .tablesorter-header-inner:after {
-  content: " \f0dd";
+  content: "\00a0\f0dd";
 }
 
 td.minimal,th.minimal {

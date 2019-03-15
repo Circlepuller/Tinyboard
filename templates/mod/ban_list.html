@@ -56,7 +56,7 @@
 								{{ (ban.expires - ban.created + time())|until }}
 							</td>
 							<td style="white-space: nowrap" data-sort-value="{{ ban.expires }}">
-								{{ ban.expires|date(config.post_date) }}
+								{{ ban.expires|date(config.post_date) }} 
 								{% if ban.expires > time() %}
 									<small>(in {{ ban.expires|until }})</small>
 								{% endif %}

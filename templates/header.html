@@ -11,38 +11,12 @@
 			var modRoot="{{ config.root }}"+(inMod ? "mod.php?/" : "");
 		</script>
 		{% if not nojavascript %}
+			{% if config.google_analytics %}
+				<script async src="//www.googletagmanager.com/gtag/js?id={{ config.google_analytics }}"></script>
+			{% endif %}
 			<script src="{{ config.url_javascript }}"></script>
 			{% if not config.additional_javascript_compile %}
 			{% for javascript in config.additional_javascript %}<script src="{{ config.url_additional_javascript }}{{ javascript }}"></script>{% endfor %}
 			{% endif %}
 		{% endif %}
-		{% if config.recaptcha %}<script src="//www.google.com/recaptcha/api.js"></script>
-		{% verbatim %}<style>
-			#recaptcha_area {
-				float: none !important;
-				padding: 0 !important;
-			}
-			#recaptcha_logo, #recaptcha_privacy {
-				display: none;
-			}
-			#recaptcha_table {
-				border: none !important;
-			}
-			#recaptcha_table tr:first-child {
-				height: auto;
-			}
-			.recaptchatable img {
-				float: none !important;
-			}
-			#recaptcha_response_field {
-				font-size: 10pt !important;
-				border: 1px solid #a9a9a9 !important;
-				padding: 1px !important;
-			}
-			td.recaptcha_image_cell {
-				background: transparent !important;
-			}
-			.recaptchatable, #recaptcha_area tr, #recaptcha_area td, #recaptcha_area th {
-				padding: 0 !important;
-			}
-		</style>{% endverbatim %}{% endif %}
+		{% if config.recaptcha %}<script src="//www.google.com/recaptcha/api.js"></script>{% endif %}
