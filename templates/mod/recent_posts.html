@@ -1,17 +1,15 @@
-<script src="{{ config.additional_javascript_url }}js/mod/recent_posts.js"></script>
 {% if not posts|length %}
 	<p style="text-align:center" class="unimportant">({% trans 'There are no active posts.' %})</p>
 {% else %}
 	<h4>Viewing last {{ limit|e }} posts</h4>
 	<p>View <a href="?/recent/25"> 25 </a>|<a href="?/recent/50"> 50 </a>|<a href="?/recent/100"> 100 </a></p>
-	<a href="javascript:void(0)" id="erase-local-data" style="float:right; clear:both">Erase local data</a></div>
 	{% for post in posts %}
 		{% if not post.thread %}
 			{% set thread = post.id %}
 		{% else %}
 			{% set thread = post.thread %}
 		{% endif %}
-		<div class="post-wrapper" data-board="{{ post.board }}"><hr/><a class="eita-link" id="eita-{{ post.board }}-{{ thread }}" href="?/{{ post.board }}/{{ config.dir.res }}{{ thread }}.html#{{ post.id }}">/{{ post.board }}/{{ post.id }}</a><br>
+		<div class="post-wrapper" data-board="{{ post.board }}"><hr/><a href="?/{{ post.board }}/{{ config.dir.res }}{{ thread }}.html#{{ post.id }}">/{{ post.board }}/{{ post.id }}</a><br>
 			{{ post.built }}
 		</div>
 	{% endfor %}

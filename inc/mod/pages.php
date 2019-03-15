@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2018 Tinyboard Development Group
+ *  Copyright (c) 2010-2019 Tinyboard Development Group
  */
 
 defined('TINYBOARD') or exit;
@@ -901,9 +901,11 @@ function mod_ban() {
 		header('Location: ?/', true, $config['redirect_http']);
 }
 
-function mod_bans() {
+function mod_bans($page_no = 1) {
 	global $config;
-	global $mod;
+
+	if ($page_no < 1)
+		error($config['error']['404']);
 	
 	if (!hasPermission($config['mod']['view_banlist']))
 		error($config['error']['noaccess']);
@@ -912,7 +914,7 @@ function mod_bans() {
 		if (!hasPermission($config['mod']['unban']))
 			error($config['error']['noaccess']);
 		
-		$unban = array();
+		$unban = [];
 		foreach ($_POST as $name => $unused) {
 			if (preg_match('/^ban_(\d+)$/', $name, $match))
 				$unban[] = $match[1];
@@ -923,29 +925,27 @@ function mod_bans() {
 		foreach ($unban as $id) {
 			Bans::delete($id, true, $mod['boards'], true);
 		}
-                rebuildThemes('bans');
+
+        rebuildThemes('bans');
 		header('Location: ?/bans', true, $config['redirect_http']);
 		return;
 	}
+
+	$bans = Bans::list_all(($page_no - 1) * $config['mod']['banlist_page'], $config['mod']['banlist_page']);
+
+	if (empty($bans) && $page_no > 1)
+		error($config['error']['404']);
+
+	foreach ($bans as &$ban) {
+		if (filter_var($ban['mask'], FILTER_VALIDATE_IP) !== false)
+			$ban['single_addr'] = true;
+	}
 	
-	mod_page(_('Ban list'), 'mod/ban_list.html', array(
-		'mod' => $mod,
-		'boards' => json_encode($mod['boards']),
-		'token' => make_secure_link_token('bans'),
-		'token_json' => make_secure_link_token('bans.json')
-	));
-}
-
-function mod_bans_json() {
-        global $config, $mod;
-
-        if (!hasPermission($config['mod']['ban']))
-                error($config['error']['noaccess']);
-
-	// Compress the json for faster loads
-	if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler");
-
-	Bans::stream_json(false, false, !hasPermission($config['mod']['view_banstaff']), $mod['boards']);
+	mod_page(_('Ban list'), 'mod/ban_list.html', [
+		'bans' => $bans,
+		'count' => Bans::count(),
+		'token' => make_secure_link_token('bans')
+	]);
 }
 
 function mod_ban_appeals() {

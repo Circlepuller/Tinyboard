@@ -145,6 +145,25 @@ class Bans {
 		return $ban_list;
 	}
 
+	public static function list_all(int $offset = 0, int $limit = 9001)
+	{
+		$query = query("SELECT ``bans``.*, `username` FROM ``bans``
+						LEFT JOIN ``mods`` ON ``mods``.`id` = `creator`
+						ORDER BY `created` DESC LIMIT $offset, $limit") or error(db_error());
+		$bans = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach ($bans as &$ban)
+			$ban['mask'] = self::range_to_string([$ban['ipstart'], $ban['ipend']]);
+
+		return $bans;
+	}
+
+	public static function count()
+	{
+		$query = query('SELECT COUNT(*) FROM ``bans``') or error(db_error());
+		return (int)$query->fetchColumn();
+	}
+
 	static public function stream_json($out = false, $filter_ips = false, $filter_staff = false, $board_access = false) {
 		$query = query("SELECT ``bans``.*, `username` FROM ``bans``
 			LEFT JOIN ``mods`` ON ``mods``.`id` = `creator`
