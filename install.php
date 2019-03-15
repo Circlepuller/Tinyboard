@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', 'v0.10.0-dev-1');
+define('VERSION', 'v0.10.0-dev-2');
 require 'inc/functions.php';
 loadConfig();
 
@@ -131,6 +131,9 @@ if (file_exists($config['has_installed'])) {
 		case '5.2.0-dev-1':
 			// Back to Tinyboard versioning at this point.
 			// PHP 7.0 and MySQL/MariaDB 5.5.3 or newer are now requirements.
+		case 'v0.10.0-dev-1':
+			// Replaced longtable with tablesorter, updated copyright years, PHP 7.3 fixes implemented
+			// Next update will feature some nice surprises!
 		case false:
 			// TODO: enhance Tinyboard -> vichan upgrade path.
 			query("CREATE TABLE IF NOT EXISTS ``search_queries`` (  `ip` varchar(39) NOT NULL,  `time` int(11) NOT NULL,  `query` text NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8;") or error(db_error());
