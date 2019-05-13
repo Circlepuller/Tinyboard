@@ -902,7 +902,7 @@ function mod_ban() {
 }
 
 function mod_bans($page_no = 1) {
-	global $config;
+	global $config, $mod;
 
 	if ($page_no < 1)
 		error($config['error']['404']);

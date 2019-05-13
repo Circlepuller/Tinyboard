@@ -371,10 +371,6 @@ function init() {
 		highlightReply(window.location.hash.substring(1));
 }
 
-var RecaptchaOptions = {
-	theme : 'clean'
-};
-
 onready_callbacks = [];
 function onready(fnc) {
 	onready_callbacks.push(fnc);
