@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2019 Tinyboard Development Group
+ *  Copyright (c) 2010-2018 Tinyboard Development Group
  */
 
 defined('TINYBOARD') or exit;
@@ -10,7 +10,7 @@ class Cache {
 	private static $cache;
 	public static function init() {
 		global $config;
-
+		
 		switch ($config['cache']['enabled']) {
 			case 'redis':
 				self::$cache = new Redis();
@@ -27,14 +27,13 @@ class Cache {
 	}
 	public static function get($key) {
 		global $config, $debug;
-
+		
 		$key = $config['cache']['prefix'] . $key;
-
+		
 		$data = false;
 		switch ($config['cache']['enabled']) {
 			case 'apc':
-			case 'apcu':
-				$data = apcu_fetch($key);
+				$data = apc_fetch($key);
 				break;
 			case 'xcache':
 				$data = xcache_get($key);
@@ -59,20 +58,20 @@ class Cache {
 				$data = json_decode(self::$cache->get($key), true);
 				break;
 		}
-
+		
 		if ($config['debug'])
 			$debug['cached'][] = $key . ($data === false ? ' (miss)' : ' (hit)');
-
+		
 		return $data;
 	}
 	public static function set($key, $value, $expires = false) {
 		global $config, $debug;
-
+		
 		$key = $config['cache']['prefix'] . $key;
-
+		
 		if (!$expires)
 			$expires = $config['cache']['timeout'];
-
+		
 		switch ($config['cache']['enabled']) {
 			case 'redis':
 				if (!self::$cache)
@@ -80,8 +79,7 @@ class Cache {
 				self::$cache->setex($key, $expires, json_encode($value));
 				break;
 			case 'apc':
-			case 'apcu':
-				apcu_store($key, $value, $expires);
+				apc_store($key, $value, $expires);
 				break;
 			case 'xcache':
 				xcache_set($key, $value, $expires);
@@ -95,15 +93,15 @@ class Cache {
 				self::$cache[$key] = $value;
 				break;
 		}
-
+		
 		if ($config['debug'])
 			$debug['cached'][] = $key . ' (set)';
 	}
 	public static function delete($key) {
 		global $config, $debug;
-
+		
 		$key = $config['cache']['prefix'] . $key;
-
+		
 		switch ($config['cache']['enabled']) {
 			case 'redis':
 				if (!self::$cache)
@@ -111,8 +109,7 @@ class Cache {
 				self::$cache->delete($key);
 				break;
 			case 'apc':
-			case 'apcu':
-				apcu_delete($key);
+				apc_delete($key);
 				break;
 			case 'xcache':
 				xcache_unset($key);
@@ -126,17 +123,16 @@ class Cache {
 				unset(self::$cache[$key]);
 				break;
 		}
-
+		
 		if ($config['debug'])
 			$debug['cached'][] = $key . ' (deleted)';
 	}
 	public static function flush() {
 		global $config;
-
+		
 		switch ($config['cache']['enabled']) {
 			case 'apc':
-			case 'apcu':
-				return apcu_clear_cache('user');
+				return apc_clear_cache('user');
 			case 'php':
 				self::$cache = array();
 				break;
@@ -151,7 +147,7 @@ class Cache {
 					self::init();
 				return self::$cache->flushDB();
 		}
-
+		
 		return false;
 	}
 }
