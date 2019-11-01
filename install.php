@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', 'v0.10.0-dev-2');
+define('VERSION', 'v0.10.0-dev-3');
 require 'inc/functions.php';
 loadConfig();
 
@@ -21,7 +21,6 @@ class SaltGen {
 		return base64_encode(random_bytes($this->salt_length));
 	}
 
-	// TODO: Perhaps add mcrypt as an option? Maybe overkill.
 	public function generate() {
 		if (extension_loaded('openssl'))
 			return "OSSL." . $this->generate_install_salt_openssl();
@@ -132,6 +131,7 @@ if (file_exists($config['has_installed'])) {
 			// Back to Tinyboard versioning at this point.
 			// PHP 7.0 and MySQL/MariaDB 5.5.3 or newer are now requirements.
 		case 'v0.10.0-dev-1':
+		case 'v0.10.0-dev-2':
 			// Replaced longtable with tablesorter, updated copyright years, PHP 7.3 fixes implemented
 			// Next update will feature some nice surprises!
 		case false:
