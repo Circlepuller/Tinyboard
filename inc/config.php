@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2018 Tinyboard Development Group
+ *  Copyright (c) 2010-2019 Tinyboard Development Group
  *  
  *  WARNING: This is a project-wide configuration file and is overwritten when upgrading to a newer
  *  version of Tinyboard. Please leave this file unchanged, or it will be a lot harder for you to upgrade.
@@ -211,7 +211,7 @@
 	// Skip checking certain IP addresses against blacklists (for troubleshooting or whatever)
 	$config['dnsbl_exceptions'][] = '127.0.0.1';
 	
-	// To prevent bump atacks; returns the thread to last position after the last post is deleted. 
+	// To prevent bump attacks; returns the thread to last position after the last post is deleted. 
 	$config['anti_bump_flood'] = false;
 
 	/*
