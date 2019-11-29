@@ -9,19 +9,19 @@ $params = '?v=' . urlencode($v) . '&amp;t=' . urlencode($t);
 <html>
 <head>
     <meta charset="utf-8">
-    <title><?php echo htmlspecialchars($t); ?></title>
+    <title><?= htmlspecialchars($t); ?></title>
     <link rel="stylesheet" href="stylesheets/webm/playerstyle.css">
     <script src="js/webm-settings.js"></script>
     <script src="js/webm/playersettings.js"></script>
 </head>
 <body>
     <div id="playerheader">
-        <a id="loop0" href="<?php echo $params; ?>&amp;loop=0"<?php if (!$loop) echo ' style="font-weight: bold"'; ?>>[play once]</a>
-        <a id="loop1" href="<?php echo $params; ?>&amp;loop=1"<?php if ($loop) echo ' style="font-weight: bold"'; ?>>[loop]</a>
+        <a id="loop0" href="<?= $params; ?>&amp;loop=0"<?php if (!$loop) echo ' style="font-weight: bold"'; ?>>[play once]</a>
+        <a id="loop1" href="<?= $params; ?>&amp;loop=1"<?php if ($loop) echo ' style="font-weight: bold"'; ?>>[loop]</a>
     </div>
     <div id="playercontent">
-        <video controls<?php if ($loop) echo ' loop'; ?> src="<?php echo htmlspecialchars($v); ?>">
-            Your browser does not support HTML5 video. <a href="<?php echo htmlspecialchars($v); ?>">[Download]</a>
+        <video controls<?php if ($loop) echo ' loop'; ?> src="<?= htmlspecialchars($v); ?>">
+            Your browser does not support HTML5 video. <a href="<?= htmlspecialchars($v); ?>">[Download]</a>
         </video>
     </div>
 </body>
