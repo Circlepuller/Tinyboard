@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', 'v0.10.0-dev-3');
+define('VERSION', 'v0.10.0');
 require 'inc/functions.php';
 loadConfig();
 
@@ -30,12 +30,12 @@ class SaltGen {
 }
 
 $step = isset($_GET['step']) ? round($_GET['step']) : 0;
-$page = array(
+$page = [
 	'config' => $config,
 	'title' => 'Install',
 	'body' => '',
 	'nojavascript' => true
-);
+];
 
 // this breaks the display of licenses if enabled
 $config['minify_html'] = false;
@@ -45,7 +45,7 @@ if (file_exists($config['has_installed'])) {
 	// Check the version number
 	$version = trim(file_get_contents($config['has_installed']));
 	if (empty($version))
-		$version = '4.4.97';
+		$version = '4.9.90';
 	
 	function __query($sql) {
 		sql_open();
@@ -56,47 +56,6 @@ if (file_exists($config['has_installed'])) {
 	$boards = listBoards();
 	
 	switch ($version) {
-		case '4.4.97':
-			if (!isset($_GET['confirm2'])) {
-				$page['title'] = 'License Change';
-				$page['body'] = '<p style="text-align:center">You are upgrading to a version which uses an amended license. The licenses included with vichan distributions prior to this version (4.4.98) are still valid for those versions, but no longer apply to this and newer versions.</p>' .
-					'<textarea style="width:700px;height:370px;margin:auto;display:block;background:white;color:black" disabled>' . htmlentities(file_get_contents('LICENSE.md')) . '</textarea>
-					<p style="text-align:center">
-						<a href="?confirm2=1">I have read and understood the agreement. Proceed to upgrading.</a>
-					</p>';
-				
-				file_write($config['has_installed'], '4.4.97');
-				
-				break;
-			}
-		case '4.4.98-pre':
-			if (!$twig)
-				load_twig();
-			$twig->clearCacheFiles();
-		case '4.4.98':
-		case '4.5.0':
-		case '4.5.1':
-		case '4.5.2':
-			if (!isset($_GET['confirm3'])) {
-				$page['title'] = 'Breaking change';
-				$page['body'] = '<p style="text-align:center">You are upgrading to the 5.0 branch of vichan. Please back up your database, because the process is irreversible. At the current time, if you want a very stable vichan experience, please use the 4.5 branch. This warning will be lifted as soon as we all agree that 5.0 branch is stable enough</p>
-					<p style="text-align:center">
-						<a href="?confirm3=1">I have read and understood the warning. Proceed to upgrading.</a>
-					</p>';
-				
-				file_write($config['has_installed'], '4.5.2');
-				
-				break;
-			}
-
-			foreach ($boards as &$board) {
-				query(sprintf('ALTER TABLE ``posts_%s`` ADD `files` text DEFAULT NULL AFTER `bump`;', $board['uri'])) or error(db_error());
-				query(sprintf('ALTER TABLE ``posts_%s`` ADD `num_files` int(11) DEFAULT 0 AFTER `files`;', $board['uri'])) or error(db_error());
-				query(sprintf('UPDATE ``posts_%s`` SET `files` = CONCAT(\'[{"file":"\',`file`,\'", "thumb":"\',`thumb`,\'", "filename":"\',`filename`,\'", "size":"\',`filesize`,\'",  "width":"\',`filewidth`,\'","height":"\',`fileheight`,\'","thumbwidth":"\',`thumbwidth`,\'","thumbheight":"\',`thumbheight`,\'"}]\') WHERE `file` IS NOT NULL', $board['uri'], $board['uri'], $board['uri'])) or error(db_error());
-				query(sprintf('UPDATE ``posts_%s`` SET `num_files` = 1 WHERE `file` IS NOT NULL', $board['uri'])) or error(db_error());
-				query(sprintf('ALTER TABLE ``posts_%s`` DROP COLUMN `thumb`, DROP COLUMN `thumbwidth`, DROP COLUMN `thumbheight`, DROP COLUMN `file`, DROP COLUMN `fileheight`, DROP COLUMN `filesize`, DROP COLUMN `filewidth`, DROP COLUMN `filename`', $board['uri'])) or error(db_error());
-				query(sprintf('REPAIR TABLE ``posts_%s``', $board['uri']));
-			}
 		case '4.9.90':
 		case '4.9.91':
 		case '4.9.92':
@@ -132,10 +91,11 @@ if (file_exists($config['has_installed'])) {
 			// PHP 7.0 and MySQL/MariaDB 5.5.3 or newer are now requirements.
 		case 'v0.10.0-dev-1':
 		case 'v0.10.0-dev-2':
+		case 'v0.10.0-dev-3':
 			// Replaced longtable with tablesorter, updated copyright years, PHP 7.3 fixes implemented
 			// Next update will feature some nice surprises!
+			// Require PHP 7.2 or newer
 		case false:
-			// TODO: enhance Tinyboard -> vichan upgrade path.
 			query("CREATE TABLE IF NOT EXISTS ``search_queries`` (  `ip` varchar(39) NOT NULL,  `time` int(11) NOT NULL,  `query` text NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8;") or error(db_error());
 
 			// Update version number
@@ -206,120 +166,120 @@ if ($step == 0) {
 	}
 	
 	// Required extensions
-	$extensions = array(
-		'PDO' => array(
+	$extensions = [
+		'PDO' => [
 			'installed' => extension_loaded('pdo'),
 			'required' => true
-		),
-		'GD' => array(
+		],
+		'GD' => [
 			'installed' => extension_loaded('gd'),
 			'required' => true
-		),
-		'Imagick' => array(
+		],
+		'Imagick' => [
 			'installed' => extension_loaded('imagick'),
 			'required' => false
-		),
-		'OpenSSL' => array(
+		],
+		'OpenSSL' => [
 			'installed' => extension_loaded('openssl'),
 			'required' => false
-		)
-	);
+		]
+	];
 
-	$tests = array(
-		array(
+	$tests = [
+		[
 			'category' => 'PHP',
 			'name' => 'PHP &ge; 7.0',
-			'result' => PHP_VERSION_ID >= 70000,
+			'result' => PHP_VERSION_ID >= 70200,
 			'required' => true,
-			'message' => 'Tinyboard requires PHP 7.0 or better.',
-		),
-		array(
+			'message' => 'Tinyboard requires PHP 7.2 or better.',
+		],
+		[
 			'category' => 'PHP',
 			'name' => 'PHP &ge; 7.2',
 			'result' => PHP_VERSION_ID >= 70200,
 			'required' => false,
-			'message' => 'Tinyboard works best on PHP 7.2 or better.',
-		),
-		array(
+			'message' => 'Tinyboard works best on PHP 7.3 or better.',
+		],
+		[
 			'category' => 'PHP',
 			'name' => 'mbstring extension installed',
 			'result' => extension_loaded('mbstring'),
 			'required' => true,
 			'message' => 'You must install the PHP <a href="http://www.php.net/manual/en/mbstring.installation.php">mbstring</a> extension.',
-		),
-		array(
+		],
+		[
 			'category' => 'PHP',
 			'name' => 'OpenSSL extension installed',
 			'result' => extension_loaded('openssl'),
 			'required' => false,
 			'message' => 'It is highly recommended that you install the PHP <a href="http://www.php.net/manual/en/openssl.installation.php">OpenSSL</a> extension. Installing the OpenSSL extension allows Tinyboard to generate a secure salt automatically for you.',
-		),
-		array(
+		],
+		[
 			'category' => 'Database',
 			'name' => 'PDO extension installed',
 			'result' => extension_loaded('pdo'),
 			'required' => true,
 			'message' => 'You must install the PHP <a href="http://www.php.net/manual/en/intro.pdo.php">PDO</a> extension.',
-		),
-		array(
+		],
+		[
 			'category' => 'Database',
 			'name' => 'MySQL PDO driver installed',
 			'result' => extension_loaded('pdo') && in_array('mysql', PDO::getAvailableDrivers()),
 			'required' => true,
 			'message' => 'The required <a href="http://www.php.net/manual/en/ref.pdo-mysql.php">PDO MySQL driver</a> is not installed.',
-		),
-		array(
+		],
+		[
 			'category' => 'Image processing',
 			'name' => 'GD extension installed',
 			'result' => extension_loaded('gd'),
 			'required' => true,
 			'message' => 'You must install the PHP <a href="http://www.php.net/manual/en/intro.image.php">GD</a> extension. GD is a requirement even if you have chosen another image processor for thumbnailing.',
-		),
-		array(
+		],
+		[
 		 	'category' => 'Image processing',
 		 	'name' => 'GD: JPEG',
 			'result' => function_exists('imagecreatefromjpeg'),
 			'required' => true,
 			'message' => 'imagecreatefromjpeg() does not exist. This is a problem.',
-		),
-		array(
+		],
+		[
 			'category' => 'Image processing',
 			'name' => 'GD: PNG',
 			'result' => function_exists('imagecreatefrompng'),
 			'required' => true,
 			'message' => 'imagecreatefrompng() does not exist. This is a problem.',
-		),
-		array(
+		],
+		[
 			'category' => 'Image processing',
 			'name' => 'GD: GIF',
 			'result' => function_exists('imagecreatefromgif'),
 			'required' => true,
 			'message' => 'imagecreatefromgif() does not exist. This is a problem.',
-		),
-		array(
+		],
+		[
 			'category' => 'Image processing',
 			'name' => '`convert` (command-line ImageMagick)',
 			'result' => $can_exec && shell_exec('which convert'),
 			'required' => false,
 			'message' => '(Optional) `convert` was not found or executable; command-line ImageMagick image processing cannot be enabled.',
 			'effect' => function (&$config) { $config['thumb_method'] = 'convert'; },
-		),
-		array(
+		],
+		[
 			'category' => 'Image processing',
 			'name' => '`identify` (command-line ImageMagick)',
 			'result' => $can_exec && shell_exec('which identify'),
 			'required' => false,
 			'message' => '(Optional) `identify` was not found or executable; command-line ImageMagick image processing cannot be enabled.',
-		),
-		array(
+		],
+		[
 			'category' => 'Image processing',
 			'name' => '`gm` (command-line GraphicsMagick)',
 			'result' => $can_exec && shell_exec('which gm'),
 			'required' => false,
 			'message' => '(Optional) `gm` was not found or executable; command-line GraphicsMagick (faster than ImageMagick) cannot be enabled.',
 			'effect' => function (&$config) { $config['thumb_method'] = 'gm'; },
-		),
-		array(
+		],
+		[
 			'category' => 'Image processing',
 			'name' => '`gifsicle` (command-line animted GIF thumbnailing)',
 			'result' => $can_exec && shell_exec('which gifsicle'),
@@ -327,90 +287,89 @@ if ($step == 0) {
 			'message' => '(Optional) `gifsicle` was not found or executable; you may not use `convert+gifsicle` for better animated GIF thumbnailing.',
 			'effect' => function (&$config) { if ($config['thumb_method'] == 'gm')      $config['thumb_method'] = 'gm+gifsicle';
 							  if ($config['thumb_method'] == 'convert') $config['thumb_method'] = 'convert+gifsicle'; },
-		),
-		array(
+		],
+		[
 			'category' => 'Image processing',
 			'name' => '`md5sum` (quick file hashing on GNU/Linux)',
 			'prereq' => '',
-			'result' => $can_exec && shell_exec('echo "vichan" | md5sum') == "141225c362da02b5c359c45b665168de  -\n",
+			'result' => $can_exec && shell_exec('echo "tinyboard" | md5sum') == "24844695af37aa69aaae43f853446cb8  -\n",
 			'required' => false,
 			'message' => '(Optional) `md5sum` was not found or executable; file hashing for multiple images will be slower. Ignore if not using Linux.',
 			'effect' => function (&$config) { $config['gnu_md5'] = true; },
-		),
-		array(
+		],
+		[
 			'category' => 'Image processing',
 			'name' => '`/sbin/md5` (quick file hashing on BSDs)',
-			'result' => $can_exec && shell_exec('echo "vichan" | /sbin/md5 -r') == "141225c362da02b5c359c45b665168de\n",
+			'result' => $can_exec && shell_exec('echo "tinyboard" | /sbin/md5 -r') == "24844695af37aa69aaae43f853446cb8\n",
 			'required' => false,
 			'message' => '(Optional) `/sbin/md5` was not found or executable; file hashing for multiple images will be slower. Ignore if not using BSD.',
 			'effect' => function (&$config) { $config['bsd_md5'] = true; },
-		),
-		array(
+		],
+		[
 			'category' => 'File permissions',
 			'name' => getcwd(),
 			'result' => is_writable('.'),
 			'required' => true,
 			'message' => 'Tinyboard does not have permission to create directories (boards) here. You will need to <code>chmod</code> (or operating system equivalent) appropriately.'
-		),
-		array(
+		],
+		[
 			'category' => 'File permissions',
 			'name' => getcwd() . '/templates/cache',
 			'result' => is_writable('templates') || (is_dir('templates/cache') && is_writable('templates/cache')),
 			'required' => true,
 			'message' => 'You must give Tinyboard permission to create (and write to) the <code>templates/cache</code> directory or performance will be drastically reduced.'
-		),
-		array(
+		],
+		[
 			'category' => 'File permissions',
 			'name' => getcwd() . '/tmp/cache',
 			'result' => is_dir('tmp/cache') && is_writable('tmp/cache'),
 			'required' => true,
 			'message' => 'You must give Tinyboard permission to write to the <code>tmp/cache</code> directory.'
-		),
-		array(
+		],
+		[
 			'category' => 'File permissions',
 			'name' => getcwd() . '/inc/instance-config.php',
 			'result' => is_writable('inc/instance-config.php'),
 			'required' => false,
 			'message' => 'Tinyboard does not have permission to make changes to <code>inc/instance-config.php</code>. To complete the installation, you will be asked to manually copy and paste code into the file instead.'
-		),
-		array(
+		],
+		[
 			'category' => 'Misc',
 			'name' => 'Caching available (APC, XCache, or Redis)',
 			'result' => extension_loaded('apc') || extension_loaded('xcache')
 				|| extension_loaded('redis'),
 			'required' => false,
 			'message' => 'You will not be able to enable the additional caching system, designed to minimize SQL queries and significantly improve performance. <a href="http://php.net/manual/en/book.apc.php">APC</a> is the recommended method of caching, but <a href="http://xcache.lighttpd.net/">XCache</a>, and <a href="http://pecl.php.net/package/redis">Redis</a> are also supported.'
-		),
-		array(
+		],
+		[
 			'category' => 'Misc',
 			'name' => 'Tinyboard installed using git',
 			'result' => is_dir('.git'),
 			'required' => false,
 			'message' => 'Tinyboard is still beta software and it\'s not going to come out of beta any time soon. As there are often many months between releases yet changes and bug fixes are very frequent, it\'s recommended to use the git repository to maintain your Tinyboard installation. Using git makes upgrading much easier.'
-		)
-	);
+		]
+	];
 
 	$config['font_awesome'] = true;
 	
-	$additional_config = array();
-	foreach ($tests as $test) {
-		if ($test['result'] && isset($test['effect'])) {
+	$additional_config = [];
+	foreach ($tests as $test)
+		if ($test['result'] && isset($test['effect']))
 			$test['effect']($additional_config);
-		}
-	}
+
 	$more = '';
 	create_config_from_array($more, $additional_config);
 	$_SESSION['more'] = $more;
 
-	echo Element('page.html', array(
-		'body' => Element('installer/check-requirements.html', array(
+	echo Element('page.html', [
+		'body' => Element('installer/check-requirements.html', [
 			'extensions' => $extensions,
 			'tests' => $tests,
 			'config' => $config,
-		)),
+		]),
 		'title' => 'Checking environment',
 		'config' => $config,
-	));
+	]);
 } elseif ($step == 2) {
 
 	// Basic config
@@ -420,14 +379,14 @@ if ($step == 0) {
 	$config['cookies']['salt'] = $sg->generate();
 	$config['secure_trip_salt'] = $sg->generate();
 	
-	echo Element('page.html', array(
-		'body' => Element('installer/config.html', array(
+	echo Element('page.html', [
+		'body' => Element('installer/config.html', [
 			'config' => $config,
 			'more' => $_SESSION['more'],
-		)),
+		]),
 		'title' => 'Configuration',
 		'config' => $config
-	));
+	]);
 } elseif ($step == 3) {
 	$more = $_POST['more'];
 	unset($_POST['more']);
@@ -485,7 +444,7 @@ if ($step == 0) {
 	preg_match_all("/(^|\n)((SET|CREATE|INSERT).+)\n\n/msU", $sql, $queries);
 	$queries = $queries[2];
 	
-	$queries[] = Element('posts.sql', array('board' => 'b'));
+	$queries[] = Element('posts.sql', ['board' => 'b']);
 	
 	$sql_errors = '';
 	foreach ($queries as $query) {
@@ -495,10 +454,10 @@ if ($step == 0) {
 	}
 	
 	$page['title'] = 'Installation complete';
-	$page['body'] = '<p style="text-align:center">Thank you for using vichan. Please remember to report any bugs you discover. <a href="http://tinyboard.org/docs/?p=Config">How do I edit the config files?</a></p>';
+	$page['body'] = '<p style="text-align:center">Thank you for using Tinyboard. Please remember to report any bugs you discover. <a href="https://web.archive.org/web/20121003095922/http://tinyboard.org/docs/?p=Config">How do I edit the config files?</a></p>';
 	
 	if (!empty($sql_errors)) {
-		$page['body'] .= '<div class="ban"><h2>SQL errors</h2><p>SQL errors were encountered when trying to install the database. This may be the result of using a database which is already occupied with a vichan installation; if so, you can probably ignore this.</p><p>The errors encountered were:</p><ul>' . $sql_errors . '</ul><p><a href="?step=5">Ignore errors and complete installation.</a></p></div>';
+		$page['body'] .= '<div class="ban"><h2>SQL errors</h2><p>SQL errors were encountered when trying to install the database. This may be the result of using a database which is already occupied with a Tinyboard installation; if so, you can probably ignore this.</p><p>The errors encountered were:</p><ul>' . $sql_errors . '</ul><p><a href="?step=5">Ignore errors and complete installation.</a></p></div>';
 	} else {
 		$boards = listBoards();
 		foreach ($boards as &$_board) {
@@ -515,7 +474,7 @@ if ($step == 0) {
 	echo Element('page.html', $page);
 } elseif ($step == 5) {
 	$page['title'] = 'Installation complete';
-	$page['body'] = '<p style="text-align:center">Thank you for using vichan. Please remember to report any bugs you discover.</p>';
+	$page['body'] = '<p style="text-align:center">Thank you for using Tinyboard. Please remember to report any bugs you discover.</p>';
 	
 	$boards = listBoards();
 	foreach ($boards as &$_board) {
@@ -524,10 +483,8 @@ if ($step == 0) {
 	}
 	
 	file_write($config['has_installed'], VERSION);
-	if (!file_unlink(__FILE__)) {
+	if (!file_unlink(__FILE__))
 		$page['body'] .= '<div class="ban"><h2>Delete install.php!</h2><p>I couldn\'t remove <strong>install.php</strong>. You will have to remove it manually.</p></div>';
-	}
 	
 	echo Element('page.html', $page);
 }
-
