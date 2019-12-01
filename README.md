@@ -11,11 +11,11 @@ Tinyboard is defunct no longer. Circlepuller and others aim to modernize and opt
 
 Requirements
 ------------
-1.	PHP >= 7.2
+1.	PHP >= 7.2.24
 2.	MySQL/MariaDB server >= 5.5.3
-3.	[mbstring](http://www.php.net/manual/en/mbstring.installation.php) 
-4.	[PHP GD](http://www.php.net/manual/en/intro.image.php)
-5.	[PHP PDO](http://www.php.net/manual/en/intro.pdo.php)
+3.	[mbstring](https://www.php.net/manual/en/mbstring.installation.php) 
+4.	[PHP GD](https://www.php.net/manual/en/intro.image.php)
+5.	[PHP PDO](https://www.php.net/manual/en/intro.pdo.php)
 
 We try to make sure Tinyboard is compatible with all major web servers and
 operating systems. Tinyboard does not include an Apache ```.htaccess``` file nor does
@@ -23,9 +23,10 @@ it need one.
 
 ### Recommended
 1.	ImageMagick (command-line ImageMagick or GraphicsMagick preferred).
-2.	[APC (Alternative PHP Cache)](http://php.net/manual/en/book.apc.php),
-	[XCache](http://xcache.lighttpd.net/) or
-	[Redis](http://pecl.php.net/package/redis)
+2.	[APC (Alternative PHP Cache)](https://php.net/manual/en/book.apc.php),
+	[XCache](https://xcache.lighttpd.net/) or
+	[Redis](https://pecl.php.net/package/redis)
+3.  [OpenSSL](https://php.net/manual/en/book.openssl.php)
 
 Contributing
 ------------
@@ -119,4 +120,4 @@ https://github.com/vichan-devel/vichan-API/ .
 
 License
 --------
-See [LICENSE.md](http://github.com/Circlepuller/Tinyboard/blob/master/LICENSE.md).
+See [LICENSE.md](https://github.com/Circlepuller/Tinyboard/blob/master/LICENSE.md).

@@ -7,6 +7,9 @@
 /*/config.php
 /*.html
 
+# /inc/src is an exception
+!/inc/src
+
 # include some files though
 !/templates/*.html
 !/inc/config.php

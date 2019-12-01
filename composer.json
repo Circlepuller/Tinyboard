@@ -1,13 +1,19 @@
 {
     "name": "circlepuller/tinyboard",
     "description": "Tinyboard is a light-weight, fast, highly configurable and user-friendly imageboard software package released under a non-restrictive open-source license. It is written in PHP and has few dependencies.",
+    "version": "v0.11.0",
     "type": "project",
-    "config": {
-        "platform": {
-            "php": "7.0.27"
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Circlepuller/Tinyboard"
         }
-    },
+    ],
     "require": {
+        "php": "^7.2.24",
+        "ext-mbstring": "*",
+        "ext-gd": "*",
+        "ext-pdo": "*",
         "gettext/gettext": "^4.4",
         "twig/twig": "^2.4",
         "twig/extensions": "^1.5",
@@ -16,11 +22,27 @@
         "lifo/ip": "^1.0",
         "erusev/parsedown": "^1.7"
     },
-    "license": "MIT",
+    "suggest": {
+        "ext-openssl": "Extended security features",
+        "ext-apc": "Caching support",
+        "ext-xcache": "Caching support",
+        "ext-redis": "Caching support"
+    },
+    "license": "Tinyboard/vichan",
     "authors": [
         {
             "name": "Daniel Saunders",
             "email": "dsaunders@dansaunders.me"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Tinyboard\\": "inc/src/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.2.24"
+        }
+    }
 }

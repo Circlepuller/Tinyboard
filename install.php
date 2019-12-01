@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', 'v0.10.0');
+define('VERSION', 'v0.11.0');
 require 'inc/functions.php';
 loadConfig();
 
@@ -23,9 +23,9 @@ class SaltGen {
 
 	public function generate() {
 		if (extension_loaded('openssl'))
-			return "OSSL." . $this->generate_install_salt_openssl();
+			return 'OSSL.' . $this->generate_install_salt_openssl();
 		else
-			return "PHP7." . $this->generate_install_salt_php7();
+			return 'PHP7.' . $this->generate_install_salt_php7();
 	}
 }
 
@@ -45,7 +45,7 @@ if (file_exists($config['has_installed'])) {
 	// Check the version number
 	$version = trim(file_get_contents($config['has_installed']));
 	if (empty($version))
-		$version = '4.9.90';
+		$version = 'v0.10.0-dev-1';
 	
 	function __query($sql) {
 		sql_open();
@@ -56,45 +56,16 @@ if (file_exists($config['has_installed'])) {
 	$boards = listBoards();
 	
 	switch ($version) {
-		case '4.9.90':
-		case '4.9.91':
-		case '4.9.92':
-            foreach ($boards as &$board)
-                query(sprintf('ALTER TABLE ``posts_%s`` ADD `slug` VARCHAR(255) DEFAULT NULL AFTER `embed`;', $board['uri'])) or error(db_error());
-        case '4.9.93':
-            query('ALTER TABLE ``mods`` CHANGE `password` `password` VARCHAR(255) NOT NULL;') or error(db_error());
-            query('ALTER TABLE ``mods`` CHANGE `salt` `salt` VARCHAR(64) NOT NULL;') or error(db_error());
-		case '5.0.0':
-			query('ALTER TABLE ``mods`` CHANGE `salt` `version` VARCHAR(64) NOT NULL;') or error(db_error());
-		case '5.0.1':
-		case '5.1.0':
-			query('CREATE TABLE IF NOT EXISTS ``pages`` (
-			  `id` int(11) NOT NULL AUTO_INCREMENT,
-			  `board` varchar(255) DEFAULT NULL,
-			  `name` varchar(255) NOT NULL,
-			  `title` varchar(255) DEFAULT NULL,
-			  `type` varchar(255) DEFAULT NULL,
-			  `content` text,
-			  PRIMARY KEY (`id`),
-			  UNIQUE KEY `u_pages` (`name`,`board`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;') or error(db_error());
-		case '5.1.1':
-            foreach ($boards as &$board)
-                query(sprintf("ALTER TABLE ``posts_%s`` ADD `cycle` int(1) NOT NULL AFTER `locked`", $board['uri'])) or error(db_error());
-		case '5.1.2':
-		case '5.1.3':
-		case '5.1.4':
-			query('DROP TABLE IF EXISTS ``nntp_references``;') or error(db_error());
-			query('DROP TABLE IF EXISTS ``captchas``;') or error(db_error());
-		case '5.2.0-dev-1':
-			// Back to Tinyboard versioning at this point.
-			// PHP 7.0 and MySQL/MariaDB 5.5.3 or newer are now requirements.
 		case 'v0.10.0-dev-1':
 		case 'v0.10.0-dev-2':
 		case 'v0.10.0-dev-3':
 			// Replaced longtable with tablesorter, updated copyright years, PHP 7.3 fixes implemented
 			// Next update will feature some nice surprises!
 			// Require PHP 7.2 or newer
+		case 'v0.10.0':
+			// Removed support for vichan upgrades, please upgrade to v0.10.0 before proceeding to a newer version
+			// Require PHP 7.2.24 or newer
+			// Updated Composer files
 		case false:
 			query("CREATE TABLE IF NOT EXISTS ``search_queries`` (  `ip` varchar(39) NOT NULL,  `time` int(11) NOT NULL,  `query` text NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8;") or error(db_error());
 
@@ -189,14 +160,14 @@ if ($step == 0) {
 		[
 			'category' => 'PHP',
 			'name' => 'PHP &ge; 7.0',
-			'result' => PHP_VERSION_ID >= 70200,
+			'result' => PHP_VERSION_ID >= 70224,
 			'required' => true,
-			'message' => 'Tinyboard requires PHP 7.2 or better.',
+			'message' => 'Tinyboard requires PHP 7.2.24 or better.',
 		],
 		[
 			'category' => 'PHP',
-			'name' => 'PHP &ge; 7.2',
-			'result' => PHP_VERSION_ID >= 70200,
+			'name' => 'PHP &ge; 7.3',
+			'result' => PHP_VERSION_ID >= 70300,
 			'required' => false,
 			'message' => 'Tinyboard works best on PHP 7.3 or better.',
 		],
