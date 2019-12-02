@@ -10,7 +10,7 @@ if (!isset ($argv[1])) {
 $board = $argv[1];
 
 $q = query(sprintf("SELECT `id`, `bump`, `time` FROM ``posts_%s``
-                    WHERE `thread` IS NULL", $board));
+                    WHERE `thread` IS NULL AND `archived` = false", $board));
 while ($val = $q->fetch()) {
         $lc = prepare(sprintf('SELECT MAX(`time`) AS `aq` FROM ``posts_%s``
                                WHERE ((`thread` = :thread and

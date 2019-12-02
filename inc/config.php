@@ -1516,6 +1516,9 @@
 	// Create pages
 	$config['mod']['edit_pages'] = MOD;
 	$config['pages_max'] = 10;
+	// Feature threads
+	$config['mod']['feature_archived_threads'] = JANITOR;
+	$config['mod']['delete_featured_archived_threads'] = JANITOR;
 
 	// Config editor permissions
 	$config['mod']['config'] = array();
@@ -1592,7 +1595,7 @@
 
 /*
  * ====================
- *  Events (PHP 5.3.0+)
+ *  Events
  * ====================
  */
 
@@ -1610,9 +1613,9 @@
 	// });
 
 /*
- * =============
+ * ====================
  *  API settings
- * =============
+ * ====================
  */
 
 	// Whether or not to enable the 4chan-compatible API, disabled by default. See
@@ -1623,6 +1626,27 @@
 	// look at the schema for posts_ tables. The array should be formatted as $db_column => $translated_name.
 	// Example: Adding the pre-markup post body to the API as "com_nomarkup".
 	// $config['api']['extra_fields'] = array('body_nomarkup' => 'com_nomarkup');
+
+/*
+ * ====================
+ *  Archive settings
+ * ====================
+ */
+	// Indicate if threads should be archived
+	$config['archive']['enabled'] = true;
+
+	// Indicate if archived threads can be marked as featured (stored forever)
+	$config['archive']['featured'] = true;
+
+	// Lifetime to keep archived threads before deletion
+	// (ex. "60 minutes", "6 hours", "1 day", "1 week")
+	// If set to false, threads are archived forever
+	$config['archive']['max_lifetime'] = '3 days';
+
+	// Set a maxiumum amount of archived threads that can be stored at a single time
+	// If this limit is reached, the oldest archived threads will be deleted
+	// If set to 0, there is no limit
+	$config['archive']['max_threads'] = 0;
 
 /*
  * ====================

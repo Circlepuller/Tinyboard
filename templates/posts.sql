@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS ``posts_{{ board }}`` (
    `sage` int(1) NOT NULL,
    `embed` text,
    `slug` varchar(256) DEFAULT NULL,
+   `archived` boolean NOT NULL DEFAULT false,
+   `featured` boolean NOT NULL DEFAULT false,
    UNIQUE KEY `id` (`id`),
    KEY `thread_id` (`thread`,`id`),
    KEY `filehash` (`filehash`(40)),

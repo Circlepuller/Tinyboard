@@ -66,6 +66,10 @@ if (file_exists($config['has_installed'])) {
 			// Removed support for vichan upgrades, please upgrade to v0.10.0 before proceeding to a newer version
 			// Require PHP 7.2.24 or newer
 			// Updated Composer files
+			// Added archiving feature
+			foreach ($boards as &$_board)
+				query(sprintf('ALTER TABLE ``posts_%s`` ADD `archived` boolean NOT NULL DEFAULT false, ADD `featured` boolean NOT NULL DEFAULT false', $_board['uri'])) or error(db_error());
+
 		case false:
 			query("CREATE TABLE IF NOT EXISTS ``search_queries`` (  `ip` varchar(39) NOT NULL,  `time` int(11) NOT NULL,  `query` text NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8;") or error(db_error());
 

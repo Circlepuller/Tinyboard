@@ -20,6 +20,7 @@ require_once 'inc/template.php';
 require_once 'inc/database.php';
 require_once 'inc/events.php';
 require_once 'inc/api.php';
+require_once 'inc/archive.php';
 require_once 'inc/mod/auth.php';
 
 // the user is not currently logged in as a moderator
@@ -950,7 +951,7 @@ function threadLocked($id) {
 	if (event('check-locked', $id))
 		return true;
 
-	$query = prepare(sprintf('SELECT `locked` FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL LIMIT 1', $board['uri']));
+	$query = prepare(sprintf('SELECT `locked` FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL AND `archived` = false LIMIT 1', $board['uri']));
 	$query->bindValue(':id', $id, PDO::PARAM_INT);
 	$query->execute() or error(db_error());
 
@@ -968,7 +969,7 @@ function threadSageLocked($id) {
 	if (event('check-sage-locked', $id))
 		return true;
 
-	$query = prepare(sprintf('SELECT `sage` FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL LIMIT 1', $board['uri']));
+	$query = prepare(sprintf('SELECT `sage` FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL AND `archived` = false LIMIT 1', $board['uri']));
 	$query->bindValue(':id', $id, PDO::PARAM_INT);
 	$query->execute() or error(db_error());
 
@@ -983,7 +984,7 @@ function threadSageLocked($id) {
 function threadExists($id) {
 	global $board;
 
-	$query = prepare(sprintf('SELECT 1 FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL LIMIT 1', $board['uri']));
+	$query = prepare(sprintf('SELECT 1 FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL AND `archived` = false LIMIT 1', $board['uri']));
 	$query->bindValue(':id', $id, PDO::PARAM_INT);
 	$query->execute() or error(db_error());
 
@@ -1112,7 +1113,7 @@ function bumpThread($id) {
 		$build_pages = array_merge(range(1, thread_find_page($id)), $build_pages);
 	}
 
-	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `bump` = :time WHERE `id` = :id AND `thread` IS NULL', $board['uri']));
+	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `bump` = :time WHERE `id` = :id AND `thread` IS NULL AND `archived` = false', $board['uri']));
 	$query->bindValue(':time', time(), PDO::PARAM_INT);
 	$query->bindValue(':id', $id, PDO::PARAM_INT);
 	$query->execute() or error(db_error($query));
@@ -1291,19 +1292,28 @@ function clean($pid = false) {
 	$offset = round($config['max_pages']*$config['threads_per_page']);
 
 	// I too wish there was an easier way of doing this...
-	$query = prepare(sprintf('SELECT `id` FROM ``posts_%s`` WHERE `thread` IS NULL ORDER BY `sticky` DESC, `bump` DESC LIMIT :offset, 9001', $board['uri']));
+	$query = prepare(sprintf('SELECT `id` FROM ``posts_%s`` WHERE `thread` IS NULL AND `archived` = false ORDER BY `sticky` DESC, `bump` DESC LIMIT :offset, 9001', $board['uri']));
 	$query->bindValue(':offset', $offset, PDO::PARAM_INT);
 
 	$query->execute() or error(db_error($query));
 	while ($post = $query->fetch(PDO::FETCH_ASSOC)) {
-		deletePost($post['id'], false, false);
-		if ($pid) modLog("Automatically deleting thread #{$post['id']} due to new thread #{$pid}");
+		if ($config['archive']['enabled']) {
+			archiveThread($post['id']);
+
+			if ($pid)
+				modLog("Automatically archiving thread #{$post['id']} due to new thread #{$pid}");
+		} else {
+			deletePost($post['id'], false, false);
+
+			if ($pid)
+				modLog("Automatically deleting thread #{$post['id']} due to new thread #{$pid}");
+		}
 	}
 
 	// Bump off threads with X replies earlier, spam prevention method
 	if ($config['early_404']) {
 		$offset = round($config['early_404_page']*$config['threads_per_page']);
-		$query = prepare(sprintf('SELECT `id` AS `thread_id`, (SELECT COUNT(`id`) FROM ``posts_%s`` WHERE `thread` = `thread_id`) AS `reply_count` FROM ``posts_%s`` WHERE `thread` IS NULL ORDER BY `sticky` DESC, `bump` DESC LIMIT :offset, 9001', $board['uri'], $board['uri']));
+		$query = prepare(sprintf('SELECT `id` AS `thread_id`, (SELECT COUNT(`id`) FROM ``posts_%s`` WHERE `thread` = `thread_id`) AS `reply_count` FROM ``posts_%s`` WHERE `thread` IS NULL AND `archived` = false ORDER BY `sticky` DESC, `bump` DESC LIMIT :offset, 9001', $board['uri'], $board['uri']));
 		$query->bindValue(':offset', $offset, PDO::PARAM_INT);
 		$query->execute() or error(db_error($query));
 		
@@ -1317,8 +1327,17 @@ function clean($pid = false) {
 
 		while ($post = $query->fetch(PDO::FETCH_ASSOC)) {
 			if ($post['reply_count'] < $page*$config['early_404_replies']) {
-				deletePost($post['thread_id'], false, false);
-				if ($pid) modLog("Automatically deleting thread #{$post['thread_id']} due to new thread #{$pid} (early 404 is set, #{$post['thread_id']} had {$post['reply_count']} replies)");
+				if ($config['archive']['enabled']) {
+					archiveThread($post['id']);
+		
+					if ($pid)
+						modLog("Automatically archiving thread #{$post['thread_id']} due to new thread #{$pid} (early 404 is set, #{$post['thread_id']} had {$post['reply_count']} replies)");
+				} else {
+					deletePost($post['id'], false, false);
+		
+					if ($pid)
+						modLog("Automatically deleting thread #{$post['thread_id']} due to new thread #{$pid} (early 404 is set, #{$post['thread_id']} had {$post['reply_count']} replies)");
+				}
 			}
 
 			if ($config['early_404_staged']) {
@@ -1336,7 +1355,7 @@ function clean($pid = false) {
 function thread_find_page($thread) {
 	global $config, $board;
 
-	$query = query(sprintf('SELECT `id` FROM ``posts_%s`` WHERE `thread` IS NULL ORDER BY `sticky` DESC, `bump` DESC', $board['uri'])) or error(db_error($query));
+	$query = query(sprintf('SELECT `id` FROM ``posts_%s`` WHERE `thread` IS NULL AND `archived` = false ORDER BY `sticky` DESC, `bump` DESC', $board['uri'])) or error(db_error($query));
 	$threads = $query->fetchAll(PDO::FETCH_COLUMN);
 	if (($index = array_search($thread, $threads)) === false)
 		return false;
@@ -1350,7 +1369,7 @@ function index($page, $mod=false) {
 	$body = '';
 	$offset = round($page*$config['threads_per_page']-$config['threads_per_page']);
 
-	$query = prepare(sprintf('SELECT * FROM ``posts_%s`` WHERE `thread` IS NULL ORDER BY `sticky` DESC, `bump` DESC LIMIT :offset,:threads_per_page', $board['uri']));
+	$query = prepare(sprintf('SELECT * FROM ``posts_%s`` WHERE `thread` IS NULL AND `archived` = false ORDER BY `sticky` DESC, `bump` DESC LIMIT :offset,:threads_per_page', $board['uri']));
 	$query->bindValue(':offset', $offset, PDO::PARAM_INT);
 	$query->bindValue(':threads_per_page', $config['threads_per_page'], PDO::PARAM_INT);
 	$query->execute() or error(db_error($query));
@@ -1487,7 +1506,7 @@ function getPages($mod=false) {
 		$count = $board['thread_count'];
 	} else {
 		// Count threads
-		$query = query(sprintf('SELECT COUNT(*) FROM ``posts_%s`` WHERE `thread` IS NULL', $board['uri'])) or error(db_error());
+		$query = query(sprintf('SELECT COUNT(*) FROM ``posts_%s`` WHERE `thread` IS NULL AND `archived` = false', $board['uri'])) or error(db_error());
 		$count = $query->fetchColumn();
 	}
 	$count = floor(($config['threads_per_page'] + $count - 1) / $config['threads_per_page']);
@@ -1708,6 +1727,9 @@ function buildIndex($global_api = 'yes') {
 		$jsonFilename = $board['dir'] . 'threads.json';
 		file_write($jsonFilename, $json);
 	}
+
+	if ($config['archive']['enabled'])
+		rebuildArchiveIndexes();
 
 	if ($config['try_smarter'])
 		$build_pages = array();

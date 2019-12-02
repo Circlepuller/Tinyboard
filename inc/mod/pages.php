@@ -1037,7 +1037,7 @@ function mod_lock($board, $unlock, $post) {
 	if (!hasPermission($config['mod']['lock'], $board))
 		error($config['error']['noaccess']);
 	
-	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `locked` = :locked WHERE `id` = :id AND `thread` IS NULL', $board));
+	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `locked` = :locked WHERE `id` = :id AND `thread` IS NULL AND `archived` = false', $board));
 	$query->bindValue(':id', $post);
 	$query->bindValue(':locked', $unlock ? 0 : 1);
 	$query->execute() or error(db_error($query));
@@ -1071,7 +1071,7 @@ function mod_sticky($board, $unsticky, $post) {
 	if (!hasPermission($config['mod']['sticky'], $board))
 		error($config['error']['noaccess']);
 	
-	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `sticky` = :sticky WHERE `id` = :id AND `thread` IS NULL', $board));
+	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `sticky` = :sticky WHERE `id` = :id AND `thread` IS NULL AND `archived` = false', $board));
 	$query->bindValue(':id', $post);
 	$query->bindValue(':sticky', $unsticky ? 0 : 1);
 	$query->execute() or error(db_error($query));
@@ -1093,7 +1093,7 @@ function mod_cycle($board, $uncycle, $post) {
 	if (!hasPermission($config['mod']['cycle'], $board))
 		error($config['error']['noaccess']);
 	
-	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `cycle` = :cycle WHERE `id` = :id AND `thread` IS NULL', $board));
+	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `cycle` = :cycle WHERE `id` = :id AND `thread` IS NULL AND `archived` = false', $board));
 	$query->bindValue(':id', $post);
 	$query->bindValue(':cycle', $uncycle ? 0 : 1);
 	$query->execute() or error(db_error($query));
@@ -1115,7 +1115,7 @@ function mod_bumplock($board, $unbumplock, $post) {
 	if (!hasPermission($config['mod']['bumplock'], $board))
 		error($config['error']['noaccess']);
 	
-	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `sage` = :bumplock WHERE `id` = :id AND `thread` IS NULL', $board));
+	$query = prepare(sprintf('UPDATE ``posts_%s`` SET `sage` = :bumplock WHERE `id` = :id AND `thread` IS NULL AND `archived` = false', $board));
 	$query->bindValue(':id', $post);
 	$query->bindValue(':bumplock', $unbumplock ? 0 : 1);
 	$query->execute() or error(db_error($query));
@@ -1239,7 +1239,7 @@ function mod_move($originBoard, $postID) {
 	if (!hasPermission($config['mod']['move'], $originBoard))
 		error($config['error']['noaccess']);
 	
-	$query = prepare(sprintf('SELECT * FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL', $originBoard));
+	$query = prepare(sprintf('SELECT * FROM ``posts_%s`` WHERE `id` = :id AND `thread` IS NULL AND `archived` = false', $originBoard));
 	$query->bindValue(':id', $postID);
 	$query->execute() or error(db_error($query));
 	if (!$post = $query->fetch(PDO::FETCH_ASSOC))
