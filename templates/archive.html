@@ -1,0 +1,34 @@
+<p class="text-align: center">
+    <strong>{{ 'Displaying %s expired threads%s'|trans|sprintf(archive|length, (config.archive.max_lifetime ? ' from the past %s'|trans|sprintf(config.archive.max_lifetime : ''))) }}</strong>
+</p>
+<table class="mod tablesorter">
+    <thead>
+        <tr>
+            <th>{% trans 'No.' %}</th>
+            <th>{% trans 'Excerpt' %}</th>
+            <th>{# Reply #}&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for thread in archive %}
+            <tr>
+                <td data-sort-value="{{ thread.id }}">{{ thread.id }}</td>
+                <td data-sort-value="{{ thread.bump }}">{% if thread.subject %}<strong>{{ thread.subject }}:</strong> {% endif %}{{ thread.snippet }}</td>
+                <td><a href="{{ thread.root }}{{ board.dir }}{{ config.dir.res }}{{ link_for(thread) }}">[{% trans 'View' %}]</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    if (typeof $ !== 'undefined' && $.tablesorter)
+        $('table.tablesorter').tablesorter({
+            textExtraction: (node) => {
+                let attr = $(node).data('sort-value');
+                
+                if (typeof attr !== 'undefined' && attr !== false)
+                    return attr;
+    
+                return $(node).text();
+            }
+        });
+</script>

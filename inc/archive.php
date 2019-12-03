@@ -103,11 +103,88 @@ function rebuildArchiveIndexes()
         buildFeaturedIndex();
 }
 
-function buildArchiveIndex()
+/**
+ * Retrieve an array of all archived threads
+ * 
+ * @return array
+ */
+function archiveList()
 {
-    global $config, $board;
+    global $board;
+
+    $query = query(sprintf('SELECT * FROM ``posts_%s`` WHERE `thread` IS NULL AND `archived` = true AND `featured` = false ORDER BY `bump` DESC', $board['uri'])) or error(db_error());
+    
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function buildFeaturedIndex()
+/**
+ * Retrieve an array of all featured threads
+ * 
+ * @return array
+ */
+function featuredList()
 {
+    global $board;
+
+    $query = query(sprintf('SELECT * FROM ``posts_%s`` WHERE `thread` IS NULL AND `archived` = true AND `featured` = true ORDER BY `bump` DESC', $board['uri'])) or error(db_error());
+
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function buildArchiveIndex($root=null, $mod=false)
+{
+    global $config, $board;
+
+    if (!isset($root))
+        $root = &$config['root'];
+
+    file_write($board['dir'] . $config['file_archive'], Element('page.html', [
+        'config' => $config,
+        'mod' => $mod,
+        'boardlist' => createBoardlist(),
+        'title' => sprintf('%s - %s - %s', $board['url'], $board['title'], _('Archive')),
+        'subtitle' => $board['subtitle'],
+        'body' => Element('archive.html', [
+            'config' => $config,
+            'mod' => $mod,
+            'board' => $board,
+            'archive' => array_map(function (&$thread) use ($root) {
+                $thread['root'] = $root;
+
+                if ($thread['body'] != '')
+                    $thread['snippet'] = pm_snippet($thread['body']);
+                else
+                    $thread['snippet'] = '<em>' . _('(no comment)') . '</em>';
+            }, archiveList())
+        ])
+    ]));
+}
+
+function buildFeaturedIndex($root=null, $mod=false)
+{
+    global $config, $board;
+
+    if (!isset($root))
+        $root = &$config['root'];
+
+    file_write($board['dir'] . $config['file_featured'], Element('page.html', [
+        'config' => $config,
+        'mod' => $mod,
+        'boardlist' => createBoardlist(),
+        'title' => sprintf('%s - %s - %s', $board['url'], $board['title'], _('Featured')),
+        'subtitle' => $board['subtitle'],
+        'body' => Element('archive.html', [
+            'config' => $config,
+            'mod' => $mod,
+            'board' => $board,
+            'archive' => array_map(function (&$thread) use ($root) {
+                $thread['root'] = $root;
+                
+                if ($thread['body'] != '')
+                    $thread['snippet'] = pm_snippet($thread['body']);
+                else
+                    $thread['snippet'] = '<em>' . _('(no comment)') . '</em>';
+            }, archiveList())
+        ])
+    ]));
 }

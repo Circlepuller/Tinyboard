@@ -1177,6 +1177,8 @@
 	$config['file_mod'] = 'mod.php';
 	$config['file_post'] = 'post.php';
 	$config['file_script'] = 'main.js';
+	$config['file_archive'] = 'archive.html';
+	$config['file_featured'] = 'featured.html';
 
 	// Board directory, followed by a forward-slash (/).
 	$config['board_path'] = '%s/';
