@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', 'v0.10.0');
+define('VERSION', 'v0.10.1');
 require 'inc/functions.php';
 loadConfig();
 
@@ -94,6 +94,7 @@ if (file_exists($config['has_installed'])) {
 		case 'v0.10.0-dev-3':
 			// Replaced longtable with tablesorter, updated copyright years, PHP 7.3 fixes implemented
 			// Next update will feature some nice surprises!
+		case 'v0.10.0':
 			// Require PHP 7.2 or newer
 		case false:
 			query("CREATE TABLE IF NOT EXISTS ``search_queries`` (  `ip` varchar(39) NOT NULL,  `time` int(11) NOT NULL,  `query` text NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8;") or error(db_error());
@@ -188,15 +189,15 @@ if ($step == 0) {
 	$tests = [
 		[
 			'category' => 'PHP',
-			'name' => 'PHP &ge; 7.0',
-			'result' => PHP_VERSION_ID >= 70200,
+			'name' => 'PHP &ge; 7.2',
+			'result' => PHP_VERSION_ID >= 70209,
 			'required' => true,
-			'message' => 'Tinyboard requires PHP 7.2 or better.',
+			'message' => 'Tinyboard requires PHP 7.2.9 or better.',
 		],
 		[
 			'category' => 'PHP',
-			'name' => 'PHP &ge; 7.2',
-			'result' => PHP_VERSION_ID >= 70200,
+			'name' => 'PHP &ge; 7.3',
+			'result' => PHP_VERSION_ID >= 70300,
 			'required' => false,
 			'message' => 'Tinyboard works best on PHP 7.3 or better.',
 		],
@@ -411,10 +412,7 @@ if ($step == 0) {
 	$instance_config .= "\n";
 	
 	if (@file_put_contents('inc/instance-config.php', $instance_config)) {
-		// flushes opcache if php >= 5.5.0 or opcache is installed via PECL
-		if (function_exists('opcache_invalidate')) {
-			opcache_invalidate('inc/instance-config.php');
-		}
+		opcache_invalidate('inc/instance-config.php');
 		header('Location: ?step=4', true, $config['redirect_http']);
 	} else {
 		$page['title'] = 'Manual installation required';

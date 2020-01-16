@@ -4,7 +4,7 @@
     "type": "project",
     "config": {
         "platform": {
-            "php": "7.0.27"
+            "php": "7.2.9"
         }
     },
     "require": {
@@ -13,7 +13,7 @@
         "twig/extensions": "^1.5",
         "maxmind/geoip": "^1.1",
         "mrclay/minify": "^3.0",
-        "lifo/ip": "^1.0",
+        "awsumchan/ip": "^1.1",
         "erusev/parsedown": "^1.7"
     },
     "license": "MIT",

@@ -11,7 +11,7 @@ Tinyboard is defunct no longer. Circlepuller and others aim to modernize and opt
 
 Requirements
 ------------
-1.	PHP >= 7.2
+1.	PHP >= 7.2.9
 2.	MySQL/MariaDB server >= 5.5.3
 3.	[mbstring](http://www.php.net/manual/en/mbstring.installation.php) 
 4.	[PHP GD](http://www.php.net/manual/en/intro.image.php)

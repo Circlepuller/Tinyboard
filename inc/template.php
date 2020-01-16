@@ -13,9 +13,9 @@ $twig = false;
 function load_twig() {
 	global $twig, $config;
 	
-	$loader = new Twig_Loader_Filesystem($config['dir']['template']);
+	$loader = new Twig\Loader\FilesystemLoader($config['dir']['template']);
 	$loader->setPaths($config['dir']['template']);
-	$twig = new Twig_Environment($loader, array(
+	$twig = new Twig\Environment($loader, array(
 		'autoescape' => false,
 		'cache' => is_writable('templates') || (is_dir('templates/cache') && is_writable('templates/cache')) ?
 			new Twig_Cache_TinyboardFilesystem("{$config['dir']['template']}/cache") : false,
@@ -73,7 +73,7 @@ function Element($templateFile, array $options) {
 /**
  * {@inheritdoc}
  */
-class Twig_Cache_TinyboardFilesystem extends Twig_Cache_Filesystem
+class Twig_Cache_TinyboardFilesystem extends Twig\Cache\FilesystemCache
 {
 	private $directory;
 	private $options;
@@ -101,7 +101,7 @@ class Twig_Cache_TinyboardFilesystem extends Twig_Cache_Filesystem
 	}
 }
 
-class Twig_Extensions_Extension_Tinyboard extends Twig_Extension
+class Twig_Extensions_Extension_Tinyboard extends Twig\Extension\AbstractExtension
 {
 	/**
 	* Returns a list of filters to add to the existing list.
@@ -110,25 +110,25 @@ class Twig_Extensions_Extension_Tinyboard extends Twig_Extension
 	*/
 	public function getFilters()
 	{
-		return array(
-			new Twig_SimpleFilter('filesize', 'format_bytes'),
-			new Twig_SimpleFilter('truncate', 'twig_truncate_filter'),
-			new Twig_SimpleFilter('truncate_body', 'truncate'),
-			new Twig_SimpleFilter('truncate_filename', 'twig_filename_truncate_filter'),
-			new Twig_SimpleFilter('extension', 'twig_extension_filter'),
-			new Twig_SimpleFilter('sprintf', 'sprintf'),
-			new Twig_SimpleFilter('capcode', 'capcode'),
-			new Twig_SimpleFilter('remove_modifiers', 'remove_modifiers'),
-			new Twig_SimpleFilter('hasPermission', 'twig_hasPermission_filter'),
-			new Twig_SimpleFilter('date', 'twig_date_filter'),
-			new Twig_SimpleFilter('poster_id', 'poster_id'),
-			new Twig_SimpleFilter('remove_whitespace', 'twig_remove_whitespace_filter'),
-			new Twig_SimpleFilter('ago', 'ago'),
-			new Twig_SimpleFilter('until', 'until'),
-			new Twig_SimpleFilter('push', 'twig_push_filter'),
-			new Twig_SimpleFilter('bidi_cleanup', 'bidi_cleanup'),
-			new Twig_SimpleFilter('addslashes', 'addslashes'),
-		);
+		return [
+			new Twig\TwigFilter('filesize', 'format_bytes'),
+			new Twig\TwigFilter('truncate', 'twig_truncate_filter'),
+			new Twig\TwigFilter('truncate_body', 'truncate'),
+			new Twig\TwigFilter('truncate_filename', 'twig_filename_truncate_filter'),
+			new Twig\TwigFilter('extension', 'twig_extension_filter'),
+			new Twig\TwigFilter('sprintf', 'sprintf'),
+			new Twig\TwigFilter('capcode', 'capcode'),
+			new Twig\TwigFilter('remove_modifiers', 'remove_modifiers'),
+			new Twig\TwigFilter('hasPermission', 'twig_hasPermission_filter'),
+			new Twig\TwigFilter('date', 'twig_date_filter'),
+			new Twig\TwigFilter('poster_id', 'poster_id'),
+			new Twig\TwigFilter('remove_whitespace', 'twig_remove_whitespace_filter'),
+			new Twig\TwigFilter('ago', 'ago'),
+			new Twig\TwigFilter('until', 'until'),
+			new Twig\TwigFilter('push', 'twig_push_filter'),
+			new Twig\TwigFilter('bidi_cleanup', 'bidi_cleanup'),
+			new Twig\TwigFilter('addslashes', 'addslashes'),
+		];
 	}
 	
 	/**
@@ -138,17 +138,17 @@ class Twig_Extensions_Extension_Tinyboard extends Twig_Extension
 	*/
 	public function getFunctions()
 	{
-		return array(
-			new Twig_SimpleFunction('time', 'time'),
-			new Twig_SimpleFunction('floor', 'floor'),
-			new Twig_SimpleFunction('timezone', 'twig_timezone_function'),
-			new Twig_SimpleFunction('hiddenInputs', 'hiddenInputs'),
-			new Twig_SimpleFunction('hiddenInputsHash', 'hiddenInputsHash'),
-			new Twig_SimpleFunction('ratio', 'twig_ratio_function'),
-			new Twig_SimpleFunction('secure_link_confirm', 'twig_secure_link_confirm'),
-			new Twig_SimpleFunction('secure_link', 'twig_secure_link'),
-			new Twig_SimpleFunction('link_for', 'link_for')
-		);
+		return [
+			new Twig\TwigFunction('time', 'time'),
+			new Twig\TwigFunction('floor', 'floor'),
+			new Twig\TwigFunction('timezone', 'twig_timezone_function'),
+			new Twig\TwigFunction('hiddenInputs', 'hiddenInputs'),
+			new Twig\TwigFunction('hiddenInputsHash', 'hiddenInputsHash'),
+			new Twig\TwigFunction('ratio', 'twig_ratio_function'),
+			new Twig\TwigFunction('secure_link_confirm', 'twig_secure_link_confirm'),
+			new Twig\TwigFunction('secure_link', 'twig_secure_link'),
+			new Twig\TwigFunction('link_for', 'link_for')
+		];
 	}
 	
 	/**
