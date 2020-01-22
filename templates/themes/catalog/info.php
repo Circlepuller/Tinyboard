@@ -5,7 +5,7 @@
 	$theme['name'] = 'Catalog';
 	// Description (you can use Tinyboard markup here)
 	$theme['description'] = 'Show a post catalog.';
-	$theme['version'] = 'v0.2';
+	$theme['version'] = 'v0.3';
 	
 	// Theme configuration	
 	$theme['config'] = Array();
