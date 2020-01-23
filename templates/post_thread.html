@@ -1,6 +1,3 @@
-{% apply spaceless %}
-{# tabs and new lines will be ignored #}
-
 <div class="thread" id="thread_{{ post.id }}" data-board="{{ board.uri }}">
 {% if not index %}<a id="{{ post.id }}" class="post_anchor"></a>{% endif %}
 
@@ -58,7 +55,7 @@
 	{% include 'post/post_controls.html' %}
 	</p>
 	<div class="body">
-		{% endapply %}{% if index %}{{ post.body|truncate_body(post.link) }}{% else %}{{ post.body }}{% endif %}{% apply spaceless %}
+		{% if index %}{{ post.body|truncate_body(post.link) }}{% else %}{{ post.body }}{% endif %}
 		{% if post.modifiers['ban message'] %}
 			{{ config.mod.ban_message|format(post.modifiers['ban message']) }}
 		{% endif %}
@@ -86,7 +83,7 @@
 	{% endif %}
 {% if not index %}
 {% endif %}
-</div>{% endapply %}
+</div>
 {% set hr = post.hr %}
 {% for post in post.posts %}
 	{% include 'post_reply.html' %}
