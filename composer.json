@@ -11,7 +11,7 @@
         "gettext/gettext": "^4.4",
         "twig/twig": "^2.4",
         "twig/extensions": "^1.5",
-        "maxmind/geoip": "^1.1",
+        "geoip/geoip": "^1.16",
         "mrclay/minify": "^3.0",
         "awsumchan/ip": "^1.1",
         "erusev/parsedown": "^1.7"
