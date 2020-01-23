@@ -34,7 +34,7 @@
 					{{ note.body }}
 				</td>
 				<td class="minimal">
-					{{ note.time|date(config.post_date) }}
+					{{ note.time|strftime(config.post_date) }}
 				</td>
 			</tr>
 		{% endfor %}
@@ -71,13 +71,13 @@
 				</td>
 				<td  style="white-space: nowrap">
 					{% if ban.board %}
-						{{ config.board_abbreviation|sprintf(ban.board) }}
+						{{ config.board_abbreviation|format(ban.board) }}
 					{% else %}
 						<em>{% trans 'all boards' %}</em>
 					{% endif %}					
 				</td>
 				<td style="white-space: nowrap">
-					<span title="{{ ban.created|date(config.post_date) }}">
+					<span title="{{ ban.created|strftime(config.post_date) }}">
 						{{ ban.created|ago }} ago
 					</span>
 				</td>
@@ -92,7 +92,7 @@
 					{% if ban.expires == 0 %}
 						<em>{% trans 'never' %}</em>
 					{% else %}
-						{{ ban.expires|date(config.post_date) }}
+						{{ ban.expires|strftime(config.post_date) }}
 						{% if ban.expires > time() %}
 							 <small>(in {{ ban.expires|until }})</small>
 						{% endif %}
@@ -151,11 +151,11 @@
 					<a href="?/IP/{{ log.ip }}">{{ log.ip }}</a>
 				</td>
 				<td class="minimal">
-					<span title="{{ log.time|date(config.post_date) }}">{{ log.time|ago }}</span>
+					<span title="{{ log.time|strftime(config.post_date) }}">{{ log.time|ago }}</span>
 				</td>
 				<td class="minimal">
 					{% if log.board %}
-						<a href="?/{{ config.board_path|sprintf(log.board) }}{{ config.file_index }}">{{ config.board_abbreviation|sprintf(log.board) }}</a>
+						<a href="?/{{ config.board_path|format(log.board) }}{{ config.file_index }}">{{ config.board_abbreviation|format(log.board) }}</a>
 					{% else %}
 						-
 					{% endif %}
@@ -187,7 +187,7 @@
 					<small>{{ post.time | ago }} ago</small>
 				</td>
 				<td class="minimal">
-					<a href="?/{{ config.board_path|sprintf(post.board) }}{{ config.file_index }}">{{ config.board_abbreviation|sprintf(post.board) }}</a>
+					<a href="?/{{ config.board_path|format(post.board) }}{{ config.file_index }}">{{ config.board_abbreviation|format(post.board) }}</a>
 				</td>
 				<td class="minimal">
 					{% if post.thread %}

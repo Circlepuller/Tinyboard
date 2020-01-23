@@ -16,8 +16,8 @@
 				<small>{{ post.time | ago }} ago</small>
 			</td>
 			<td class="minimal">
-				<a href="?/{{ config.board_path|sprintf(post.board) }}{{ config.file_index }}">
-					{{ config.board_abbreviation|sprintf(post.board) }}
+				<a href="?/{{ config.board_path|format(post.board) }}{{ config.file_index }}">
+					{{ config.board_abbreviation|format(post.board) }}
 				</a>
 			</td>
 			<td><code>{{ post.posthash }}</code></td>
@@ -53,8 +53,8 @@
 				<small>{{ post.time | ago }} ago</small>
 			</td>
 			<td class="minimal">
-				<a href="?/{{ config.board_path|sprintf(post.board) }}{{ config.file_index }}">
-					{{ config.board_abbreviation|sprintf(post.board) }}
+				<a href="?/{{ config.board_path|format(post.board) }}{{ config.file_index }}">
+					{{ config.board_abbreviation|format(post.board) }}
 				</a>
 			</td>
 			<td class="minimal" >

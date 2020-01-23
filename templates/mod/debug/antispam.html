@@ -12,7 +12,7 @@
 	</tr>
 	{% for hash in recent %}
 		<tr>
-			<td>{{ config.board_abbreviation|sprintf(hash.board) }}</td>
+			<td>{{ config.board_abbreviation|format(hash.board) }}</td>
 			<td>
 				{% if hash.thread > 0 %}
 					{{ hash.thread }}
@@ -26,11 +26,11 @@
 				<small><code>{{ hash.hash }}</code></small>
 			</td>
 			<td>
-				<span title="{{ hash.created|date(config.post_date) }}">{{ hash.created|ago }} ago</span>
+				<span title="{{ hash.created|strftime(config.post_date) }}">{{ hash.created|ago }} ago</span>
 			</td>
 			<td>
 				{% if hash.expires %}
-					<span title="{{ hash.expires|date(config.post_date) }}">
+					<span title="{{ hash.expires|strftime(config.post_date) }}">
 						{% if hash.expires < time() %}
 							{{ hash.expires|ago }} ago
 						{% else %}
@@ -60,7 +60,7 @@
 	</tr>
 	{% for hash in top %}
 		<tr>
-			<td>{{ config.board_abbreviation|sprintf(hash.board) }}</td>
+			<td>{{ config.board_abbreviation|format(hash.board) }}</td>
 			<td>
 				{% if hash.thread > 0 %}
 					{{ hash.thread }}
@@ -74,11 +74,11 @@
 				<small><code>{{ hash.hash }}</code></small>
 			</td>
 			<td>
-				<span title="{{ hash.created|date(config.post_date) }}">{{ hash.created|ago }} ago</span>
+				<span title="{{ hash.created|strftime(config.post_date) }}">{{ hash.created|ago }} ago</span>
 			</td>
 			<td>
 				{% if hash.expires %}
-					<span title="{{ hash.expires|date(config.post_date) }}">
+					<span title="{{ hash.expires|strftime(config.post_date) }}">
 						{% if hash.expires < time() %}
 							{{ hash.expires|ago }} ago
 						{% else %}

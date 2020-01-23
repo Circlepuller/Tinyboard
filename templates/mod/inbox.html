@@ -23,7 +23,7 @@
 					{% endif %}
 				</td>
 				<td class="minimal">
-					{{ message.time|date(config.post_date) }}
+					{{ message.time|strftime(config.post_date) }}
 				</td>
 				<td>
 					<a href="?/PM/{{ message.id }}">

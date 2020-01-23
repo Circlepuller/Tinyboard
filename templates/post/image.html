@@ -15,9 +15,9 @@
 			 poster="
 				{{ config.root }}
 				{% if config.file_icons[post.filename|extension] %}
-					{{ config.file_thumb|sprintf(config.file_icons[post.filename|extension]) }}
+					{{ config.file_thumb|format(config.file_icons[post.filename|extension]) }}
 				{% else %}
-					{{ config.file_thumb|sprintf(config.file_icons.default) }}
+					{{ config.file_thumb|format(config.file_icons.default) }}
 				{% endif %}
 			"
 			 style="width:{{ post.thumbwidth }}px;height:{{ post.thumbheight }}px"
@@ -29,9 +29,9 @@
 				{% if post.thumb == 'file' %}
 					{{ config.root }}
 					{% if config.file_icons[post.filename|extension] %}
-						{{ config.file_thumb|sprintf(config.file_icons[post.filename|extension]) }}
+						{{ config.file_thumb|format(config.file_icons[post.filename|extension]) }}
 					{% else %}
-						{{ config.file_thumb|sprintf(config.file_icons.default) }}
+						{{ config.file_thumb|format(config.file_icons.default) }}
 					{% endif %}
 				{% elseif post.thumb == 'spoiler' %}
 					{{ config.root }}{{ config.spoiler_image }}

@@ -76,7 +76,7 @@
 						<li>
 							<input type="radio" name="board" value="{{ board.uri }}" id="ban-board-{{ board.uri }}"> 
 							<label style="display:inline" for="ban-board-{{ board.uri }}">
-								{{ config.board_abbreviation|sprintf(board.uri) }} - {{ board.title|e }}
+								{{ config.board_abbreviation|format(board.uri) }} - {{ board.title|e }}
 							</label>
 						</li>
 					{% endfor %}

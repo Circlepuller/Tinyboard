@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2018 Tinyboard Development Group
+ *  Copyright (c) 2010-2020 Tinyboard Development Group
  */
 
 defined('TINYBOARD') or exit;
@@ -116,13 +116,11 @@ class Twig_Extensions_Extension_Tinyboard extends Twig\Extension\AbstractExtensi
 			new Twig\TwigFilter('truncate_body', 'truncate'),
 			new Twig\TwigFilter('truncate_filename', 'twig_filename_truncate_filter'),
 			new Twig\TwigFilter('extension', 'twig_extension_filter'),
-			new Twig\TwigFilter('sprintf', 'sprintf'),
 			new Twig\TwigFilter('capcode', 'capcode'),
 			new Twig\TwigFilter('remove_modifiers', 'remove_modifiers'),
 			new Twig\TwigFilter('hasPermission', 'twig_hasPermission_filter'),
-			new Twig\TwigFilter('date', 'twig_date_filter'),
+			new Twig\TwigFilter('strftime', 'twig_strftime_filter'),
 			new Twig\TwigFilter('poster_id', 'poster_id'),
-			new Twig\TwigFilter('remove_whitespace', 'twig_remove_whitespace_filter'),
 			new Twig\TwigFilter('ago', 'ago'),
 			new Twig\TwigFilter('until', 'until'),
 			new Twig\TwigFilter('push', 'twig_push_filter'),
@@ -140,8 +138,6 @@ class Twig_Extensions_Extension_Tinyboard extends Twig\Extension\AbstractExtensi
 	{
 		return [
 			new Twig\TwigFunction('time', 'time'),
-			new Twig\TwigFunction('floor', 'floor'),
-			new Twig\TwigFunction('timezone', 'twig_timezone_function'),
 			new Twig\TwigFunction('hiddenInputs', 'hiddenInputs'),
 			new Twig\TwigFunction('hiddenInputsHash', 'hiddenInputsHash'),
 			new Twig\TwigFunction('ratio', 'twig_ratio_function'),
@@ -162,20 +158,12 @@ class Twig_Extensions_Extension_Tinyboard extends Twig\Extension\AbstractExtensi
 	}
 }
 
-function twig_timezone_function() {
-	return 'Z';
-}
-
 function twig_push_filter($array, $value) {
 	array_push($array, $value);
 	return $array;
 }
 
-function twig_remove_whitespace_filter($data) {
-	return preg_replace('/[\t\r\n]/', '', $data);
-}
-
-function twig_date_filter($date, $format) {
+function twig_strftime_filter($date, $format) {
 	return gmstrftime($format, $date);
 }
 
@@ -188,10 +176,6 @@ function twig_extension_filter($value, $case_insensitive = true) {
 	if($case_insensitive)
 		$ext = mb_strtolower($ext);		
 	return $ext;
-}
-
-function twig_sprintf_filter( $value, $var) {
-	return sprintf($value, $var);
 }
 
 function twig_truncate_filter($value, $length = 30, $preserve = false, $separator = '…') {

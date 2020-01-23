@@ -20,7 +20,7 @@
 		{% endif %}
 		<tr>
 			<th>{% trans 'Date' %}</th>
-			<td>{{ time|date(config.post_date) }} <small>({{ time|ago }} ago)</small></td>
+			<td>{{ time|strftime(config.post_date) }} <small>({{ time|ago }} ago)</small></td>
 			
 		</tr>
 		<tr>

@@ -1,10 +1,10 @@
 <div class="report">
 	<hr>
-	{% trans 'Board' %}: <a href="?/{{ report.board }}/{{ config.file_index }}">{{ config.board_abbreviation|sprintf(report.board) }}</a>
+	{% trans 'Board' %}: <a href="?/{{ report.board }}/{{ config.file_index }}">{{ config.board_abbreviation|format(report.board) }}</a>
 	<br>
 	{% trans 'Reason' %}: {{ report.reason }}
 	<br>
-	{% trans 'Report date' %}: {{ report.time|date(config.post_date) }}
+	{% trans 'Report date' %}: {{ report.time|strftime(config.post_date) }}
 	<br>
 	{% if mod|hasPermission(config.mod.show_ip, report.board) %}
 		{% trans 'Reported by' %}: <a href="?/IP/{{ report.ip }}">{{ report.ip }}</a>

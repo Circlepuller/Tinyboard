@@ -875,7 +875,7 @@
 	// Timezone to use for displaying dates/tiems.
 	$config['timezone'] = 'America/Los_Angeles';
 	// The format string passed to strftime() for displaying dates.
-	// http://www.php.net/manual/en/function.strftime.php
+	// https://www.php.net/manual/en/function.strftime.php
 	$config['post_date'] = '%m/%d/%y (%a) %H:%M:%S';
 	// Same as above, but used for "you are banned' pages.
 	$config['ban_date'] = '%A %e %B, %Y';

@@ -4,7 +4,7 @@
 	<ul>
 		{% for board in boards %}
 			<li>
-				<a href="?/{{ config.board_path|sprintf(board.uri) }}{{ config.file_index }}">{{ config.board_abbreviation|sprintf(board.uri) }}</a>
+				<a href="?/{{ config.board_path|format(board.uri) }}{{ config.file_index }}">{{ config.board_abbreviation|format(board.uri) }}</a>
 					 - 
 				{{ board.title|e }}
 				{% if board.subtitle %}
@@ -56,7 +56,7 @@
 										<em>deleted?</em>
 									{% endif %} 
 									at 
-									{{ post.time|date(config.post_date) }} 
+									{{ post.time|strftime(config.post_date) }} 
 								</small>
 							</li>
 						{% endfor %}

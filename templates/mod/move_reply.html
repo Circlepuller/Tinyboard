@@ -6,7 +6,7 @@
 				{% trans 'Post ID' %}
 			</th>
 			<td>
-				&gt;&gt;&gt;{{ config.board_abbreviation|sprintf(board) }}{{ post }}
+				&gt;&gt;&gt;{{ config.board_abbreviation|format(board) }}{{ post }}
 			</td>
 		</tr>
 		<tr>
@@ -17,7 +17,7 @@
 						<li>
 							<input type="radio" name="board" value="{{ targetboard.uri }}" id="ban-board-{{ targetboard.uri }}" {% if boards|length == 2 %}checked{% endif %}> 
 							<label style="display:inline" for="ban-board-{{ targetboard.uri }}">
-								{{ config.board_abbreviation|sprintf(targetboard.uri) }} - {{ targetboard.title|e }}
+								{{ config.board_abbreviation|format(targetboard.uri) }} - {{ targetboard.title|e }}
 							</label>
 						</li>
 					{% endfor %}

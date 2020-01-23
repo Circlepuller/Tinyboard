@@ -36,11 +36,11 @@
 					{% endif %}
 				</td>
 				<td class="minimal" data-sort-value="{{ log.time }}">
-					<span title="{{ log.time|date(config.post_date) }}">{{ log.time|ago }}</span>
+					<span title="{{ log.time|strftime(config.post_date) }}">{{ log.time|ago }}</span>
 				</td>
 				<td class="minimal">
 					{% if log.board %}
-						<a href="?/{{ config.board_path|sprintf(log.board) }}{{ config.file_index }}">{{ config.board_abbreviation|sprintf(log.board) }}</a>
+						<a href="?/{{ config.board_path|format(log.board) }}{{ config.file_index }}">{{ config.board_abbreviation|format(log.board) }}</a>
 					{% else %}
 						-
 					{% endif %}

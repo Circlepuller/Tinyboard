@@ -31,7 +31,7 @@
 					{% set boards = user.boards|split(',') %}
 					{% set _boards = [] %}
 					{% for board in boards %}
-						{% set _boards = _boards|push(board == '*' ? '*' : config.board_abbreviation|sprintf(board)) %}
+						{% set _boards = _boards|push(board == '*' ? '*' : config.board_abbreviation|format(board)) %}
 					{% endfor %}
 					{% set _boards = _boards|sort %}
 					{{ _boards|join(', ') }}

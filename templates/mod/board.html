@@ -11,7 +11,7 @@
 			<th>{% trans 'URI' %}</th>
 			<td>
 				{% if not new %}
-					{{ config.board_abbreviation|sprintf(board.uri) }}
+					{{ config.board_abbreviation|format(board.uri) }}
 				{% else %}
 					/<input size="10" maxlength="255" type="text" name="uri" autocomplete="off">/
 				{% endif %}

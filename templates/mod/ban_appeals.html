@@ -33,7 +33,7 @@
 			<th>{% trans 'Board' %}</th>
 			<td>
 				{% if ban.board %}
-					{{ config.board_abbreviation|sprintf(ban.board) }}
+					{{ config.board_abbreviation|format(ban.board) }}
 				{% else %}
 					<em>{% trans 'all boards' %}</em>
 				{% endif %}
@@ -41,13 +41,13 @@
 		</tr>
 		<tr>
 			<th>{% trans 'Set' %}</th>
-			<td>{{ ban.created|date(config.post_date) }}</td>
+			<td>{{ ban.created|strftime(config.post_date) }}</td>
 		</tr>
 		<tr>
 			<th>{% trans 'Expires' %}</th>
 			<td>
 				{% if ban.expires %}
-					{{ ban.expires|date(config.post_date) }}
+					{{ ban.expires|strftime(config.post_date) }}
 				{% else %}
 					<em>{% trans 'never' %}</em>
 				{% endif %}
@@ -78,7 +78,7 @@
 	<table style="margin: 10px 0">
 		<tr>
 			<th>{% trans 'Appeal time' %}</th>
-			<td>{{ ban.time|date(config.post_date) }}</td>
+			<td>{{ ban.time|strftime(config.post_date) }}</td>
 		</tr>
 		<tr>
 			<th>{% trans 'Appeal reason' %}</th>

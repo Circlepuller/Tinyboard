@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "024e398738753e998a1e2b62235843a3",
+    "content-hash": "cd1eb38aad1ab9b78eddde4761daa8b6",
     "packages": [
         {
             "name": "awsumchan/ip",

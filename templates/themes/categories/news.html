@@ -1,4 +1,4 @@
-{% filter remove_whitespace %}
+{% apply spaceless %}
 <!doctype html>
 <html>
 <head>
@@ -24,7 +24,7 @@
 					{% else %}
 						<em>{% trans %}no subject{% endtrans %}</em>
 					{% endif %}
-					<span class="unimportant"> &mdash; {% trans %}by{% endtrans %} {{ entry.name }} {% trans %}at{% endtrans %} {{ entry.time|date(config.post_date) }}</span>
+					<span class="unimportant"> &mdash; {% trans %}by{% endtrans %} {{ entry.name }} {% trans %}at{% endtrans %} {{ entry.time|strftime(config.post_date) }}</span>
 				</h2>
 				<p>{{ entry.body }}</p>
 			{% endfor %}
@@ -33,9 +33,9 @@
 	
         <footer>
                 <p class="unimportant" style="margin-top:20px;text-align:center;">Powered by Tinyboard {{ config.version }}
-                <br>Tinyboard Copyright &copy; 2010-2018 Tinyboard Development Group    
+                <br>Tinyboard Copyright &copy; 2010-2020 Tinyboard Development Group    
                 <br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2016 vichan-devel</p>
         </footer>
 </body>
 </html>
-{% endfilter %}
+{% endapply %}

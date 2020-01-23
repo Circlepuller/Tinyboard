@@ -1,4 +1,4 @@
-{% filter remove_whitespace %}
+{% apply spaceless %}
 <!doctype html>
 <html>
 <head>
@@ -29,7 +29,7 @@
 		<ul>
 			{% for board in boards %}
 				<li>
-					<a href="{{ config.board_path|sprintf(board.uri) }}">
+					<a href="{{ config.board_path|format(board.uri) }}">
 						{{ board.title|e }}
 					</a>
 				</li>
@@ -38,4 +38,4 @@
 	</fieldset>
 </body>
 </html>
-{% endfilter %}
+{% endapply %}

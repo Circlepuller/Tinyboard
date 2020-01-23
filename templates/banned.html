@@ -1,4 +1,4 @@
-{% filter remove_whitespace %}
+{% apply spaceless %}
 {# Automatically removes unnecessary whitespace #}
 <div class="ban">
 	{% if ban.expires and time() >= ban.expires %}
@@ -13,7 +13,7 @@
 			{% trans %}You have been banned from{% endtrans %}
 		{% endif %}
 			{% if ban.board %}
-				 <strong>{{ config.board_abbreviation|sprintf(ban.board) }}</strong>
+				 <strong>{{ config.board_abbreviation|format(ban.board) }}</strong>
 			{% else %}
 				 {% trans %}all boards{% endtrans %}
 			{% endif %}
@@ -30,7 +30,7 @@
 	{% endif %}
 	<p>
 		{% trans %}Your ban was filed on{% endtrans %} 
-			<strong>{{ ban.created|date(config.ban_date) }}</strong> 
+			<strong>{{ ban.created|strftime(config.ban_date) }}</strong> 
 			{% if config.show_modname %}
 				{% if ban.username %}
 					{% trans %}by{% endtrans %} <strong> {{ ban.username }} </strong>
@@ -44,7 +44,7 @@
 		{% elseif ban.expires %}
 			{% trans %}expires{% endtrans %} <span id="countdown">{{ ban.expires|until }}</span> {% trans %}from now, which is on{% endtrans %} 
 			<strong>
-				{{ ban.expires|date(config.ban_date) }}
+				{{ ban.expires|strftime(config.ban_date) }}
 			</strong>
 			<script>
 				var secondsLeft = {{ ban.expires - time() }};
@@ -101,13 +101,13 @@
 		{% if pending_appeal %}
 			<p>
 				{% trans %}You submitted an appeal for this ban on{% endtrans %} 
-				<strong>{{ pending_appeal|date(config.ban_date) }}</strong>. {% trans %}It is still pending{% endtrans %}.
+				<strong>{{ pending_appeal|strftime(config.ban_date) }}</strong>. {% trans %}It is still pending{% endtrans %}.
 			</p>
 		{% elseif denied_appeals|length >= config.ban_appeals_max %}
 			{% if denied_appeals|length == 1 %}
 				<p>
 					{% trans %}You appealed this ban on{% endtrans %} 
-					<strong>{{ denied_appeals[0]|date(config.ban_date) }}</strong> 
+					<strong>{{ denied_appeals[0]|strftime(config.ban_date) }}</strong> 
 					{% trans %}and it was denied. You may not appeal this ban again.{% endtrans %}
 				</p>
 			{% else %}
@@ -118,14 +118,14 @@
 				{% if denied_appeals|length == 1 %}
 					<p>
 						{% trans %}You appealed this ban on{% endtrans %} 
-						<strong>{{ denied_appeals[0]|date(config.ban_date) }}</strong> 
+						<strong>{{ denied_appeals[0]|strftime(config.ban_date) }}</strong> 
 						{% trans %}and it was denied.{% endtrans %}
 					</p>
 					<p>{% trans %}You may appeal this ban again. Please enter your reasoning below.{% endtrans %}</p>
 				{% else %}
 					<p>
 						{% trans %}You last appealed this ban on{% endtrans %} 
-						<strong>{{ denied_appeals[denied_appeals|length - 1]|date(config.ban_date) }}</strong> 
+						<strong>{{ denied_appeals[denied_appeals|length - 1]|strftime(config.ban_date) }}</strong> 
 						{% trans %}and it was denied.{% endtrans %}
 					</p>
 					<p>{% trans %}You may appeal this ban again. Please enter your reasoning below.{% endtrans %}</p>
@@ -141,4 +141,4 @@
 		{% endif %}
 	{% endif %}
 </div>
-{% endfilter %}
+{% endapply %}
