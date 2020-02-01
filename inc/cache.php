@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2018 Tinyboard Development Group
+ *  Copyright (c) 2010-2020 Tinyboard Development Group
  */
 
 defined('TINYBOARD') or exit;
@@ -12,6 +12,9 @@ class Cache {
 		global $config;
 		
 		switch ($config['cache']['enabled']) {
+			case 'memcached':
+				self::$cache = new Memcached();
+				self::$cache->addServers($config['cache']['memcached']);
 			case 'redis':
 				self::$cache = new Redis();
 				self::$cache->connect($config['cache']['redis'][0], $config['cache']['redis'][1]);
@@ -32,8 +35,16 @@ class Cache {
 		
 		$data = false;
 		switch ($config['cache']['enabled']) {
+			case 'memcached':
+				if (!self::$cache)
+					self::init();
+				$data = self::$cache->get($key);
+				break;
 			case 'apc':
 				$data = apc_fetch($key);
+				break;
+			case 'apcu':
+				$data = apcu_fetch($key);
 				break;
 			case 'xcache':
 				$data = xcache_get($key);
@@ -73,6 +84,11 @@ class Cache {
 			$expires = $config['cache']['timeout'];
 		
 		switch ($config['cache']['enabled']) {
+			case 'memcached':
+				if (!self::$cache)
+					self::init();
+				self::$cache->set($key, $value, $expires);
+				break;
 			case 'redis':
 				if (!self::$cache)
 					self::init();
@@ -80,6 +96,9 @@ class Cache {
 				break;
 			case 'apc':
 				apc_store($key, $value, $expires);
+				break;
+			case 'apcu':
+				apcu_store($key, $value, $expires);
 				break;
 			case 'xcache':
 				xcache_set($key, $value, $expires);
@@ -103,13 +122,21 @@ class Cache {
 		$key = $config['cache']['prefix'] . $key;
 		
 		switch ($config['cache']['enabled']) {
-			case 'redis':
+			case 'memcached':
 				if (!self::$cache)
 					self::init();
 				self::$cache->delete($key);
 				break;
+			case 'redis':
+				if (!self::$cache)
+					self::init();
+				self::$cache->del($key);
+				break;
 			case 'apc':
 				apc_delete($key);
+				break;
+			case 'apcu':
+				apcu_delete($key);
 				break;
 			case 'xcache':
 				xcache_unset($key);
@@ -131,8 +158,14 @@ class Cache {
 		global $config;
 		
 		switch ($config['cache']['enabled']) {
+			case 'memcached':
+				if (!self::$cache)
+					self::init();
+				return self::$cache->flush();
 			case 'apc':
 				return apc_clear_cache('user');
+			case 'apcu':
+				return apcu_clear_cache();
 			case 'php':
 				self::$cache = array();
 				break;

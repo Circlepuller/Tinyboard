@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', 'v0.10.1');
+define('VERSION', 'v0.10.2');
 require 'inc/functions.php';
 loadConfig();
 
@@ -96,6 +96,12 @@ if (file_exists($config['has_installed'])) {
 			// Next update will feature some nice surprises!
 		case 'v0.10.0':
 			// Require PHP 7.2 or newer
+		case 'v0.10.1':
+			// Replaced GeoIP dependency with official leaner version (this removed a lot of unnecessary dependencies)
+			// Add APCu and Memcached support
+			// APC will be deprecated in v0.11 or another future version as it is no longer maintained
+			// Updated composer.json and install.php to reflect current dependencies
+			// Upgrade support from vichan 4.x is planned to be removed in v0.11 or another future version
 		case false:
 			query("CREATE TABLE IF NOT EXISTS ``search_queries`` (  `ip` varchar(39) NOT NULL,  `time` int(11) NOT NULL,  `query` text NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8;") or error(db_error());
 
@@ -166,8 +172,8 @@ if ($step == 0) {
 		define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 	}
 	
-	// Required extensions
 	$extensions = [
+		// Required extensions
 		'PDO' => [
 			'installed' => extension_loaded('pdo'),
 			'required' => true
@@ -176,12 +182,30 @@ if ($step == 0) {
 			'installed' => extension_loaded('gd'),
 			'required' => true
 		],
+
+		// Recommended extensions
 		'Imagick' => [
 			'installed' => extension_loaded('imagick'),
 			'required' => false
 		],
 		'OpenSSL' => [
 			'installed' => extension_loaded('openssl'),
+			'required' => false
+		],
+		'APCu' => [
+			'installed' => extension_loaded('apcu'),
+			'required' => false
+		],
+		'Memcached' => [
+			'installed' => extension_loaded('memcached'),
+			'required' => false
+		],
+		'Redis' => [
+			'installed' => extension_loaded('redis'),
+			'required' => false
+		],
+		'XCache' => [
+			'installed' => extension_loaded('xcache'),
 			'required' => false
 		]
 	];
@@ -337,10 +361,9 @@ if ($step == 0) {
 		[
 			'category' => 'Misc',
 			'name' => 'Caching available (APC, XCache, or Redis)',
-			'result' => extension_loaded('apc') || extension_loaded('xcache')
-				|| extension_loaded('redis'),
+			'result' => extension_loaded('apc') || extension_loaded('apcu') || extension_loaded('memcached') || extension_loaded('redis') || extension_loaded('xcache'),
 			'required' => false,
-			'message' => 'You will not be able to enable the additional caching system, designed to minimize SQL queries and significantly improve performance. <a href="http://php.net/manual/en/book.apc.php">APC</a> is the recommended method of caching, but <a href="http://xcache.lighttpd.net/">XCache</a>, and <a href="http://pecl.php.net/package/redis">Redis</a> are also supported.'
+			'message' => 'You will not be able to enable the additional caching system, designed to minimize SQL queries and significantly improve performance. <a href="https://php.net/manual/en/book.apcu.php">APCu</a> is the recommended method of caching, but <a href="https://www.php.net/manual/en/book.apc.php">APC</a>, <a href="https://pecl.php.net/package/redis">Redis</a>, <a href="https://www.php.net/manual/en/book.memcached.php">Memcached</a>, and <a href="https://xcache.lighttpd.net/">XCache</a> are also supported.'
 		],
 		[
 			'category' => 'Misc',
@@ -464,9 +487,6 @@ if ($step == 0) {
 		}
 		
 		file_write($config['has_installed'], VERSION);
-		/*if (!file_unlink(__FILE__)) {
-			$page['body'] .= '<div class="ban"><h2>Delete install.php!</h2><p>I couldn\'t remove <strong>install.php</strong>. You will have to remove it manually.</p></div>';
-		}*/
 	}
 	
 	echo Element('page.html', $page);
@@ -481,8 +501,5 @@ if ($step == 0) {
 	}
 	
 	file_write($config['has_installed'], VERSION);
-	if (!file_unlink(__FILE__))
-		$page['body'] .= '<div class="ban"><h2>Delete install.php!</h2><p>I couldn\'t remove <strong>install.php</strong>. You will have to remove it manually.</p></div>';
-	
 	echo Element('page.html', $page);
 }

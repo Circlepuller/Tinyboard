@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2018 Tinyboard Development Group
+ *  Copyright (c) 2010-2020 Tinyboard Development Group
  */
 
 if (realpath($_SERVER['SCRIPT_FILENAME']) === str_replace('\\', '/', __FILE__)) {
@@ -1802,6 +1802,27 @@ function isIPv6() {
 
 function ReverseIPOctets($ip) {
 	return implode('.', array_reverse(explode('.', $ip)));
+}
+
+/**
+ * Convert an IPv4 address to an IPv6 address
+ * 
+ * @param string $ip An IPv4 address
+ * @return string A IPv6 representation of the input
+ */
+function ipv4to6($ip) {
+	if (strpos($ip, ':') !== false) {
+		if (strpos($ip, '.') > 0)
+			$ip = substr($ip, strrpos($ip, ':')+1);
+		else
+			return $ip;  //native ipv6
+	}
+
+	$iparr = array_pad(explode('.', $ip), 4, 0);
+	$part7 = base_convert(($iparr[0] * 256) + $iparr[1], 10, 16);
+	$part8 = base_convert(($iparr[2] * 256) + $iparr[3], 10, 16);
+
+	return '::ffff:' . $part7 . ':' . $part8;
 }
 
 function wordfilters(&$body) {

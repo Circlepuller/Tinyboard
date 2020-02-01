@@ -8,6 +8,8 @@
         }
     },
     "require": {
+        "ext-pdo": "*",
+        "ext-gd": "*",
         "gettext/gettext": "^4.4",
         "twig/twig": "^2.9",
         "twig/extensions": "^1.5",
@@ -22,5 +24,13 @@
             "name": "Daniel Saunders",
             "email": "dsaunders@dansaunders.me"
         }
-    ]
+    ],
+    "suggest": {
+        "ext-imagick": "Allows the use of ImageMagick for image handling",
+        "ext-openssl": "Allows for enhanced security features through OpenSSL",
+        "ext-apcu": "Allows the use of APCu for cache storage",
+        "ext-redis": "Allows the use of Redis for cache storage",
+        "ext-memcached": "Allows the use of Memcached for cache storage",
+        "ext-xcache": "Allows the use of XCache for cache storage"
+    }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd1eb38aad1ab9b78eddde4761daa8b6",
+    "content-hash": "8bc7409d30b142bc84e3d42e0f09578e",
     "packages": [
         {
             "name": "awsumchan/ip",
@@ -1067,7 +1067,10 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-pdo": "*",
+        "ext-gd": "*"
+    },
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.2.9"
