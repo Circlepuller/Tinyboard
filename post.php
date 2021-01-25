@@ -132,7 +132,8 @@ if (isset($_POST['delete'])) {
 	if (count($report) > $config['report_limit'])
 		error($config['error']['toomanyreports']);
 
-	if ($config['recaptcha']) {
+	// Disabled since there is currently no reCAPTCHA for the report form. This will be fixed in a future update.
+	/*if ($config['recaptcha']) {
 		if (!isset($_POST['g-recaptcha-response']))
 			error($config['error']['bot']);
 
@@ -144,7 +145,7 @@ if (isset($_POST['delete'])) {
 
 		if (!$resp['success'])
 			error($config['error']['captcha']);
-	}
+	}*/
 	
 	$reason = escape_markup_modifiers($_POST['reason']);
 	markup($reason);

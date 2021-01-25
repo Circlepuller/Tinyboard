@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', 'v0.10.2');
+define('VERSION', 'v0.11.0');
 require 'inc/functions.php';
 loadConfig();
 
@@ -45,7 +45,7 @@ if (file_exists($config['has_installed'])) {
 	// Check the version number
 	$version = trim(file_get_contents($config['has_installed']));
 	if (empty($version))
-		$version = '4.9.90';
+		$version = '5.0.0';
 	
 	function __query($sql) {
 		sql_open();
@@ -56,14 +56,6 @@ if (file_exists($config['has_installed'])) {
 	$boards = listBoards();
 	
 	switch ($version) {
-		case '4.9.90':
-		case '4.9.91':
-		case '4.9.92':
-            foreach ($boards as &$board)
-                query(sprintf('ALTER TABLE ``posts_%s`` ADD `slug` VARCHAR(255) DEFAULT NULL AFTER `embed`;', $board['uri'])) or error(db_error());
-        case '4.9.93':
-            query('ALTER TABLE ``mods`` CHANGE `password` `password` VARCHAR(255) NOT NULL;') or error(db_error());
-            query('ALTER TABLE ``mods`` CHANGE `salt` `salt` VARCHAR(64) NOT NULL;') or error(db_error());
 		case '5.0.0':
 			query('ALTER TABLE ``mods`` CHANGE `salt` `version` VARCHAR(64) NOT NULL;') or error(db_error());
 		case '5.0.1':
@@ -99,9 +91,19 @@ if (file_exists($config['has_installed'])) {
 		case 'v0.10.1':
 			// Replaced GeoIP dependency with official leaner version (this removed a lot of unnecessary dependencies)
 			// Add APCu and Memcached support
-			// APC will be deprecated in v0.11 or another future version as it is no longer maintained
+			// APC will be deprecated in v0.11 or another future version as it is no longer maintained (?)
 			// Updated composer.json and install.php to reflect current dependencies
 			// Upgrade support from vichan 4.x is planned to be removed in v0.11 or another future version
+		case 'v0.10.2':
+			// PHP 8 support! Bugs may lurk under the surface, please report any that appear
+			// Updated several dependencies via Composer. For a smooth PHP 8 experience, use the latest release of Composer
+			// Run `composer install` in your shell to utilize the newer dependencies!
+			// Fixed a "bug" that prevented users from making reports on posts. reCAPTCHA support for the report forms will be fixed at a later time
+			// Updated copyright years for modified files
+			// Fixed a Twig template that was causing an error that spit out so much text it crashed my web browser (ouch!)
+			// Fixed access to debug pages so you can actually access them when $config['debug'] == true
+			// Upgrade support from vichan is planned to be removed in v0.12, removed upgrade support from 4.x already
+			// Updated locale metadata
 		case false:
 			query("CREATE TABLE IF NOT EXISTS ``search_queries`` (  `ip` varchar(39) NOT NULL,  `time` int(11) NOT NULL,  `query` text NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8;") or error(db_error());
 

@@ -6,7 +6,7 @@
 # Kanker Kanker <brent-13@live.nl>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: vichan\n"
+"Project-Id-Version: Tinyboard\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-10-18 13:47+0200\n"
 "PO-Revision-Date: 2014-10-18 11:48+0000\n"

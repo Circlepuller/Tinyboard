@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2019 Tinyboard Development Group
+ *  Copyright (c) 2010-2021 Tinyboard Development Group
  */
 
 defined('TINYBOARD') or exit;
@@ -2423,7 +2423,7 @@ function mod_config($board_config = false) {
 			foreach ($var['name'] as $n)
 				$c = &$c[$n];
 		} else {
-			$c = @$config[$var['name']];
+			$c = array_key_exists($var['name'], $config) ? $config[$var['name']] : null;
 		}
 		
 		$var['value'] = $c;

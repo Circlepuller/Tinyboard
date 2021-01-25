@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2020 Tinyboard Development Group
+ *  Copyright (c) 2010-2021 Tinyboard Development Group
  */
 
 if (realpath($_SERVER['SCRIPT_FILENAME']) === str_replace('\\', '/', __FILE__)) {
@@ -717,12 +717,14 @@ function file_unlink($path) {
 		$debug['unlink'][] = $path;
 	}
 
-	$ret = @unlink($path);
+	$ret = false;
 
-        if ($config['gzip_static']) {
-                $gzpath = "$path.gz";
+	if (file_exists($path)) {
+		$ret = unlink($path);
+	}
 
-		@unlink($gzpath);
+	if ($config['gzip_static'] && file_exists($gzpath = "$path.gz")) {
+		unlink($gzpath);
 	}
 
 	if (isset($config['purge']) && $path[0] != '/' && isset($_SERVER['HTTP_HOST'])) {

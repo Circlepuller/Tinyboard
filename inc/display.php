@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2018 Tinyboard Development Group
+ *  Copyright (c) 2010-2021 Tinyboard Development Group
  */
 
 if (realpath($_SERVER['SCRIPT_FILENAME']) === str_replace('\\', '/', __FILE__)) {
@@ -68,7 +68,7 @@ function error($message, $priority = true, $debug_stuff = false) {
 	}
 
 	$pw = $config['db']['password'];
-	$debug_callback = function(&$item) use (&$debug_callback, $pw) {
+	$debug_callback = function($item) use (&$debug_callback, $pw) {
 		if (is_array($item)) {
 			$item = array_filter($item, $debug_callback);
 		}

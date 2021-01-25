@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (c) 2010-2019 Tinyboard Development Group
+ *  Copyright (c) 2010-2021 Tinyboard Development Group
  */
 
 require 'inc/functions.php';
@@ -16,7 +16,7 @@ check_login(true);
 
 $query = isset($_SERVER['QUERY_STRING']) ? rawurldecode($_SERVER['QUERY_STRING']) : '';
 
-$pages = array(
+$pages = [
 	''					=> ':?/',			// redirect to dashboard
 	'/'					=> 'dashboard',			// dashboard
 	'/confirm/(.+)'				=> 'confirm',			// confirm action (if javascript didn't work)
@@ -92,12 +92,6 @@ $pages = array(
 	'/config'				=> 'secure_POST config',	// config editor
 	'/config/(\%b)'				=> 'secure_POST config',	// config editor
 	
-	// these pages aren't listed in the dashboard without $config['debug']
-	//'/debug/antispam'			=> 'debug_antispam',
-	//'/debug/recent'				=> 'debug_recent_posts',
-	//'/debug/apc'				=> 'debug_apc',
-	//'/debug/sql'				=> 'secure_POST debug_sql',
-	
 	// This should always be at the end:
 	'/(\%b)/'										=> 'view_board',
 	'/(\%b)/' . preg_quote($config['file_index'], '!')					=> 'view_board',
@@ -111,7 +105,17 @@ $pages = array(
 			str_replace(array('%d','%s'), array('(\d+)', '[a-z0-9-]+'), preg_quote($config['file_page50_slug'], '!'))	=> 'view_thread50',
 	'/(\%b)/' . preg_quote($config['dir']['res'], '!') .
 			str_replace(array('%d','%s'), array('(\d+)', '[a-z0-9-]+'), preg_quote($config['file_page_slug'], '!'))	=> 'view_thread',
-);
+];
+
+// these pages aren't listed in the dashboard without $config['debug']
+if ($config['debug']) {
+	$pages = array_merge_recursive($pages, [
+		'/debug/antispam'			=> 'debug_antispam',
+		'/debug/recent'				=> 'debug_recent_posts',
+		'/debug/apc'				=> 'debug_apc',
+		'/debug/sql'				=> 'secure_POST debug_sql',
+	]);
+}
 
 
 if (!$mod) {
@@ -130,7 +134,7 @@ foreach ($pages as $key => $callback) {
 	if (is_string($callback) && preg_match('/^secure /', $callback))
 		$key .= '(/(?P<token>[a-f0-9]{8}))?';
 	$key = str_replace('\%b', '?P<board>' . sprintf(substr($config['board_path'], 0, -1), $config['board_regex']), $key);
-	$new_pages[@$key[0] == '!' ? $key : '!^' . $key . '(?:&[^&=]+=[^&]*)*$!u'] = $callback;
+	$new_pages[strpos($key, '!') === 0 ? $key : '!^' . $key . '(?:&[^&=]+=[^&]*)*$!u'] = $callback;
 }
 $pages = $new_pages;
 
@@ -150,12 +154,15 @@ foreach ($pages as $uri => $handler) {
 		if (is_string($handler) && preg_match('/^secure(_POST)? /', $handler, $m)) {
 			$secure_post_only = isset($m[1]);
 			if (!$secure_post_only || $_SERVER['REQUEST_METHOD'] == 'POST') {
-				$token = isset($matches['token']) ? $matches['token'] : (isset($_POST['token']) ? $_POST['token'] : false);
-				
-				if ($token === false) {
-					if ($secure_post_only)
+				if (isset($matches['token'])) {
+					$token = $matches['token'];
+					unset($matches['token']);
+				} elseif (isset($_POST['token'])) {
+					$token = $_POST['token'];
+				} else {
+					if ($secure_post_only) {
 						error($config['error']['csrf']);
-					else {
+					} else {
 						mod_confirm(substr($query, 1));
 						exit;
 					}
